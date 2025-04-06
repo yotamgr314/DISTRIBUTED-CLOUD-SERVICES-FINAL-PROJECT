@@ -1,9 +1,10 @@
-// src/pages/SignUpPage.js
+// src/pages/LoginPage.js
 
 import React from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import Footer from "../components/Footer";
 
-const Login = () => {
+const LoginPage = () => {
   return (
     <Box
       sx={{
@@ -22,7 +23,7 @@ const Login = () => {
           left: 0,
           width: "100%",
           height: "100%",
-          backgroundImage: "url(/assets/hero-image.png)", // Replace with your actual background
+          backgroundImage: 'url("/assets/hero-image.png")',
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -40,20 +41,26 @@ const Login = () => {
         }}
       />
 
-      {/* Netflix Logo (top-left) */}
+      {/* Netflix Logo as Styled Text (top-left) */}
       <Box
         sx={{
           position: "absolute",
           top: "20px",
           left: "20px",
-          width: "148px",
-          height: "40px",
-          backgroundImage: "url(/assets/Netflix_2015_logo.png)", // Replace with your logo path
-          backgroundSize: "contain",
-          backgroundRepeat: "no-repeat",
           zIndex: 2,
         }}
-      />
+      >
+        <Typography
+          sx={{
+            fontSize: "2rem",
+            fontWeight: "bold",
+            color: "#E50914",
+            fontFamily: "Arial, sans-serif",
+          }}
+        >
+          NETFLIX
+        </Typography>
+      </Box>
 
       {/* Language Selector (bottom-left) */}
       <Box
@@ -82,8 +89,8 @@ const Login = () => {
         </Typography>
       </Box>
 
-      {/* Sign Up Form Container */}
-      <Box
+      {/* Login Form Container */}
+      <Container
         sx={{
           position: "absolute",
           top: "50%",
@@ -114,157 +121,74 @@ const Login = () => {
           Log In
         </Typography>
 
-        {/* Email Field (placeholder) */}
-        <Box
+        {/* Email Field */}
+        <TextField
+          variant="filled"
+          label="Email or phone number"
+          type="email"
+          fullWidth
           sx={{
-            boxSizing: "border-box",
-            display: "flex",
-            alignItems: "center",
-            padding: "8px 24px",
-            width: "100%",
-            height: "56px",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            border: "1px solid #808080",
-            borderRadius: "4px",
+            mb: 2,
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            "& .MuiFilledInput-input": { color: "#fff" },
+            "& .MuiInputLabel-root": { color: "#8c8c8c" },
           }}
-        >
-          <Typography
-            sx={{
-              fontFamily: "ABeeZee",
-              fontWeight: 400,
-              fontSize: "16px",
-              lineHeight: "24px",
-              color: "#BCBCBC",
-            }}
-          >
-            Email or phone number
-          </Typography>
-        </Box>
+        />
 
-        {/* Password Field (placeholder) */}
-        <Box
+        {/* Password Field */}
+        <TextField
+          variant="filled"
+          label="Password"
+          type="password"
+          fullWidth
           sx={{
-            boxSizing: "border-box",
-            display: "flex",
-            alignItems: "center",
-            padding: "8px 24px",
-            width: "100%",
-            height: "56px",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            border: "1px solid #808080",
-            borderRadius: "4px",
+            mb: 2,
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            "& .MuiFilledInput-input": { color: "#fff" },
+            "& .MuiInputLabel-root": { color: "#8c8c8c" },
           }}
-        >
-          <Typography
-            sx={{
-              fontFamily: "ABeeZee",
-              fontWeight: 400,
-              fontSize: "16px",
-              lineHeight: "24px",
-              color: "#BCBCBC",
-            }}
-          >
-            Password
-          </Typography>
-        </Box>
+        />
 
-        {/* Sign Up Button */}
+        {/* Log In Button */}
         <Button
           variant="contained"
+          fullWidth
           sx={{
-            width: "100%",
-            height: "40px",
             backgroundColor: "#E50914",
-            borderRadius: "4px",
-            fontFamily: "ABeeZee",
-            fontSize: "16px",
-            lineHeight: "24px",
-            color: "#FFFFFF",
+            fontWeight: "bold",
+            paddingY: 1.5,
+            mb: 2,
             textTransform: "none",
             "&:hover": {
               backgroundColor: "#f40612",
             },
           }}
         >
-          log in
+          Log In
         </Button>
 
         {/* reCAPTCHA Note */}
         <Typography
+          variant="body2"
           sx={{
             fontFamily: "Netflix Sans",
             fontWeight: 400,
             fontSize: "13px",
             lineHeight: "16px",
             color: "#808080",
+            textAlign: "center",
           }}
         >
           This page is protected by Google reCAPTCHA to ensure you’re not a bot.
           <br />
           <u>Learn more.</u>
         </Typography>
-      </Box>
+      </Container>
 
-      {/* Footer */}
-      <Box
-        sx={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          width: "100%",
-          backgroundColor: "rgba(0, 0, 0, 0.6)",
-          p: "40px 50px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-          zIndex: 2,
-        }}
-      >
-        <Typography
-          sx={{
-            fontFamily: "ABeeZee",
-            fontSize: "16px",
-            lineHeight: "19px",
-            color: "#B3B3B3",
-          }}
-        >
-          Questions? Call 1-844-505-2993
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "12px",
-          }}
-        >
-          {[
-            "FAQ",
-            "Help Center",
-            "Netflix Shop",
-            "Terms of Use",
-            "Privacy",
-            "Cookie Preferences",
-            "Corporate Information",
-            "Do Not Sell or Share My Personal Information",
-          ].map((link, idx) => (
-            <Typography
-              key={idx}
-              sx={{
-                fontFamily: "Netflix Sans",
-                fontSize: "14px",
-                lineHeight: "18px",
-                textDecoration: "underline",
-                color: "#B3B3B3",
-                cursor: "pointer",
-              }}
-            >
-              {link}
-            </Typography>
-          ))}
-        </Box>
-      </Box>
+      {/* Footer Component */}
+      <Footer />
     </Box>
   );
 };
 
-export default Login;
+export default LoginPage;
