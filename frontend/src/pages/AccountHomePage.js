@@ -90,43 +90,44 @@ const AccountHomePage = () => {
         overflowX: "hidden",
       }}
     >
-      {/* TOP NAVBAR - רקע שקוף כדי לראות את ה-Hero מאחור */}
-      <Box
-        sx={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "68px",
-          display: "flex",
-          alignItems: "center",
-          px: "58px",
-          gap: "20px",
-          backgroundColor: "transparent",
-          zIndex: 999,
-        }}
-      >
-        <Typography
+      {/* HERO / COVER SECTION */}
+      <Box sx={{ position: "relative", width: "100%" }}>
+        {/* Navbar moved inside the hero section as an absolute element */}
+        <Box
           sx={{
-            color: "#E50914",
-            fontSize: "2rem",
-            fontWeight: "bold",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "68px",
+            display: "flex",
+            alignItems: "center",
+            px: "58px",
+            gap: "20px",
+            backgroundColor: "transparent",
+            zIndex: 999,
           }}
         >
-          NETFLIX
-        </Typography>
-        <Box sx={{ display: "flex", gap: "20px" }}>
-          <Typography>Home</Typography>
-          <Typography>TV Shows</Typography>
-          <Typography>Movies</Typography>
-          <Typography>New &amp; Popular</Typography>
-          <Typography>My List</Typography>
-          <Typography>Browse</Typography>
+          <Typography
+            sx={{
+              color: "#E50914",
+              fontSize: "2rem",
+              fontWeight: "bold",
+            }}
+          >
+            NETFLIX
+          </Typography>
+          <Box sx={{ display: "flex", gap: "20px" }}>
+            <Typography>Home</Typography>
+            <Typography>TV Shows</Typography>
+            <Typography>Movies</Typography>
+            <Typography>New &amp; Popular</Typography>
+            <Typography>My List</Typography>
+            <Typography>Browse</Typography>
+          </Box>
         </Box>
-      </Box>
 
-      {/* HERO / COVER SECTION */}
-      <Box sx={{ position: "relative", width: "100%", mt: "68px" }}>
+        {/* HERO IMAGE */}
         <Box
           component="img"
           src="/assets/houseOfNinjasCover.png"
