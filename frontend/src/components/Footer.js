@@ -1,17 +1,59 @@
 // src/components/Footer.js
+
 import React from "react";
 import { Box, Typography } from "@mui/material";
+// Import the external SVG as a React component.
+// Ensure the file is named without spaces (e.g., translator-icon.svg) and located in src/assets.
+import { ReactComponent as TranslatorIcon } from "../assets/translator-icon.svg";
 
 const footerColumns = [
-  // Column 1
   ["FAQ", "Privacy", "Ad Choices"],
-  // Column 2
   ["Help Center", "Cookie Preferences"],
-  // Column 3
   ["Netflix Shop", "Corporate Information"],
-  // Column 4
   ["Terms of Use", "Do Not Sell or Share My Personal Information"],
 ];
+
+const LanguageSelector = () => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        backgroundColor: "transparent",
+        border: "1px solid #FFFFFF",
+        borderRadius: "4px",
+        padding: "6px 16px",
+        gap: "8px",
+        width: "max-content",
+      }}
+    >
+      {/* Use the external SVG as the translator icon */}
+      <TranslatorIcon style={{ width: 16, height: 16, fill: "#none" }} />
+
+      {/* "English" text */}
+      <Typography
+        sx={{
+          fontFamily: "ABeeZee",
+          fontSize: "16px",
+          color: "#fff",
+        }}
+      >
+        English
+      </Typography>
+
+      {/* Down arrow */}
+      <Typography
+        sx={{
+          fontFamily: "ABeeZee",
+          fontSize: "16px",
+          color: "#fff",
+        }}
+      >
+        ▼
+      </Typography>
+    </Box>
+  );
+};
 
 const Footer = () => {
   return (
@@ -41,12 +83,12 @@ const Footer = () => {
         Questions? Call 1-844-505-2993
       </Typography>
 
-      {/* Four Columns of Links */}
+      {/* Footer Columns */}
       <Box
         sx={{
           display: "flex",
           flexWrap: "wrap",
-          gap: "40px", // Adjust spacing between columns
+          gap: "40px",
         }}
       >
         {footerColumns.map((column, colIndex) => (
@@ -56,7 +98,7 @@ const Footer = () => {
               display: "flex",
               flexDirection: "column",
               gap: "12px",
-              minWidth: "150px", // Ensures each column has some width
+              minWidth: "150px",
             }}
           >
             {column.map((link, linkIndex) => (
@@ -74,6 +116,7 @@ const Footer = () => {
                 {link}
               </Typography>
             ))}
+            {colIndex === 0 && <LanguageSelector />}
           </Box>
         ))}
       </Box>

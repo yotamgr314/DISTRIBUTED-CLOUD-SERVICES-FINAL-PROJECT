@@ -63,31 +63,6 @@ const LoginPage = () => {
       </Box>
 
       {/* Language Selector (bottom-left) */}
-      <Box
-        sx={{
-          position: "absolute",
-          bottom: "20px",
-          left: "20px",
-          display: "flex",
-          alignItems: "center",
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          border: "1px solid #545454",
-          borderRadius: "4px",
-          padding: "6px 16px",
-          gap: "8px",
-          zIndex: 2,
-        }}
-      >
-        <Typography
-          sx={{
-            fontFamily: "ABeeZee",
-            fontSize: "16px",
-            color: "#fff",
-          }}
-        >
-          English
-        </Typography>
-      </Box>
 
       {/* Login Form Container */}
       <Container
