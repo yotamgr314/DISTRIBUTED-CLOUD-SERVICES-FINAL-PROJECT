@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { ReactComponent as TranslatorIcon } from "../assets/translator-icon.svg";
+import { ReactComponent as TranslatorIcon } from "../../assets/translator-icon.svg";
 
 const footerColumns = [
   ["FAQ", "Privacy", "Ad Choices"],

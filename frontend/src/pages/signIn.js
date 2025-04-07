@@ -11,7 +11,8 @@ import {
   Checkbox,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
+import Footer from "../components/shared/footerSignInUp";
+
 
 const SignIn = () => {
   const [remember, setRemember] = useState(false);

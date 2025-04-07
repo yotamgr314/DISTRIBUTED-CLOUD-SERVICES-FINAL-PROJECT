@@ -1,16 +1,12 @@
 // src/pages/AccountHomePage.js
 
 import React from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  IconButton,
-} from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import InfoIcon from "@mui/icons-material/Info";
+import FooterAccountHomePage from "../components/shared/footerAccountHomePage";
 
-// כאן נגדיר מערכים גדולים יותר כדי שייראה כמו בתמונה (אפשר כמובן להחליף בקישורים אמיתיים).
+// מערכי תמונות לדוגמה
 const newOnNetflixImages = new Array(9).fill("/assets/newOnNetFlix.svg");
 const top10Images = new Array(10).fill("/assets/newOnNetFlix.svg");
 const weThinkYoullLoveImages = new Array(9).fill("/assets/newOnNetFlix.svg");
@@ -22,13 +18,7 @@ const adultAnimationImages = new Array(6).fill("/assets/newOnNetFlix.svg");
 const freshPicksImages = new Array(6).fill("/assets/newOnNetFlix.svg");
 
 /**
- * SectionRow: רכיב שורה גנרי המאפשר גלילה אופקית.
- * @param {string} title - כותרת השורה
- * @param {string[]} images - מערך של מסלולי תמונות
- * @param {number} imageWidth - רוחב כל תמונה (ברירת מחדל 218)
- * @param {number} imageHeight - גובה כל תמונה (ברירת מחדל 123)
- * @param {number} borderRadius - רדיוס הפינות של התמונה (ברירת מחדל 2)
- * @param {boolean} showProgressBar - האם להציג פס התקדמות קטן מתחת לתמונה
+ * SectionRow: רכיב שורה גנרי להצגת תמונות בגלילה אופקית
  */
 const SectionRow = ({
   title,
@@ -50,8 +40,6 @@ const SectionRow = ({
       >
         {title}
       </Typography>
-
-      {/* גלילה אופקית במקום גריד */}
       <Box
         sx={{
           display: "flex",
@@ -103,7 +91,7 @@ const AccountHomePage = () => {
         overflowX: "hidden",
       }}
     >
-      {/* TOP NAVBAR - מוצמד לראש המסך */}
+      {/* TOP NAVBAR - רקע שקוף כדי לראות את ה-Hero מאחור */}
       <Box
         sx={{
           position: "fixed",
@@ -115,11 +103,10 @@ const AccountHomePage = () => {
           alignItems: "center",
           px: "58px",
           gap: "20px",
-          backgroundColor: "#000", // אפשר לשחק עם שקיפות/gradient אם רוצים
+          backgroundColor: "transparent",
           zIndex: 999,
         }}
       >
-        {/* Netflix Brand */}
         <Typography
           sx={{
             color: "#E50914",
@@ -129,8 +116,6 @@ const AccountHomePage = () => {
         >
           NETFLIX
         </Typography>
-
-        {/* Nav Items */}
         <Box sx={{ display: "flex", gap: "20px" }}>
           <Typography>Home</Typography>
           <Typography>TV Shows</Typography>
@@ -141,9 +126,8 @@ const AccountHomePage = () => {
         </Box>
       </Box>
 
-      {/* HERO / COVER SECTION - כולל כפתורי Play ו-More Info */}
+      {/* HERO / COVER SECTION */}
       <Box sx={{ position: "relative", width: "100%", mt: "68px" }}>
-        {/* תמונת הרקע */}
         <Box
           component="img"
           src="/assets/houseOfNinjasCover.png"
@@ -154,8 +138,6 @@ const AccountHomePage = () => {
             height: "auto",
           }}
         />
-
-        {/* גרדיאנט בחלק התחתון של התמונה, כדי ליצור אפקט Fade */}
         <Box
           sx={{
             position: "absolute",
@@ -166,8 +148,6 @@ const AccountHomePage = () => {
             background: "linear-gradient(to top, #000, transparent)",
           }}
         />
-
-        {/* טקסט וכפתורים מעל התמונה */}
         <Box
           sx={{
             position: "absolute",
@@ -178,7 +158,6 @@ const AccountHomePage = () => {
           <Typography variant="h3" sx={{ fontWeight: "bold", mb: 2 }}>
             HOUSE OF NINJAS
           </Typography>
-
           <Box sx={{ display: "flex", gap: 2 }}>
             <Button
               variant="contained"
@@ -213,7 +192,6 @@ const AccountHomePage = () => {
           imageHeight={123}
           borderRadius={2}
         />
-
         <SectionRow
           title="Top 10 in the U.S. Today"
           images={top10Images}
@@ -221,80 +199,39 @@ const AccountHomePage = () => {
           imageHeight={154}
           borderRadius={0}
         />
-
         <SectionRow
           title="We Think You'll Love These"
           images={weThinkYoullLoveImages}
         />
-
         <SectionRow
           title="Continue Watching for Yotam"
           images={continueForYotamImages}
           showProgressBar
         />
-
         <SectionRow
           title="Week In One Weekend"
           images={weekInOneWeekendImages}
         />
-
         <SectionRow
           title="Critically Acclaimed Movies"
           images={criticallyAcclaimedImages}
         />
-
         <SectionRow
           title="Inspiring Movies"
           images={inspiringMoviesImages}
         />
-
         <SectionRow
           title="Adult Animation"
           images={adultAnimationImages}
         />
-
         <SectionRow
           title="Todays Fresh Picks for You"
           images={freshPicksImages}
         />
       </Box>
 
-      {/* FOOTER בסגנון נטפליקס */}
-      <Box
-        sx={{
-          width: "100%",
-          backgroundColor: "#141414",
-          py: 4,
-          px: "58px",
-          mt: 2,
-          color: "#757575",
-        }}
-      >
-        <Typography variant="body2" sx={{ mb: 2 }}>
-          Questions? Call 1-800-000-000
-        </Typography>
-
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 2,
-            maxWidth: "800px",
-            mb: 3,
-          }}
-        >
-          <Typography variant="body2">FAQ</Typography>
-          <Typography variant="body2">Help Center</Typography>
-          <Typography variant="body2">Terms of Use</Typography>
-          <Typography variant="body2">Privacy</Typography>
-          <Typography variant="body2">Cookie Preferences</Typography>
-          <Typography variant="body2">Corporate Information</Typography>
-          <Typography variant="body2">Contact Us</Typography>
-          <Typography variant="body2">Speed Test</Typography>
-        </Box>
-
-        <Typography variant="body2">Netflix Israel</Typography>
-      </Box>
+      {/* FOOTER */}
+      <FooterAccountHomePage />
     </Box>
   );
 };
