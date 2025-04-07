@@ -2,6 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUp from "./pages/signUp";
 import SignIn from "./pages/signIn";
+import ProfileSelectionPage from "./pages/ProfileSelectionPage";
 
 function App() {
   return (
@@ -9,6 +10,10 @@ function App() {
       <Routes>
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/SignIn" element={<SignIn />} />
+        <Route
+          path="/ProfileSelectionPage"
+          element={<ProfileSelectionPage />}
+        />
       </Routes>
     </Router>
   );
