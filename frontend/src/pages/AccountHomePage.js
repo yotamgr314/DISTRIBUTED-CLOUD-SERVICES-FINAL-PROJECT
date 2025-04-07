@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Box, Typography, Button } from "@mui/material";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import InfoIcon from "@mui/icons-material/Info";
 import FooterAccountHomePage from "../components/shared/footerAccountHomePage";
 
@@ -162,18 +161,9 @@ const AccountHomePage = () => {
             <Button
               variant="contained"
               sx={{
-                backgroundColor: "#fff",
-                color: "#000",
-                fontWeight: "bold",
-              }}
-              startIcon={<PlayArrowIcon />}
-            >
-              Play
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
                 backgroundColor: "rgba(109,109,110,0.7)",
+                color: "#fff",
+                fontWeight: "bold",
               }}
               startIcon={<InfoIcon />}
             >
