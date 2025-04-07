@@ -12,7 +12,7 @@ const LoginPage = () => {
         overflow: "hidden",
       }}
     >
-      {/* רקע + שכבת אוברליי */}
+      {/* רקע ושכבת אוברליי */}
       <Box
         sx={{
           position: "absolute",
@@ -32,7 +32,7 @@ const LoginPage = () => {
         }}
       />
 
-      {/* תוכן הדף – זרימה של header, main ו-footer */}
+      {/* מבנה עוטף (Flex-column) כדי שהתוכן יהיה בזרימה טבעית */}
       <Box
         sx={{
           position: "relative",
@@ -42,7 +42,7 @@ const LoginPage = () => {
           minHeight: "100vh",
         }}
       >
-        {/* Header – לוגו נטפליקס */}
+        {/* Header - לוגו נטפליקס */}
         <Box
           sx={{
             padding: { xs: "20px", md: "20px 50px" },
@@ -60,7 +60,7 @@ const LoginPage = () => {
           </Typography>
         </Box>
 
-        {/* Main Content – טופס התחברות */}
+        {/* Main Content - טופס התחברות */}
         <Box
           sx={{
             flex: 1,
@@ -73,6 +73,7 @@ const LoginPage = () => {
         >
           <Container
             sx={{
+              position: "relative", // חלק מהזרימה – לא absolute
               width: { xs: "90%", sm: "70%", md: "450px" },
               backgroundColor: "rgba(0, 0, 0, 0.75)",
               borderRadius: "4px",
@@ -80,6 +81,7 @@ const LoginPage = () => {
               display: "flex",
               flexDirection: "column",
               gap: "20px",
+              mb: 4, // מרווח תחתון למניעת התנגשות עם ה-footer
             }}
           >
             <Typography
@@ -152,7 +154,7 @@ const LoginPage = () => {
           </Container>
         </Box>
 
-        {/* Footer – מגיע בתחתית הזרימה */}
+        {/* Footer - בתור אלמנט זרימה, לא absolute */}
         <Footer />
       </Box>
     </Box>
