@@ -3,79 +3,135 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 
-// Example image arrays (replace these with your actual image paths)
+// 1) "New on Netflix"
 const newOnNetflixImages = [
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-];
-const top10Images = [
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-];
-const weThinkYoullLoveImages = [
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
   "/assets/newOnNetFlix.svg",
   "/assets/newOnNetFlix.svg",
   "/assets/newOnNetFlix.svg",
   "/assets/newOnNetFlix.svg",
 ];
 
-// Reusable row component
+// 2) "Top 10 in the U.S. Today" (215×154, no border radius)
+const top10Images = [
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+];
+
+// 3) "We Think You'll Love These"
+const weThinkYoullLoveImages = [
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+];
+
+// 4) "Continue Watching for Yotam" (progress bar shown)
+const continueForYotamImages = [
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+];
+
+// 5) "Week In One Weekend"
+const weekInOneWeekendImages = [
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+];
+
+// 6) "Critically Acclaimed Movies"
+const criticallyAcclaimedImages = [
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+];
+
+// 7) "Inspiring Movies"
+const inspiringMoviesImages = [
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+];
+
+// 8) "Adult Animation"
+const adultAnimationImages = [
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+];
+
+// 9) "Todays Fresh Picks for You"
+const freshPicksImages = [
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+  "/assets/newOnNetFlix.svg",
+];
+
+/**
+ * SectionRow: Reusable row component that uses a responsive grid layout.
+ * @param {string} title - The row title
+ * @param {string[]} images - An array of image paths
+ * @param {number} imageWidth - default 218
+ * @param {number} imageHeight - default 123
+ * @param {number} borderRadius - default 2
+ * @param {boolean} showProgressBar - if true, show a small 132×3 bar under each image
+ */
 const SectionRow = ({
   title,
   images,
-  // By default, images are 218×123, with a 2px borderRadius
   imageWidth = 218,
   imageHeight = 123,
   borderRadius = 2,
+  showProgressBar = false,
 }) => {
   return (
     <Box sx={{ mb: 4 }}>
       <Typography
         variant="h6"
-        sx={{ mb: 2, fontWeight: "bold", fontSize: "1.2rem" }}
+        sx={{
+          mb: 2,
+          fontWeight: "bold",
+          fontSize: "1.2rem",
+        }}
       >
         {title}
       </Typography>
-      {/* 
-        A grid layout so images wrap instead of scrolling horizontally.
-        "repeat(auto-fill, minmax(218px, 1fr))" ensures each item is at least 218px wide,
-        but can expand if there's extra space. 
-      */}
       <Box
         sx={{
+          // A responsive grid so there's no horizontal scroll
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(218px, auto))",
+          gridTemplateColumns: "repeat(auto-fill, minmax(218px, 1fr))",
           gap: "20px",
         }}
       >
         {images.map((img, idx) => (
-          <Box
-            key={idx}
-            component="img"
-            src={img}
-            alt={`${title} ${idx}`}
-            sx={{
-              width: `${imageWidth}px`,
-              height: `${imageHeight}px`,
-              borderRadius: `${borderRadius}px`,
-              objectFit: "cover",
-              cursor: "pointer",
-            }}
-          />
+          <Box key={idx}>
+            <Box
+              component="img"
+              src={img}
+              alt={`${title} ${idx}`}
+              sx={{
+                width: `${imageWidth}px`,
+                height: `${imageHeight}px`,
+                borderRadius: `${borderRadius}px`,
+                objectFit: "cover",
+                cursor: "pointer",
+                display: "block",
+                mb: showProgressBar ? 1 : 0,
+              }}
+            />
+            {showProgressBar && (
+              // A small progress bar 132×3
+              <Box
+                sx={{
+                  width: "132px",
+                  height: "3px",
+                  backgroundColor: "#E50914",
+                }}
+              />
+            )}
+          </Box>
         ))}
       </Box>
     </Box>
@@ -88,23 +144,19 @@ const AccountHomePage = () => {
       sx={{
         backgroundColor: "#000",
         color: "#fff",
-        // Hide any accidental horizontal scroll
-        overflowX: "hidden",
         minHeight: "100vh",
+        overflowX: "hidden", // Hide any accidental horizontal scroll
       }}
     >
       {/* TOP NAVBAR */}
       <Box
         sx={{
-          // Let it stretch full width and attach to the left
           width: "100%",
           height: "68px",
           display: "flex",
           alignItems: "center",
-          px: "58px", // left/right padding if needed
-          // remove margin between Netflix brand & first nav item
-          // so they are "attached"
-          gap: "20px",
+          px: "58px",
+          gap: "20px", // gap between brand and nav items
         }}
       >
         {/* Netflix Brand */}
@@ -119,7 +171,7 @@ const AccountHomePage = () => {
         </Typography>
 
         {/* Nav Items */}
-        <Box sx={{ display: "flex", gap: "20px", ml: "20px" }}>
+        <Box sx={{ display: "flex", gap: "20px" }}>
           <Typography>Home</Typography>
           <Typography>TV Shows</Typography>
           <Typography>Movies</Typography>
@@ -133,7 +185,7 @@ const AccountHomePage = () => {
       <Box sx={{ position: "relative", width: "100%", mt: 2 }}>
         <Box
           component="img"
-          src="/assets/house-of-ninjas-cover.jpg"
+          src="/assets/houseOfNinjasCover.png"
           alt="House of Ninjas"
           sx={{
             display: "block",
@@ -145,8 +197,14 @@ const AccountHomePage = () => {
 
       {/* MAIN CONTENT */}
       <Box sx={{ px: "58px", py: 4 }}>
-        {/* Example rows */}
-        <SectionRow title="New on Netflix" images={newOnNetflixImages} />
+        <SectionRow
+          title="New on Netflix"
+          images={newOnNetflixImages}
+          imageWidth={218}
+          imageHeight={123}
+          borderRadius={2}
+        />
+
         <SectionRow
           title="Top 10 in the U.S. Today"
           images={top10Images}
@@ -154,11 +212,36 @@ const AccountHomePage = () => {
           imageHeight={154}
           borderRadius={0}
         />
+
         <SectionRow
           title="We Think You'll Love These"
           images={weThinkYoullLoveImages}
         />
-        {/* Repeat more rows as needed */}
+
+        <SectionRow
+          title="Continue Watching for Yotam"
+          images={continueForYotamImages}
+          showProgressBar
+        />
+
+        <SectionRow
+          title="Week In One Weekend"
+          images={weekInOneWeekendImages}
+        />
+
+        <SectionRow
+          title="Critically Acclaimed Movies"
+          images={criticallyAcclaimedImages}
+        />
+
+        <SectionRow title="Inspiring Movies" images={inspiringMoviesImages} />
+
+        <SectionRow title="Adult Animation" images={adultAnimationImages} />
+
+        <SectionRow
+          title="Todays Fresh Picks for You"
+          images={freshPicksImages}
+        />
       </Box>
 
       {/* FOOTER (Optional) */}
