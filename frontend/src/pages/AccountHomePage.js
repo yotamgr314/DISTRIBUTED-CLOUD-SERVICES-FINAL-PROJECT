@@ -91,9 +91,8 @@ const AccountHomePage = () => {
     >
       {/* HERO / COVER SECTION */}
       <Box sx={{ position: "relative", width: "100%" }}>
-        {/* Place the Navbar over the hero image */}
+        {/* Navbar is now the reusable component */}
         <Navbar />
-
         {/* HERO IMAGE */}
         <Box
           component="img"
