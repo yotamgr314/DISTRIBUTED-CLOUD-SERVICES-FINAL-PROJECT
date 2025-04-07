@@ -19,47 +19,55 @@ const FooterAccountHomePage = () => {
         color: "#757575",
         display: "flex",
         flexDirection: "column",
-        gap: 2,
+        gap: "16px",
       }}
     >
-      {/* שורת האייקונים */}
-      <Box sx={{ display: "flex", gap: 2 }}>
+      {/* Social Media Icons Row (colored white) */}
+      <Box sx={{ display: "flex", gap: "16px" }}>
         <IconButton size="small" sx={{ p: 0 }}>
-          <FacebookIcon sx={{ color: "#757575" }} />
+          <FacebookIcon sx={{ color: "#fff" }} />
         </IconButton>
         <IconButton size="small" sx={{ p: 0 }}>
-          <InstagramIcon sx={{ color: "#757575" }} />
+          <InstagramIcon sx={{ color: "#fff" }} />
         </IconButton>
         <IconButton size="small" sx={{ p: 0 }}>
-          <TwitterIcon sx={{ color: "#757575" }} />
+          <TwitterIcon sx={{ color: "#fff" }} />
         </IconButton>
         <IconButton size="small" sx={{ p: 0 }}>
-          <YouTubeIcon sx={{ color: "#757575" }} />
+          <YouTubeIcon sx={{ color: "#fff" }} />
         </IconButton>
       </Box>
 
-      {/* 4 עמודות */}
+      {/* Footer Columns */}
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: "repeat(4, minmax(100px, 1fr))",
-          gap: 2,
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: "16px",
         }}
       >
-        {/* עמודה 1 */}
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          <Typography variant="body2">Audio Description</Typography>
-          <Typography variant="body2">Investor Relations</Typography>
-          <Typography variant="body2">Privacy</Typography>
-          <Typography variant="body2">Contact Us</Typography>
-
-          {/* Service Code ככפתור קטן עם מסגרת */}
+        {/* Column 1 */}
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Typography variant="body2" sx={{ cursor: "pointer" }}>
+            Audio Description
+          </Typography>
+          <Typography variant="body2" sx={{ mt: "16px", cursor: "pointer" }}>
+            Investor Relations
+          </Typography>
+          <Typography variant="body2" sx={{ mt: "16px", cursor: "pointer" }}>
+            Privacy
+          </Typography>
+          <Typography variant="body2" sx={{ mt: "16px", cursor: "pointer" }}>
+            Contact Us
+          </Typography>
+          {/* 32px gap above Service Code */}
           <Box
             sx={{
               border: "1px solid #757575",
               width: "fit-content",
               px: 1,
               py: 0.3,
+              mt: "32px",
               cursor: "pointer",
             }}
           >
@@ -67,40 +75,60 @@ const FooterAccountHomePage = () => {
               Service Code
             </Typography>
           </Box>
-
-          {/* שורת זכויות יוצרים */}
-          <Typography variant="body2">© 1997-2024 Netflix, Inc.</Typography>
+          {/* 20px gap above the copyright */}
+          <Typography variant="body2" sx={{ mt: "20px" }}>
+            © 1997-2024 Netflix, Inc.
+          </Typography>
         </Box>
 
-        {/* עמודה 2 */}
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          <Typography variant="body2">Help Center</Typography>
-          <Typography variant="body2">Jobs</Typography>
-          <Typography variant="body2">Legal Notices</Typography>
-          <Typography variant="body2">
+        {/* Column 2 */}
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Typography variant="body2" sx={{ cursor: "pointer" }}>
+            Help Center
+          </Typography>
+          <Typography variant="body2" sx={{ mt: "16px", cursor: "pointer" }}>
+            Jobs
+          </Typography>
+          <Typography variant="body2" sx={{ mt: "16px", cursor: "pointer" }}>
+            Legal Notices
+          </Typography>
+          <Typography variant="body2" sx={{ mt: "16px", cursor: "pointer" }}>
             Do Not Sell or Share My Personal Information
           </Typography>
         </Box>
 
-        {/* עמודה 3 */}
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          <Typography variant="body2">Gift Cards</Typography>
-          <Typography variant="body2">Netflix Shop</Typography>
-          <Typography variant="body2">Cookie Preferences</Typography>
-          <Typography variant="body2">Ad Choices</Typography>
+        {/* Column 3 */}
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Typography variant="body2" sx={{ cursor: "pointer" }}>
+            Gift Cards
+          </Typography>
+          <Typography variant="body2" sx={{ mt: "16px", cursor: "pointer" }}>
+            Netflix Shop
+          </Typography>
+          <Typography variant="body2" sx={{ mt: "16px", cursor: "pointer" }}>
+            Cookie Preferences
+          </Typography>
+          <Typography variant="body2" sx={{ mt: "16px", cursor: "pointer" }}>
+            Ad Choices
+          </Typography>
         </Box>
 
-        {/* עמודה 4 */}
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          <Typography variant="body2">Media Center</Typography>
-          <Typography variant="body2">Terms of Use</Typography>
-          <Typography variant="body2">Corporate Information</Typography>
+        {/* Column 4 */}
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Typography variant="body2" sx={{ cursor: "pointer" }}>
+            Media Center
+          </Typography>
+          <Typography variant="body2" sx={{ mt: "16px", cursor: "pointer" }}>
+            Terms of Use
+          </Typography>
+          <Typography variant="body2" sx={{ mt: "16px", cursor: "pointer" }}>
+            Corporate Information
+          </Typography>
         </Box>
       </Box>
     </Box>
   );
 };
-
 export default FooterAccountHomePage;
 
 
