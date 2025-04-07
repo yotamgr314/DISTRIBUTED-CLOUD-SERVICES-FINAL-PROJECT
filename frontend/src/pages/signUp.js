@@ -16,27 +16,23 @@ const LoginPage = () => {
       <Box
         sx={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
+          inset: 0,
           backgroundImage: 'url("/assets/hero-image.png")',
           backgroundSize: "cover",
           backgroundPosition: "center",
+          zIndex: 0,
         }}
       />
       <Box
         sx={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
+          inset: 0,
           backgroundColor: "rgba(0, 0, 0, 0.6)",
+          zIndex: 1,
         }}
       />
 
-      {/* מבנה עוטף בתצוגת Flex-column, כדי שה-footer יהיה בתחתית */}
+      {/* תוכן הדף – זרימה של header, main ו-footer */}
       <Box
         sx={{
           position: "relative",
@@ -46,18 +42,15 @@ const LoginPage = () => {
           minHeight: "100vh",
         }}
       >
-        {/* לוגו נטפליקס - שמאל עליון */}
+        {/* Header – לוגו נטפליקס */}
         <Box
           sx={{
-            position: "absolute",
-            top: "20px",
-            left: "20px",
-            zIndex: 3,
+            padding: { xs: "20px", md: "20px 50px" },
           }}
         >
           <Typography
             sx={{
-              fontSize: "2rem",
+              fontSize: { xs: "1.5rem", md: "2rem" },
               fontWeight: "bold",
               color: "#E50914",
               fontFamily: "Arial, sans-serif",
@@ -67,41 +60,15 @@ const LoginPage = () => {
           </Typography>
         </Box>
 
-        {/* Selector שפה - שמאל תחתון */}
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: "20px",
-            left: "20px",
-            zIndex: 3,
-            display: { xs: "none", md: "flex" }, // אם רוצים להסתיר/להראות בהתאם לרזולוציה – ניתן להתאים
-            alignItems: "center",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            border: "1px solid #545454",
-            borderRadius: "4px",
-            padding: "6px 16px",
-            gap: "8px",
-          }}
-        >
-          <Typography
-            sx={{
-              fontFamily: "ABeeZee",
-              fontSize: "16px",
-              color: "#fff",
-            }}
-          >
-            English
-          </Typography>
-        </Box>
-
-        {/* Content Area - מיקום הטופס */}
+        {/* Main Content – טופס התחברות */}
         <Box
           sx={{
             flex: 1,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            mt: { xs: 4, sm: 4, md: 0 }, // במכשירים קטנים להוסיף מרווח עליון
+            mt: { xs: 8, sm: 8, md: 0 },
+            mb: { xs: 4, sm: 4, md: 0 },
           }}
         >
           <Container
@@ -185,7 +152,7 @@ const LoginPage = () => {
           </Container>
         </Box>
 
-        {/* Footer - יש לשים אותו מחוץ לאזור התוכן הראשי, בתוך ה-flex container */}
+        {/* Footer – מגיע בתחתית הזרימה */}
         <Footer />
       </Box>
     </Box>
