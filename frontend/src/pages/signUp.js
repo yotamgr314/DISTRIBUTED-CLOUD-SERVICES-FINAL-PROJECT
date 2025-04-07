@@ -1,169 +1,164 @@
-// src/pages/LoginPage.js
-
 import React from "react";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import Footer from "../components/Footer";
 
-const SignUp = () => {
+const LoginPage = () => {
   return (
     <Box
       sx={{
         position: "relative",
-        width: "100vw",
-        height: "100vh",
+        minHeight: "100vh",
         backgroundColor: "#000",
         overflow: "hidden",
       }}
     >
-      {/* Background Image */}
+      {/* רקע ושכבת אוברליי */}
       <Box
         sx={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
+          inset: 0,
           backgroundImage: 'url("/assets/hero-image.png")',
           backgroundSize: "cover",
           backgroundPosition: "center",
+          zIndex: 0,
         }}
       />
-
-      {/* Dark Overlay */}
       <Box
         sx={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
+          inset: 0,
           backgroundColor: "rgba(0, 0, 0, 0.6)",
+          zIndex: 1,
         }}
       />
 
-      {/* Netflix Logo as Styled Text (top-left) */}
+      {/* מבנה עוטף (Flex-column) כדי שהתוכן יהיה בזרימה טבעית */}
       <Box
         sx={{
-          position: "absolute",
-          top: "20px",
-          left: "20px",
+          position: "relative",
           zIndex: 2,
-        }}
-      >
-        <Typography
-          sx={{
-            fontSize: "2rem",
-            fontWeight: "bold",
-            color: "#E50914",
-            fontFamily: "Arial, sans-serif",
-          }}
-        >
-          NETFLIX
-        </Typography>
-      </Box>
-
-      {/* Language Selector (bottom-left) */}
-
-      {/* Login Form Container */}
-      <Container
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "450px",
-          maxWidth: "90%",
-          backgroundColor: "rgba(0, 0, 0, 0.75)",
-          borderRadius: "4px",
-          padding: "40px 50px",
           display: "flex",
           flexDirection: "column",
-          gap: "20px",
-          zIndex: 2,
+          minHeight: "100vh",
         }}
       >
-        {/* Heading */}
-        <Typography
+        {/* Header - לוגו נטפליקס */}
+        <Box
           sx={{
-            fontFamily: "ABeeZee",
-            fontWeight: 400,
-            fontSize: "32px",
-            lineHeight: "40px",
-            color: "#FFFFFF",
-            mb: 1,
+            padding: { xs: "20px", md: "20px 50px" },
           }}
         >
-          Log In
-        </Typography>
+          <Typography
+            sx={{
+              fontSize: { xs: "1.5rem", md: "2rem" },
+              fontWeight: "bold",
+              color: "#E50914",
+              fontFamily: "Arial, sans-serif",
+            }}
+          >
+            NETFLIX
+          </Typography>
+        </Box>
 
-        {/* Email Field */}
-        <TextField
-          variant="filled"
-          label="Email or phone number"
-          type="email"
-          fullWidth
+        {/* Main Content - טופס התחברות */}
+        <Box
           sx={{
-            mb: 2,
-            backgroundColor: "rgba(0, 0, 0, 0.8)",
-            "& .MuiFilledInput-input": { color: "#fff" },
-            "& .MuiInputLabel-root": { color: "#8c8c8c" },
-          }}
-        />
-
-        {/* Password Field */}
-        <TextField
-          variant="filled"
-          label="Password"
-          type="password"
-          fullWidth
-          sx={{
-            mb: 2,
-            backgroundColor: "rgba(0, 0, 0, 0.8)",
-            "& .MuiFilledInput-input": { color: "#fff" },
-            "& .MuiInputLabel-root": { color: "#8c8c8c" },
-          }}
-        />
-
-        {/* Log In Button */}
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{
-            backgroundColor: "#E50914",
-            fontWeight: "bold",
-            paddingY: 1.5,
-            mb: 2,
-            textTransform: "none",
-            "&:hover": {
-              backgroundColor: "#f40612",
-            },
+            flex: 1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            mt: { xs: 8, sm: 8, md: 0 },
+            mb: { xs: 4, sm: 4, md: 0 },
           }}
         >
-          Log In
-        </Button>
+          <Container
+            sx={{
+              position: "relative", // חלק מהזרימה – לא absolute
+              width: { xs: "90%", sm: "70%", md: "450px" },
+              backgroundColor: "rgba(0, 0, 0, 0.75)",
+              borderRadius: "4px",
+              padding: { xs: "24px", sm: "32px", md: "40px 50px" },
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              mb: 4, // מרווח תחתון למניעת התנגשות עם ה-footer
+            }}
+          >
+            <Typography
+              variant="h3"
+              sx={{
+                mb: 2,
+                fontWeight: "bold",
+                color: "#fff",
+                fontFamily: "ABeeZee",
+              }}
+            >
+              Log In
+            </Typography>
+            <TextField
+              variant="filled"
+              label="Email or phone number"
+              type="email"
+              fullWidth
+              sx={{
+                mb: 2,
+                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                "& .MuiFilledInput-input": { color: "#fff" },
+                "& .MuiInputLabel-root": { color: "#8c8c8c" },
+              }}
+            />
+            <TextField
+              variant="filled"
+              label="Password"
+              type="password"
+              fullWidth
+              sx={{
+                mb: 2,
+                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                "& .MuiFilledInput-input": { color: "#fff" },
+                "& .MuiInputLabel-root": { color: "#8c8c8c" },
+              }}
+            />
+            <Button
+              variant="contained"
+              fullWidth
+              sx={{
+                backgroundColor: "#E50914",
+                fontWeight: "bold",
+                paddingY: 1.5,
+                mb: 2,
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#f40612",
+                },
+              }}
+            >
+              Log In
+            </Button>
+            <Typography
+              variant="body2"
+              sx={{
+                fontFamily: "Netflix Sans",
+                fontWeight: 400,
+                fontSize: "13px",
+                lineHeight: "16px",
+                color: "#808080",
+                textAlign: "center",
+              }}
+            >
+              This page is protected by Google reCAPTCHA to ensure you’re not a
+              bot.
+              <br />
+              <u style={{ color: "#0071EB" }}>Learn more.</u>
+            </Typography>
+          </Container>
+        </Box>
 
-        {/* reCAPTCHA Note */}
-        <Typography
-          variant="body2"
-          sx={{
-            fontFamily: "Netflix Sans",
-            fontWeight: 400,
-            fontSize: "13px",
-            lineHeight: "16px",
-            color: "#808080",
-            textAlign: "center",
-          }}
-        >
-          This page is protected by Google reCAPTCHA to ensure you’re not a bot.
-          <br />
-          <u>Learn more.</u>
-        </Typography>
-      </Container>
-
-      {/* Footer Component */}
-      <Footer />
+        {/* Footer - בתור אלמנט זרימה, לא absolute */}
+        <Footer />
+      </Box>
     </Box>
   );
 };
 
-export default SignUp;
+export default LoginPage;
