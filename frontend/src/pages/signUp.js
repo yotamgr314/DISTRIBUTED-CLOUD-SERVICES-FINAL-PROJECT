@@ -4,7 +4,7 @@ import React from "react";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import Footer from "../components/Footer";
 
-const LoginPage = () => {
+const SignUp = () => {
   return (
     <Box
       sx={{
@@ -166,4 +166,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignUp;
