@@ -116,7 +116,7 @@ const Navbar = () => {
             />
             <Box
               component="img"
-              src="/assets/smallAvatarUserIcon.png"
+              src="/assets/smallAvatarUserIcon.svg"
               alt="User Avatar"
               sx={{
                 width: 32,

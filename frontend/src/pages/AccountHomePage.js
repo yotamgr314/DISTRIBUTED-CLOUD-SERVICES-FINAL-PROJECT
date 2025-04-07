@@ -114,30 +114,38 @@ const AccountHomePage = () => {
             background: "linear-gradient(to top, #000, transparent)",
           }}
         />
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: "20%",
-            left: "5%",
-          }}
-        >
-          <Typography variant="h3" sx={{ fontWeight: "bold", mb: 2 }}>
-            HOUSE OF NINJAS
-          </Typography>
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "rgba(109,109,110,0.7)",
-                color: "#fff",
-                fontWeight: "bold",
-              }}
-              startIcon={<InfoIcon />}
-            >
-              More Info
-            </Button>
-          </Box>
-        </Box>
+<Box
+  sx={{
+    position: "absolute",
+    bottom: "20%",
+    left: "5%",
+  }}
+>
+  <Typography
+    variant="h3"
+    sx={{
+      fontWeight: "bold",
+      mb: 2,
+      fontSize: { xs: "1.5rem", md: "3rem" } // רספונסיביות: בגודל קטן 1.5rem, במחשב 3rem
+    }}
+  >
+    HOUSE OF NINJAS
+  </Typography>
+  <Box sx={{ display: "flex", gap: 2 }}>
+    <Button
+      variant="contained"
+      sx={{
+        backgroundColor: "rgba(109,109,110,0.7)",
+        color: "#fff",
+        fontWeight: "bold",
+      }}
+      startIcon={<InfoIcon />}
+    >
+      More Info
+    </Button>
+  </Box>
+</Box>
+
       </Box>
 
       {/* MAIN CONTENT */}
