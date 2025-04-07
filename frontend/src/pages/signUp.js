@@ -1,21 +1,18 @@
-// src/pages/LoginPage.js
-
 import React from "react";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import Footer from "../components/Footer";
 
-const SignUp = () => {
+const LoginPage = () => {
   return (
     <Box
       sx={{
         position: "relative",
-        width: "100vw",
-        height: "100vh",
+        minHeight: "100vh",
         backgroundColor: "#000",
         overflow: "hidden",
       }}
     >
-      {/* Background Image */}
+      {/* רקע */}
       <Box
         sx={{
           position: "absolute",
@@ -29,7 +26,7 @@ const SignUp = () => {
         }}
       />
 
-      {/* Dark Overlay */}
+      {/* שכבת אוברליי */}
       <Box
         sx={{
           position: "absolute",
@@ -41,7 +38,7 @@ const SignUp = () => {
         }}
       />
 
-      {/* Netflix Logo as Styled Text (top-left) */}
+      {/* לוגו נטפליקס כטקסט מעוצב (שמאל עליון) */}
       <Box
         sx={{
           position: "absolute",
@@ -62,41 +59,65 @@ const SignUp = () => {
         </Typography>
       </Box>
 
-      {/* Language Selector (bottom-left) */}
-
-      {/* Login Form Container */}
-      <Container
+      {/* Selector שפה (שמאל תחתון) */}
+      <Box
         sx={{
           position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "450px",
+          bottom: "20px",
+          left: "20px",
+          display: "flex",
+          alignItems: "center",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          border: "1px solid #545454",
+          borderRadius: "4px",
+          padding: "6px 16px",
+          gap: "8px",
+          zIndex: 2,
+        }}
+      >
+        <Typography
+          sx={{
+            fontFamily: "ABeeZee",
+            fontSize: "16px",
+            color: "#fff",
+          }}
+        >
+          English
+        </Typography>
+      </Box>
+
+      {/* טופס התחברות */}
+      <Container
+        sx={{
+          // במובייל (xs, sm) - relative, במחשבים (md ומעלה) - absolute במרכז
+          position: { xs: "relative", sm: "relative", md: "absolute" },
+          top: { md: "50%" },
+          left: { md: "50%" },
+          transform: { md: "translate(-50%, -50%)" },
+          width: { xs: "90%", sm: "70%", md: "450px" },
           maxWidth: "90%",
           backgroundColor: "rgba(0, 0, 0, 0.75)",
           borderRadius: "4px",
-          padding: "40px 50px",
+          padding: { xs: "24px", sm: "32px", md: "40px 50px" },
           display: "flex",
           flexDirection: "column",
           gap: "20px",
           zIndex: 2,
+          mt: { xs: 4, sm: 4, md: 0 },
         }}
       >
-        {/* Heading */}
         <Typography
+          variant="h3"
           sx={{
+            mb: 2,
+            fontWeight: "bold",
+            color: "#fff",
             fontFamily: "ABeeZee",
-            fontWeight: 400,
-            fontSize: "32px",
-            lineHeight: "40px",
-            color: "#FFFFFF",
-            mb: 1,
           }}
         >
           Log In
         </Typography>
 
-        {/* Email Field */}
         <TextField
           variant="filled"
           label="Email or phone number"
@@ -110,7 +131,6 @@ const SignUp = () => {
           }}
         />
 
-        {/* Password Field */}
         <TextField
           variant="filled"
           label="Password"
@@ -124,7 +144,6 @@ const SignUp = () => {
           }}
         />
 
-        {/* Log In Button */}
         <Button
           variant="contained"
           fullWidth
@@ -142,7 +161,6 @@ const SignUp = () => {
           Log In
         </Button>
 
-        {/* reCAPTCHA Note */}
         <Typography
           variant="body2"
           sx={{
@@ -156,14 +174,14 @@ const SignUp = () => {
         >
           This page is protected by Google reCAPTCHA to ensure you’re not a bot.
           <br />
-          <u>Learn more.</u>
+          <u style={{ color: "#0071EB" }}>Learn more.</u>
         </Typography>
       </Container>
 
-      {/* Footer Component */}
+      {/* Footer */}
       <Footer />
     </Box>
   );
 };
 
-export default SignUp;
+export default LoginPage;

@@ -1,9 +1,5 @@
-// src/components/Footer.js
-
 import React from "react";
 import { Box, Typography } from "@mui/material";
-// Import the external SVG as a React component.
-// Ensure the file is named without spaces (e.g., translator-icon.svg) and located in src/assets.
 import { ReactComponent as TranslatorIcon } from "../assets/translator-icon.svg";
 
 const footerColumns = [
@@ -27,10 +23,8 @@ const LanguageSelector = () => {
         width: "max-content",
       }}
     >
-      {/* Use the external SVG as the translator icon */}
-      <TranslatorIcon style={{ width: 16, height: 16, fill: "#none" }} />
-
-      {/* "English" text */}
+      {/* השתמשנו ב-SVG חיצוני - ודא שהקובץ נמצא ב-src/assets */}
+      <TranslatorIcon style={{ width: 16, height: 16, fill: "none" }} />
       <Typography
         sx={{
           fontFamily: "ABeeZee",
@@ -40,8 +34,6 @@ const LanguageSelector = () => {
       >
         English
       </Typography>
-
-      {/* Down arrow */}
       <Typography
         sx={{
           fontFamily: "ABeeZee",
@@ -59,19 +51,25 @@ const Footer = () => {
   return (
     <Box
       sx={{
-        position: "absolute",
-        bottom: 0,
+        // ב-xs ו-sm (עד 900px) יהיה relative, וב-md ומעלה absolute
+        position: { xs: "relative", sm: "relative", md: "absolute" },
+        bottom: { xs: "auto", sm: "auto", md: 0 },
         left: 0,
         width: "100%",
         backgroundColor: "rgba(0, 0, 0, 0.6)",
-        padding: "40px 50px",
+        padding: {
+          xs: "24px 30px",
+          sm: "32px 40px",
+          md: "40px 50px",
+        },
         display: "flex",
         flexDirection: "column",
         gap: "24px",
         zIndex: 2,
+        mt: { xs: 4, sm: 4, md: 0 }, // במובייל להוסיף מרווח מעל כדי שלא יהיה צפוף
       }}
     >
-      {/* Top Text */}
+      {/* טקסט עליון */}
       <Typography
         sx={{
           fontFamily: "ABeeZee",
@@ -83,7 +81,7 @@ const Footer = () => {
         Questions? Call 1-844-505-2993
       </Typography>
 
-      {/* Footer Columns */}
+      {/* עמודות Footer */}
       <Box
         sx={{
           display: "flex",
