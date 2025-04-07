@@ -156,7 +156,7 @@ const SignUp = () => {
         >
           This page is protected by Google reCAPTCHA to ensure you’re not a bot.
           <br />
-          <u>Learn more.</u>
+          <u style={{ color: "#0071EB" }}>Learn more.</u>
         </Typography>
       </Container>
 
