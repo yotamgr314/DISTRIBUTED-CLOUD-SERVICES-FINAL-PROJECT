@@ -1,11 +1,10 @@
-// src/pages/AccountHomePage.js
-
 import React from "react";
 import { Box, Typography, Button } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import FooterAccountHomePage from "../components/shared/footerAccountHomePage";
+import Navbar from "../components/shared/navbar";
 
-// מערכי תמונות לדוגמה
+// Example image arrays
 const newOnNetflixImages = new Array(9).fill("/assets/newOnNetFlix.svg");
 const top10Images = new Array(10).fill("/assets/newOnNetFlix.svg");
 const weThinkYoullLoveImages = new Array(9).fill("/assets/newOnNetFlix.svg");
@@ -17,7 +16,7 @@ const adultAnimationImages = new Array(6).fill("/assets/newOnNetFlix.svg");
 const freshPicksImages = new Array(6).fill("/assets/newOnNetFlix.svg");
 
 /**
- * SectionRow: רכיב שורה גנרי להצגת תמונות בגלילה אופקית
+ * SectionRow: Generic component to display images in a horizontal scroll
  */
 const SectionRow = ({
   title,
@@ -92,40 +91,8 @@ const AccountHomePage = () => {
     >
       {/* HERO / COVER SECTION */}
       <Box sx={{ position: "relative", width: "100%" }}>
-        {/* Navbar moved inside the hero section as an absolute element */}
-        <Box
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "68px",
-            display: "flex",
-            alignItems: "center",
-            px: "58px",
-            gap: "20px",
-            backgroundColor: "transparent",
-            zIndex: 999,
-          }}
-        >
-          <Typography
-            sx={{
-              color: "#E50914",
-              fontSize: "2rem",
-              fontWeight: "bold",
-            }}
-          >
-            NETFLIX
-          </Typography>
-          <Box sx={{ display: "flex", gap: "20px" }}>
-            <Typography>Home</Typography>
-            <Typography>TV Shows</Typography>
-            <Typography>Movies</Typography>
-            <Typography>New &amp; Popular</Typography>
-            <Typography>My List</Typography>
-            <Typography>Browse</Typography>
-          </Box>
-        </Box>
+        {/* Place the Navbar over the hero image */}
+        <Navbar />
 
         {/* HERO IMAGE */}
         <Box
