@@ -13,33 +13,50 @@ import {
   Slide,
   Divider,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import RateReviewIcon from "@mui/icons-material/RateReview";
-import AddIcon from "@mui/icons-material/Add";
 
-// Slides in from the left side
+// Slide in from left
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-/**
- * MoreInfoModal - Netflix-like modal with styling to match your target screenshot.
- */
 const MoreInfoModal = ({ open, onClose, details = {} }) => {
-  // Fallbacks if certain fields are not provided
+  // Fallbacks if not provided
   const {
-    title = "House of Ninjas",
-    rankInfo = "N6 #2 in TV Shows Today",
-    year = "2023",
-    format = "4K • 5.1",
-    genre = "Action • Drama • Comedy",
-    rating = "TV-14",
-    summary = `Years after retiring from their formidable ninja lives, a dysfunctional family must 
-        return to shadowy missions but counteract a string of looming threats.`,
     isSeries = true,
-    episodes = [],
-
-    // Bottom portion data:
+    title = "House of Ninjas",
+    nSeriesLabel = true,
+    newSeasons = "New 3 Seasons",
+    year = "2024",
+    hdAvailable = true,
+    adAvailable = true,
+    maturityRating = "TV-MA  smoking, violence",
+    top10Rank = "#2 in TV Shows Today",
+    summary = `Years after retiring from their formidable ninja lives, a dysfunctional family must 
+      return to shadowy missions to counter a string of looming threats.`,
+    // Upper-right details
+    cast = "Kento Kaku, Yosuke Eguchi, Tae Kimura, ...",
+    genresList = "TV Dramas, Japanese, TV Thrillers",
+    showIs = "Dark, Suspenseful, Exciting",
+    // Lower "About" section fields
+    director = "Dave Boyle",
+    aboutMaturityRating = "TV-MA   smoking, violence    For Mature Audiences.",
+    disclaimers = "smoking, violence    For Mature Audiences.",
+    // Episodes array
+    episodes = [
+      {
+        image: "/assets/newOnNetFlix.svg",
+        title: "פרק 1",
+        description: "תיאור קצר לפרק 1...",
+        runtime: "55m",
+      },
+      {
+        image: "/assets/newOnNetFlix.svg",
+        title: "פרק 2",
+        description: "תיאור קצר לפרק 2...",
+        runtime: "53m",
+      },
+    ],
+    // Trailers array
     trailers = [
       {
         image: "/assets/newOnNetFlix.svg",
@@ -47,22 +64,13 @@ const MoreInfoModal = ({ open, onClose, details = {} }) => {
       },
       {
         image: "/assets/newOnNetFlix.svg",
-        caption: "Season 1 Trailer 1: House of Ninjas",
+        caption: "Season 1 Trailer 2: House of Ninjas",
       },
       {
         image: "/assets/newOnNetFlix.svg",
-        caption: "Season 1 Trailer 1: House of Ninjas",
+        caption: "Season 1 Trailer 3: House of Ninjas",
       },
     ],
-
-    // "About" data:
-    director = "Dave Boyle",
-    cast = `Kento Kaku, Yosuke Eguchi, Tae Kimura, Kengo Kora, Aju Makita, Nobuko Miyamoto, 
-      Tomorowo Taguchi, Riko Yoshio, Toko Emoto, Kyusaku Shimada, Pierre Taki, 
-      Mariko Tsutsui, Tenta Banka, Takayuki Yamada`,
-    genresList = "TV Dramas, Japanese, TV Thrillers",
-    showIs = "Dark, Suspenseful, Exciting",
-    maturityRating = "TV-MA  smoking, violence   For Mature Audiences.",
   } = details;
 
   return (
@@ -72,33 +80,80 @@ const MoreInfoModal = ({ open, onClose, details = {} }) => {
       TransitionComponent={Transition}
       fullWidth
       maxWidth="md"
+      // remove scrollbar
+      sx={{
+        "& .MuiDialog-container": {
+          alignItems: "flex-start",
+        },
+      }}
       PaperProps={{
         sx: {
           backgroundColor: "#141414",
           color: "#fff",
           borderRadius: 0,
+          maxHeight: "none",
+          overflow: "hidden",
         },
       }}
     >
-      {/* Top header: Title + Close Button */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          p: 2,
-        }}
-      >
-        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+      {/* TOP SECTION */}
+      <Box sx={{ position: "relative", p: 2 }}>
+        {/* X Button Icon */}
+        <IconButton
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            p: 0.5,
+          }}
+        >
+          <Box
+            component="img"
+            src={`${process.env.PUBLIC_URL}/assets/xButtonIcon.svg`}
+            alt="Close"
+            sx={{ width: 24, height: 24 }}
+          />
+        </IconButton>
+
+        {/* N SERIES label (optional) */}
+        {nSeriesLabel && (
+          <Typography
+            variant="body2"
+            sx={{
+              color: "#E50914",
+              mb: 1,
+              fontWeight: "bold",
+              letterSpacing: 2,
+              textTransform: "uppercase",
+            }}
+          >
+            N SERIES
+          </Typography>
+        )}
+
+        {/* Title */}
+        <Typography variant="h4" sx={{ fontWeight: "bold", mb: 1 }}>
           {title}
         </Typography>
-        <IconButton onClick={onClose} sx={{ color: "#fff" }}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
 
-      <DialogContent sx={{ px: 2 }}>
-        {/* Sub Header: Rank info, format, etc. */}
+        {/* Buttons row */}
+        <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+          <Button
+            variant="outlined"
+            sx={{ color: "#fff", borderColor: "#fff", textTransform: "none" }}
+          >
+            Review
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{ color: "#fff", borderColor: "#fff", textTransform: "none" }}
+          >
+            My List
+          </Button>
+        </Box>
+
+        {/* Info row */}
         <Box
           sx={{
             display: "flex",
@@ -108,84 +163,91 @@ const MoreInfoModal = ({ open, onClose, details = {} }) => {
             mb: 1,
           }}
         >
-          {/* Review button */}
-          <Button
-            variant="outlined"
-            startIcon={<RateReviewIcon />}
-            sx={{ color: "#fff", borderColor: "#fff" }}
-          >
-            Review
-          </Button>
-          {/* My List button */}
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-            sx={{ color: "#fff", borderColor: "#fff" }}
-          >
-            My List
-          </Button>
-
-          {/* Rank Info */}
-          <Typography
-            variant="body2"
-            sx={{ opacity: 0.8, ml: { xs: 0, md: 2 } }}
-          >
-            {rankInfo}
+          <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+            {newSeasons}
           </Typography>
-          {/* Dots */}
-          <Typography
-            variant="body2"
-            sx={{ display: { xs: "none", md: "inline" } }}
-          >
-            &nbsp;•&nbsp;
-          </Typography>
-
-          {/* Year */}
-          <Typography variant="body2" sx={{ opacity: 0.8 }}>
+          <Typography variant="body2" sx={{ fontWeight: "bold" }}>
             {year}
           </Typography>
-          <Typography
-            variant="body2"
-            sx={{ display: { xs: "none", md: "inline" } }}
-          >
-            &nbsp;•&nbsp;
-          </Typography>
-
-          {/* Format */}
-          <Typography variant="body2" sx={{ opacity: 0.8 }}>
-            {format}
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ display: { xs: "none", md: "inline" } }}
-          >
-            &nbsp;•&nbsp;
-          </Typography>
-
-          {/* Genre */}
-          <Typography variant="body2" sx={{ opacity: 0.8 }}>
-            {genre}
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ display: { xs: "none", md: "inline" } }}
-          >
-            &nbsp;•&nbsp;
-          </Typography>
-
-          {/* Rating */}
-          <Typography variant="body2" sx={{ opacity: 0.8 }}>
-            {rating}
-          </Typography>
+          {hdAvailable && (
+            <Box
+              component="img"
+              src={`${process.env.PUBLIC_URL}/assets/hdIcon.svg`}
+              alt="HD"
+              sx={{ width: 24, height: 16 }}
+            />
+          )}
+          {adAvailable && (
+            <Box
+              component="img"
+              src={`${process.env.PUBLIC_URL}/assets/adIcon.svg`}
+              alt="AD"
+              sx={{ width: 24, height: 16 }}
+            />
+          )}
         </Box>
 
-        {/* Summary */}
-        <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.5 }}>
-          {summary}
-        </Typography>
+        {/* Maturity, top10 rank */}
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: 1,
+            mb: 2,
+          }}
+        >
+          <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+            {maturityRating}
+          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Box
+              component="img"
+              src={`${process.env.PUBLIC_URL}/assets/top10Icon.svg`}
+              alt="Top 10"
+              sx={{ width: 24, height: 24 }}
+            />
+            <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+              {top10Rank}
+            </Typography>
+          </Box>
+        </Box>
 
-        <Divider sx={{ mb: 2, borderColor: "#333" }} />
+        {/* Split top into 2 columns: summary (left), cast/genres/showIs (right) */}
+        <Box sx={{ display: "flex", gap: 4, mb: 2, flexWrap: "wrap" }}>
+          {/* Left: summary */}
+          <Box sx={{ flex: 2, minWidth: { xs: "100%", md: "60%" } }}>
+            <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+              {summary}
+            </Typography>
+          </Box>
+          {/* Right: cast, genres, showIs */}
+          <Box sx={{ flex: 1, minWidth: { xs: "100%", md: "35%" } }}>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              <strong>Cast:</strong> {cast}
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              <strong>Genres:</strong> {genresList}
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              <strong>This show is:</strong> {showIs}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
 
+      <Divider sx={{ borderColor: "#333" }} />
+
+      {/* LOWER SECTION */}
+      <DialogContent
+        sx={{
+          px: 2,
+          pt: 2,
+          pb: 2,
+          overflow: "visible",
+          "::-webkit-scrollbar": { display: "none" },
+        }}
+      >
         {/* Episodes */}
         {isSeries && (
           <Box sx={{ mb: 4 }}>
@@ -216,10 +278,12 @@ const MoreInfoModal = ({ open, onClose, details = {} }) => {
                   borderRadius: 1,
                 }}
               >
-                {/* Episode image (example: /assets/newOnNetFlix.svg) */}
                 <Box
                   component="img"
-                  src={ep.image || "/assets/newOnNetFlix.svg"}
+                  src={
+                    ep.image ||
+                    `${process.env.PUBLIC_URL}/assets/newOnNetFlix.svg`
+                  }
                   alt={`Episode ${index + 1}`}
                   sx={{
                     width: 120,
@@ -228,7 +292,6 @@ const MoreInfoModal = ({ open, onClose, details = {} }) => {
                     borderRadius: 1,
                   }}
                 />
-                {/* Episode info in center */}
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
                     {ep.title || `Episode ${index + 1}`}
@@ -237,7 +300,6 @@ const MoreInfoModal = ({ open, onClose, details = {} }) => {
                     {ep.description || "Short episode summary..."}
                   </Typography>
                 </Box>
-                {/* Runtime on the far right */}
                 <Box>
                   <Typography variant="body2" sx={{ color: "#fff" }}>
                     {ep.runtime || "53m"}
@@ -256,7 +318,6 @@ const MoreInfoModal = ({ open, onClose, details = {} }) => {
           <Grid container spacing={2}>
             {trailers.slice(0, 3).map((tr, i) => (
               <Grid item xs={12} sm={4} md={4} key={i}>
-                {/* Trailer image */}
                 <Box
                   component="img"
                   src={tr.image}
@@ -268,7 +329,6 @@ const MoreInfoModal = ({ open, onClose, details = {} }) => {
                     borderRadius: 1,
                   }}
                 />
-                {/* Trailer caption */}
                 <Typography
                   variant="body2"
                   sx={{ mt: 1, fontWeight: "bold", color: "#ccc" }}
@@ -280,30 +340,22 @@ const MoreInfoModal = ({ open, onClose, details = {} }) => {
           </Grid>
         </Box>
 
-        {/* About Section */}
+        {/* About Section - includes Director, Maturity, disclaimers, etc. */}
         <Box sx={{ mb: 2 }}>
           <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
             About {title}
           </Typography>
-          {/* Director */}
+
           <Typography variant="body2" sx={{ mb: 1 }}>
             <strong>Director:</strong> {director}
           </Typography>
-          {/* Cast */}
+
           <Typography variant="body2" sx={{ mb: 1 }}>
-            <strong>Cast:</strong> {cast}
+            <strong>Maturity rating:</strong> {aboutMaturityRating}
           </Typography>
-          {/* Genres */}
+
           <Typography variant="body2" sx={{ mb: 1 }}>
-            <strong>Genres:</strong> {genresList}
-          </Typography>
-          {/* This show is: */}
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            <strong>This show is:</strong> {showIs}
-          </Typography>
-          {/* Maturity rating */}
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            <strong>Maturity rating:</strong> {maturityRating}
+            <strong>Warning/Disclaimers:</strong> {disclaimers}
           </Typography>
         </Box>
       </DialogContent>
@@ -315,14 +367,22 @@ MoreInfoModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   details: PropTypes.shape({
-    title: PropTypes.string,
-    rankInfo: PropTypes.string,
-    year: PropTypes.string,
-    format: PropTypes.string,
-    genre: PropTypes.string,
-    rating: PropTypes.string,
-    summary: PropTypes.string,
     isSeries: PropTypes.bool,
+    title: PropTypes.string,
+    nSeriesLabel: PropTypes.bool,
+    newSeasons: PropTypes.string,
+    year: PropTypes.string,
+    hdAvailable: PropTypes.bool,
+    adAvailable: PropTypes.bool,
+    maturityRating: PropTypes.string,
+    top10Rank: PropTypes.string,
+    summary: PropTypes.string,
+    cast: PropTypes.string,
+    genresList: PropTypes.string,
+    showIs: PropTypes.string,
+    director: PropTypes.string,
+    aboutMaturityRating: PropTypes.string,
+    disclaimers: PropTypes.string,
     episodes: PropTypes.arrayOf(
       PropTypes.shape({
         image: PropTypes.string,
@@ -331,19 +391,12 @@ MoreInfoModal.propTypes = {
         runtime: PropTypes.string,
       })
     ),
-    // For the "Trailers & More" section
     trailers: PropTypes.arrayOf(
       PropTypes.shape({
         image: PropTypes.string,
         caption: PropTypes.string,
       })
     ),
-    // "About" data
-    director: PropTypes.string,
-    cast: PropTypes.string,
-    genresList: PropTypes.string,
-    showIs: PropTypes.string,
-    maturityRating: PropTypes.string,
   }),
 };
 
