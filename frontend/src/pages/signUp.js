@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import Footer from "../components/Footer";
+import Footer from "../components/shared/footerSignInUp";
 
 const LoginPage = () => {
   return (

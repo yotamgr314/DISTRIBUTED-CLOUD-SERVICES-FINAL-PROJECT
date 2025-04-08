@@ -1,81 +1,22 @@
-// src/pages/AccountHomePage.js
-
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
+import FooterAccountHomePage from "../components/shared/footerAccountHomePage";
+import Navbar from "../components/shared/navbar";
 
-// 1) "New on Netflix"
-const newOnNetflixImages = [
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-];
-
-// 2) "Top 10 in the U.S. Today" (215×154, no border radius)
-const top10Images = [
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-];
-
-// 3) "We Think You'll Love These"
-const weThinkYoullLoveImages = [
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-];
-
-// 4) "Continue Watching for Yotam" (progress bar shown)
-const continueForYotamImages = [
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-];
-
-// 5) "Week In One Weekend"
-const weekInOneWeekendImages = [
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-];
-
-// 6) "Critically Acclaimed Movies"
-const criticallyAcclaimedImages = [
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-];
-
-// 7) "Inspiring Movies"
-const inspiringMoviesImages = [
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-];
-
-// 8) "Adult Animation"
-const adultAnimationImages = [
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-];
-
-// 9) "Todays Fresh Picks for You"
-const freshPicksImages = [
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-  "/assets/newOnNetFlix.svg",
-];
+// Example image arrays
+const newOnNetflixImages = new Array(9).fill("/assets/newOnNetFlix.svg");
+const top10Images = new Array(10).fill("/assets/newOnNetFlix.svg");
+const weThinkYoullLoveImages = new Array(9).fill("/assets/newOnNetFlix.svg");
+const continueForYotamImages = new Array(6).fill("/assets/newOnNetFlix.svg");
+const weekInOneWeekendImages = new Array(6).fill("/assets/newOnNetFlix.svg");
+const criticallyAcclaimedImages = new Array(6).fill("/assets/newOnNetFlix.svg");
+const inspiringMoviesImages = new Array(6).fill("/assets/newOnNetFlix.svg");
+const adultAnimationImages = new Array(6).fill("/assets/newOnNetFlix.svg");
+const freshPicksImages = new Array(6).fill("/assets/newOnNetFlix.svg");
 
 /**
- * SectionRow: Reusable row component that uses a responsive grid layout.
- * @param {string} title - The row title
- * @param {string[]} images - An array of image paths
- * @param {number} imageWidth - default 218
- * @param {number} imageHeight - default 123
- * @param {number} borderRadius - default 2
- * @param {boolean} showProgressBar - if true, show a small 132×3 bar under each image
+ * SectionRow: Generic component to display images in a horizontal scroll
  */
 const SectionRow = ({
   title,
@@ -99,14 +40,15 @@ const SectionRow = ({
       </Typography>
       <Box
         sx={{
-          // A responsive grid so there's no horizontal scroll
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(218px, 1fr))",
+          display: "flex",
+          overflowX: "auto",
           gap: "20px",
+          scrollBehavior: "smooth",
+          "::-webkit-scrollbar": { display: "none" },
         }}
       >
         {images.map((img, idx) => (
-          <Box key={idx}>
+          <Box key={idx} sx={{ flex: "0 0 auto" }}>
             <Box
               component="img"
               src={img}
@@ -122,7 +64,6 @@ const SectionRow = ({
               }}
             />
             {showProgressBar && (
-              // A small progress bar 132×3
               <Box
                 sx={{
                   width: "132px",
@@ -145,44 +86,14 @@ const AccountHomePage = () => {
         backgroundColor: "#000",
         color: "#fff",
         minHeight: "100vh",
-        overflowX: "hidden", // Hide any accidental horizontal scroll
+        overflowX: "hidden",
       }}
     >
-      {/* TOP NAVBAR */}
-      <Box
-        sx={{
-          width: "100%",
-          height: "68px",
-          display: "flex",
-          alignItems: "center",
-          px: "58px",
-          gap: "20px", // gap between brand and nav items
-        }}
-      >
-        {/* Netflix Brand */}
-        <Typography
-          sx={{
-            color: "#E50914",
-            fontSize: "2rem",
-            fontWeight: "bold",
-          }}
-        >
-          NETFLIX
-        </Typography>
-
-        {/* Nav Items */}
-        <Box sx={{ display: "flex", gap: "20px" }}>
-          <Typography>Home</Typography>
-          <Typography>TV Shows</Typography>
-          <Typography>Movies</Typography>
-          <Typography>New &amp; Popular</Typography>
-          <Typography>My List</Typography>
-          <Typography>Browse</Typography>
-        </Box>
-      </Box>
-
       {/* HERO / COVER SECTION */}
-      <Box sx={{ position: "relative", width: "100%", mt: 2 }}>
+      <Box sx={{ position: "relative", width: "100%" }}>
+        {/* Navbar is now the reusable component */}
+        <Navbar />
+        {/* HERO IMAGE */}
         <Box
           component="img"
           src="/assets/houseOfNinjasCover.png"
@@ -193,6 +104,48 @@ const AccountHomePage = () => {
             height: "auto",
           }}
         />
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            height: "50%",
+            background: "linear-gradient(to top, #000, transparent)",
+          }}
+        />
+<Box
+  sx={{
+    position: "absolute",
+    bottom: "20%",
+    left: "5%",
+  }}
+>
+  <Typography
+    variant="h3"
+    sx={{
+      fontWeight: "bold",
+      mb: 2,
+      fontSize: { xs: "1.5rem", md: "3rem" } // רספונסיביות: בגודל קטן 1.5rem, במחשב 3rem
+    }}
+  >
+    HOUSE OF NINJAS
+  </Typography>
+  <Box sx={{ display: "flex", gap: 2 }}>
+    <Button
+      variant="contained"
+      sx={{
+        backgroundColor: "rgba(109,109,110,0.7)",
+        color: "#fff",
+        fontWeight: "bold",
+      }}
+      startIcon={<InfoIcon />}
+    >
+      More Info
+    </Button>
+  </Box>
+</Box>
+
       </Box>
 
       {/* MAIN CONTENT */}
@@ -204,7 +157,6 @@ const AccountHomePage = () => {
           imageHeight={123}
           borderRadius={2}
         />
-
         <SectionRow
           title="Top 10 in the U.S. Today"
           images={top10Images}
@@ -212,52 +164,39 @@ const AccountHomePage = () => {
           imageHeight={154}
           borderRadius={0}
         />
-
         <SectionRow
           title="We Think You'll Love These"
           images={weThinkYoullLoveImages}
         />
-
         <SectionRow
           title="Continue Watching for Yotam"
           images={continueForYotamImages}
           showProgressBar
         />
-
         <SectionRow
           title="Week In One Weekend"
           images={weekInOneWeekendImages}
         />
-
         <SectionRow
           title="Critically Acclaimed Movies"
           images={criticallyAcclaimedImages}
         />
-
-        <SectionRow title="Inspiring Movies" images={inspiringMoviesImages} />
-
-        <SectionRow title="Adult Animation" images={adultAnimationImages} />
-
+        <SectionRow
+          title="Inspiring Movies"
+          images={inspiringMoviesImages}
+        />
+        <SectionRow
+          title="Adult Animation"
+          images={adultAnimationImages}
+        />
         <SectionRow
           title="Todays Fresh Picks for You"
           images={freshPicksImages}
         />
       </Box>
 
-      {/* FOOTER (Optional) */}
-      <Box
-        sx={{
-          width: "100%",
-          backgroundColor: "#141414",
-          py: 4,
-          px: "58px",
-          mt: 2,
-        }}
-      >
-        <Typography variant="body2" sx={{ color: "#999" }}>
-          Footer content here...
-        </Typography>
-      </Box>
+      {/* FOOTER */}
+      <FooterAccountHomePage />
     </Box>
   );
 };
