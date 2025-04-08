@@ -1,8 +1,11 @@
-import React from "react";
+// src/pages/AccountHomePage.js
+
+import React, { useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import FooterAccountHomePage from "../components/shared/footerAccountHomePage";
 import Navbar from "../components/shared/navbar";
+import MoreInfoModal from "../components/shared/moreInfoModal";
 
 // Example image arrays
 const newOnNetflixImages = new Array(9).fill("/assets/newOnNetFlix.svg");
@@ -25,6 +28,7 @@ const SectionRow = ({
   imageHeight = 123,
   borderRadius = 2,
   showProgressBar = false,
+  onImageClick,
 }) => {
   return (
     <Box sx={{ mb: 4 }}>
@@ -62,6 +66,7 @@ const SectionRow = ({
                 display: "block",
                 mb: showProgressBar ? 1 : 0,
               }}
+              onClick={onImageClick}
             />
             {showProgressBar && (
               <Box
@@ -80,6 +85,34 @@ const SectionRow = ({
 };
 
 const AccountHomePage = () => {
+  // מצב לפתיחת מודאל עם פרטי התכנית
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+
+  const handleOpenDetailsModal = () => {
+    setDetailsModalOpen(true);
+  };
+  const handleCloseDetailsModal = () => {
+    setDetailsModalOpen(false);
+  };
+
+  const sampleDetails = {
+    title: "House of Ninjas",
+    description:
+      "תיאור התכנית: כאן יופיע תיאור מפורט של התכנית, הסיפור, הסגנון ועוד. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    isSeries: true,
+    episodes: [
+      { title: "פרק 1", description: "תיאור קצר של פרק 1" },
+      { title: "פרק 2", description: "תיאור קצר של פרק 2" },
+      { title: "פרק 3", description: "תיאור קצר של פרק 3" },
+    ],
+    additionalImages: [
+      "/assets/example1.jpg",
+      "/assets/example2.jpg",
+      "/assets/example3.jpg",
+    ],
+    crew: "במאי: דוגמה, מפיק: דוגמה, ועוד...",
+  };
+
   return (
     <Box
       sx={{
@@ -91,7 +124,7 @@ const AccountHomePage = () => {
     >
       {/* HERO / COVER SECTION */}
       <Box sx={{ position: "relative", width: "100%" }}>
-        {/* Navbar is now the reusable component */}
+        {/* Navbar as a reusable component */}
         <Navbar />
         {/* HERO IMAGE */}
         <Box
@@ -102,7 +135,9 @@ const AccountHomePage = () => {
             display: "block",
             width: "100%",
             height: "auto",
+            cursor: "pointer",
           }}
+          onClick={handleOpenDetailsModal}
         />
         <Box
           sx={{
@@ -114,38 +149,32 @@ const AccountHomePage = () => {
             background: "linear-gradient(to top, #000, transparent)",
           }}
         />
-<Box
-  sx={{
-    position: "absolute",
-    bottom: "20%",
-    left: "5%",
-  }}
->
-  <Typography
-    variant="h3"
-    sx={{
-      fontWeight: "bold",
-      mb: 2,
-      fontSize: { xs: "1.5rem", md: "3rem" } // רספונסיביות: בגודל קטן 1.5rem, במחשב 3rem
-    }}
-  >
-    HOUSE OF NINJAS
-  </Typography>
-  <Box sx={{ display: "flex", gap: 2 }}>
-    <Button
-      variant="contained"
-      sx={{
-        backgroundColor: "rgba(109,109,110,0.7)",
-        color: "#fff",
-        fontWeight: "bold",
-      }}
-      startIcon={<InfoIcon />}
-    >
-      More Info
-    </Button>
-  </Box>
-</Box>
-
+        <Box sx={{ position: "absolute", bottom: "20%", left: "5%" }}>
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: "bold",
+              mb: 2,
+              fontSize: { xs: "1.5rem", md: "3rem" },
+            }}
+          >
+            HOUSE OF NINJAS
+          </Typography>
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "rgba(109,109,110,0.7)",
+                color: "#fff",
+                fontWeight: "bold",
+              }}
+              startIcon={<InfoIcon />}
+              onClick={handleOpenDetailsModal}
+            >
+              More Info
+            </Button>
+          </Box>
+        </Box>
       </Box>
 
       {/* MAIN CONTENT */}
@@ -156,6 +185,7 @@ const AccountHomePage = () => {
           imageWidth={218}
           imageHeight={123}
           borderRadius={2}
+          onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
           title="Top 10 in the U.S. Today"
@@ -163,40 +193,55 @@ const AccountHomePage = () => {
           imageWidth={215}
           imageHeight={154}
           borderRadius={0}
+          onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
           title="We Think You'll Love These"
           images={weThinkYoullLoveImages}
+          onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
           title="Continue Watching for Yotam"
           images={continueForYotamImages}
           showProgressBar
+          onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
           title="Week In One Weekend"
           images={weekInOneWeekendImages}
+          onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
           title="Critically Acclaimed Movies"
           images={criticallyAcclaimedImages}
+          onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
           title="Inspiring Movies"
           images={inspiringMoviesImages}
+          onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
           title="Adult Animation"
           images={adultAnimationImages}
+          onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
           title="Todays Fresh Picks for You"
           images={freshPicksImages}
+          onImageClick={handleOpenDetailsModal}
         />
       </Box>
 
       {/* FOOTER */}
       <FooterAccountHomePage />
+
+      {/* Program Details Modal */}
+      <MoreInfoModal
+        open={detailsModalOpen}
+        onClose={handleCloseDetailsModal}
+        details={sampleDetails}
+      />
     </Box>
   );
 };
