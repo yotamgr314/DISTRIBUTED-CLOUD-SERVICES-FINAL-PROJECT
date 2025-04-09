@@ -14,8 +14,9 @@ import {
   useTheme,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-// Define your nav link labels
+// הגדרת הלינקים לתפריט הניווט
 const navLinks = [
   "Home",
   "TV Shows",
@@ -34,7 +35,12 @@ const Navbar = () => {
     setMobileOpen((prevState) => !prevState);
   };
 
-  // Drawer content for mobile
+  // פונקציה שמופעלת בלחיצה על האייקון - כרגע לא עושה כלום
+  const handleAvatarClick = () => {
+    // לא לעשות כלום כרגע
+  };
+
+  // תוכן ה-drawer עבור מכשירים ניידים
   const drawer = (
     <Box sx={{ width: 240 }} onClick={handleDrawerToggle}>
       <List>
@@ -63,11 +69,23 @@ const Navbar = () => {
           zIndex: 999,
         }}
       >
-        <Toolbar disableGutters sx={{ minHeight: "68px", display: "flex", justifyContent: "space-between" }}>
-          {/* Left Side: Logo and Nav Links */}
+        <Toolbar
+          disableGutters
+          sx={{
+            minHeight: "68px",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          {/* צד שמאל: לוגו וקישורי ניווט */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {isMobile && (
-              <IconButton color="inherit" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2 }}>
+              <IconButton
+                color="inherit"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{ mr: 2 }}
+              >
                 <MenuIcon />
               </IconButton>
             )}
@@ -81,9 +99,16 @@ const Navbar = () => {
             >
               NETFLIX
             </Typography>
-            {/* Display nav links only on desktop */}
+            {/* הצגת קישורי ניווט רק במצב דסקטופ */}
             {!isMobile && (
-              <Box sx={{ display: "flex", alignItems: "center", gap: "20px", ml: 2 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "20px",
+                  ml: 2,
+                }}
+              >
                 {navLinks.map((link) => (
                   <Typography key={link} sx={{ cursor: "pointer" }}>
                     {link}
@@ -92,8 +117,15 @@ const Navbar = () => {
               </Box>
             )}
           </Box>
-          {/* Right Side: Custom Icons */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: "20px", flexShrink: 0 }}>
+          {/* צד ימין: אייקונים מותאמים אישית */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "20px",
+              flexShrink: 0,
+            }}
+          >
             <Box
               component="img"
               src="/assets/searchIcon.svg"
@@ -114,28 +146,31 @@ const Navbar = () => {
                 cursor: "pointer",
               }}
             />
-            <Box
-              component="img"
-              src="/assets/smallAvatarUserIcon.svg"
-              alt="User Avatar"
-              sx={{
-                width: 32,
-                height: 32,
-                objectFit: "contain",
-                cursor: "pointer",
-              }}
-            />
+            {/* אייקון ה-avatar עם כפתור ה-accordion - כרגע, בלחיצה, לא מתבצעת שום פעולה */}
+            <IconButton onClick={handleAvatarClick} sx={{ padding: 0 }}>
+              <Box
+                component="img"
+                src="/assets/smallAvatarUserIcon.svg"
+                alt="User Avatar"
+                sx={{
+                  width: 32,
+                  height: 32,
+                  objectFit: "contain",
+                }}
+              />
+              <ArrowDropDownIcon sx={{ color: "white" }} />
+            </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
-      {/* Mobile Drawer */}
+      {/* Drawer למכשירים ניידים */}
       <Box component="nav">
         <Drawer
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Improves mobile performance.
+            keepMounted: true, // שיפור ביצועים במכשירים ניידים.
           }}
           sx={{
             display: { xs: "block", md: "none" },
