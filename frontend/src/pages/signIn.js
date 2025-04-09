@@ -9,25 +9,27 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
+  MenuItem, // ייבוא MenuItem
 } from "@mui/material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"; // ייבוא האייקון
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/shared/footerSignInUp";
 
-
 const SignIn = () => {
   const [remember, setRemember] = useState(false);
+  const [role, setRole] = useState("Registered User"); // ברירת מחדל "Registered User"
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (remember) {
       const now = new Date();
-      now.setTime(now.getTime() + 60 * 60 * 1000); // 1 שעה
+      now.setTime(now.getTime() + 60 * 60 * 1000); // שעה אחת
       document.cookie =
         "rememberMe=true; expires=" + now.toUTCString() + "; path=/";
     }
     // כאן תוכל להוסיף לוגיקת התחברות (API וכו')
-    console.log("Sign in submitted. Remember me:", remember);
+    console.log("Sign in submitted. Remember me:", remember, "Role:", role);
   };
 
   return (
@@ -149,6 +151,29 @@ const SignIn = () => {
                 "& .MuiInputLabel-root": { color: "#8c8c8c" },
               }}
             />
+
+            {/* שדה תפקיד משתמש עם אייקון חץ כלפי מטה */}
+            <TextField
+              variant="filled"
+              select
+              label="User Role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              fullWidth
+              SelectProps={{
+                IconComponent: ArrowDropDownIcon, // מציג חץ כלפי מטה
+              }}
+              sx={{
+                mb: 2,
+                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                "& .MuiFilledInput-input": { color: "#fff" },
+                "& .MuiInputLabel-root": { color: "#8c8c8c" },
+                "& .MuiSelect-icon": { color: "#fff" }, // שינוי צבע האייקון ללבן
+              }}
+            >
+              <MenuItem value="Registered User">Registered User</MenuItem>
+              <MenuItem value="Admin">Admin</MenuItem>
+            </TextField>
 
             {/* כפתור Sign In */}
             <Button
