@@ -4,6 +4,7 @@ import SignUp from "./pages/signUp";
 import SignIn from "./pages/signIn";
 import ProfileSelectionPage from "./pages/ProfileSelectionPage";
 import AccountHomePage from "./pages/AccountHomePage";
+import MyListPage from "./pages/myList";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           element={<ProfileSelectionPage />}
         />
         <Route path="/AccountHomePage" element={<AccountHomePage />} />
+        <Route path="/MyListPage" element={<MyListPage />} />
       </Routes>
     </Router>
   );
