@@ -52,8 +52,9 @@ const ReviewProgram = () => {
 
   return (
     <Box
+      id="review-root"
       sx={{
-        minHeight: "100%",
+        minHeight: "100vh",
         backgroundImage: 'url("/assets/hero-image.png")',
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
@@ -196,7 +197,11 @@ const ReviewProgram = () => {
       </Box>
 
       {/* Exit Confirmation Dialog */}
-      <Dialog open={exitDialogOpen} onClose={() => setExitDialogOpen(false)}>
+      <Dialog
+        open={exitDialogOpen}
+        onClose={() => setExitDialogOpen(false)}
+        container={document.getElementById("review-root")}
+      >
         <DialogTitle>Are you sure you wish to leave?</DialogTitle>
         <DialogContent>
           <Typography>The review will not be saved.</Typography>
