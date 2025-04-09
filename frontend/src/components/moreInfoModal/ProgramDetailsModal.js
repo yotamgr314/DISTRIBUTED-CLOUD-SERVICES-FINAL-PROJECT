@@ -39,6 +39,7 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
       TransitionComponent={Transition}
       fullWidth
       maxWidth="md"
+      scroll="body" // ✅ let the modal grow and scroll with the body
       sx={{
         "& .MuiDialog-container": {
           alignItems: "flex-start",
@@ -50,7 +51,7 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
           color: "#fff",
           borderRadius: 0,
           maxHeight: "none",
-          overflow: "hidden",
+          overflow: "visible",
         },
       }}
     >
