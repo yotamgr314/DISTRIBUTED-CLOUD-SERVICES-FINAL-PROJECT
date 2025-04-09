@@ -5,7 +5,7 @@ import { Box, Typography, Button } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import FooterAccountHomePage from "../components/shared/footerAccountHomePage";
 import Navbar from "../components/shared/navbar";
-import MoreInfoModal from "../components/shared/moreInfoModal";
+import ProgramDetailsModal from "../components/moreInfoModal/ProgramDetailsModal";
 
 // Example image arrays
 const newOnNetflixImages = new Array(9).fill("/assets/newOnNetFlix.svg");
@@ -19,7 +19,7 @@ const adultAnimationImages = new Array(6).fill("/assets/newOnNetFlix.svg");
 const freshPicksImages = new Array(6).fill("/assets/newOnNetFlix.svg");
 
 /**
- * SectionRow: Generic component to display images in a horizontal scroll
+ * SectionRow: Generic component to display images in a horizontal scroll.
  */
 const SectionRow = ({
   title,
@@ -85,7 +85,7 @@ const SectionRow = ({
 };
 
 const AccountHomePage = () => {
-  // מצב לפתיחת מודאל עם פרטי התכנית
+  // State to control opening of the modal with program details
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
   const handleOpenDetailsModal = () => {
@@ -95,15 +95,16 @@ const AccountHomePage = () => {
     setDetailsModalOpen(false);
   };
 
+  // Sample details with a non-empty trailers array so that the Trailers & More section renders.
   const sampleDetails = {
     title: "House of Ninjas",
     description:
       "תיאור התכנית: כאן יופיע תיאור מפורט של התכנית, הסיפור, הסגנון ועוד. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     isSeries: true,
     episodes: [
-      { title: "פרק 1", description: "תיאור קצר של פרק 1" },
-      { title: "פרק 2", description: "תיאור קצר של פרק 2" },
-      { title: "פרק 3", description: "תיאור קצר של פרק 3" },
+      { title: "פרק 1", description: "תיאור קצר של פרק 1", runtime: "55m" },
+      { title: "פרק 2", description: "תיאור קצר של פרק 2", runtime: "53m" },
+      { title: "פרק 3", description: "תיאור קצר של פרק 3", runtime: "55m" },
     ],
     additionalImages: [
       "/assets/example1.jpg",
@@ -111,6 +112,21 @@ const AccountHomePage = () => {
       "/assets/example3.jpg",
     ],
     crew: "במאי: דוגמה, מפיק: דוגמה, ועוד...",
+    // Added trailers array so TrailersSection will render
+    trailers: [
+      {
+        image: "/assets/newOnNetFlix.svg",
+        caption: "Season 1 Trailer 1: House of Ninjas",
+      },
+      {
+        image: "/assets/newOnNetFlix.svg",
+        caption: "Season 1 Trailer 2: House of Ninjas",
+      },
+      {
+        image: "/assets/newOnNetFlix.svg",
+        caption: "Season 1 Trailer 3: House of Ninjas",
+      },
+    ],
   };
 
   return (
@@ -237,7 +253,7 @@ const AccountHomePage = () => {
       <FooterAccountHomePage />
 
       {/* Program Details Modal */}
-      <MoreInfoModal
+      <ProgramDetailsModal
         open={detailsModalOpen}
         onClose={handleCloseDetailsModal}
         details={sampleDetails}
