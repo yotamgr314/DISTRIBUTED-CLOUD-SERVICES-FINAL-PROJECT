@@ -4,10 +4,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Box, Typography, Button, IconButton } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import { useNavigate } from "react-router-dom";
 
 const ModalHeader = ({ details, onClose }) => {
+  const navigate = useNavigate();
+
   const {
-    heroImage = "/assets/houseOfNinjasCover.png",
+    /*  programId */ _id: heroImage = "/assets/houseOfNinjasCover.png",
     title = "House of Ninjas",
     nSeriesLabel = true,
   } = details;
@@ -102,6 +105,7 @@ const ModalHeader = ({ details, onClose }) => {
           <Button
             variant="contained"
             startIcon={<PlayArrowIcon />}
+            onClick={() => navigate("/reviewProgram")}
             sx={{
               textTransform: "none",
               fontWeight: "bold",
@@ -133,6 +137,7 @@ const ModalHeader = ({ details, onClose }) => {
 ModalHeader.propTypes = {
   onClose: PropTypes.func.isRequired,
   details: PropTypes.shape({
+    _id: PropTypes.string,
     heroImage: PropTypes.string,
     title: PropTypes.string,
     nSeriesLabel: PropTypes.bool,
