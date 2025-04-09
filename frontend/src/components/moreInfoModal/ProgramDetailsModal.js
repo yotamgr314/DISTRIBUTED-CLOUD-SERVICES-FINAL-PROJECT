@@ -1,19 +1,13 @@
+// 📁 src/components/moreInfoModal/ProgramDetailsModal.js
+
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  Box,
-  Typography,
-  Button,
-  IconButton,
-  Dialog,
-  DialogContent,
-  Slide,
-} from "@mui/material";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import { Box, Typography, Dialog, DialogContent, Slide } from "@mui/material";
 
 import EpisodesList from "./EpisodesList";
 import AboutSection from "./AboutSection";
 import TrailersSection from "./TrailersSection";
+import ModalHeader from "./ModalHeader";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
@@ -21,14 +15,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
   const {
-    heroImage = "/assets/houseOfNinjasCover.png",
     title = "House of Ninjas",
-    nSeriesLabel = true,
     newSeasons = "New 3 Seasons",
     year = "2024",
     hdAvailable = true,
     adAvailable = true,
-    maturityRating = "TV-MA  smoking, violence",
     top10Rank = "#2 in TV Shows Today",
     summary = `Years after retiring from their formidable ninja lives, a dysfunctional family must return to shadowy missions to counter a string of looming threats.`,
     cast = "Kento Kaku, Yosuke Eguchi, Tae Kimura, more",
@@ -63,118 +54,8 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
         },
       }}
     >
-      {/* IMAGE SECTION */}
-      <Box
-        sx={{
-          position: "relative",
-          width: "100%",
-          height: { xs: 350, md: 450 },
-        }}
-      >
-        <Box
-          component="img"
-          src={heroImage}
-          alt={title}
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
-        />
-
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            width: "100%",
-            height: "50%",
-            background: "linear-gradient(to top, #141414, transparent)",
-          }}
-        />
-
-        <IconButton
-          onClick={onClose}
-          sx={{ position: "absolute", top: 16, right: 16, zIndex: 10 }}
-        >
-          <Box
-            component="img"
-            src={`${process.env.PUBLIC_URL}/assets/xButtonIcon.svg`}
-            alt="Close"
-            sx={{ width: 24, height: 24 }}
-          />
-        </IconButton>
-
-        {/* OVERLAY HEADER (on image) */}
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 32,
-            left: "5%",
-            zIndex: 5,
-            display: "flex",
-            flexDirection: "column",
-            gap: 1.5,
-            width: { xs: "90%", md: "auto" },
-          }}
-        >
-          {nSeriesLabel && (
-            <Typography
-              sx={{
-                color: "#E50914",
-                fontWeight: "bold",
-                letterSpacing: 2,
-                fontSize: 12,
-                textTransform: "uppercase",
-              }}
-            >
-              N SERIES
-            </Typography>
-          )}
-
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              fontSize: { xs: "1.8rem", md: "2.5rem" },
-              color: "#fff",
-              textTransform: "uppercase",
-            }}
-          >
-            {title}
-          </Typography>
-
-          <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
-            <Button
-              variant="contained"
-              startIcon={<PlayArrowIcon />}
-              sx={{
-                textTransform: "none",
-                fontWeight: "bold",
-                backgroundColor: "#fff",
-                color: "#000",
-                "&:hover": { backgroundColor: "#e6e6e6" },
-              }}
-            >
-              Review
-            </Button>
-            <IconButton
-              sx={{
-                border: "1px solid #fff",
-                color: "#fff",
-                width: 36,
-                height: 36,
-              }}
-            >
-              <Typography variant="h5" sx={{ lineHeight: 1 }}>
-                +
-              </Typography>
-            </IconButton>
-          </Box>
-        </Box>
-      </Box>
+      {/* Header Image + Overlay */}
+      <ModalHeader details={details} onClose={onClose} />
 
       {/* MAIN CONTENT */}
       <DialogContent
