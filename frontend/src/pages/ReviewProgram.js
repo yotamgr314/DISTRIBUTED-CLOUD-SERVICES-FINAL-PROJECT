@@ -56,6 +56,8 @@ const ReviewProgram = () => {
         minHeight: "100%",
         backgroundImage: 'url("/assets/hero-image.png")',
         backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
         backgroundPosition: "center",
         position: "relative",
         overflowX: "hidden",
