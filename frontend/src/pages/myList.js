@@ -19,7 +19,6 @@ const MyListPage = () => {
     setVisibleItems(sampleItems.slice(0, initialBatch));
   }, []);
 
-  // Check if content is tall enough, if not – load more until scroll appears
   useEffect(() => {
     let attempts = 0;
 
@@ -74,15 +73,16 @@ const MyListPage = () => {
       sx={{
         backgroundColor: "#000",
         minHeight: "100vh",
-        height: "auto",
         color: "#fff",
         overflowX: "hidden",
-        overflowY: "auto",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <Navbar />
 
-      <Box sx={{ pt: 12, px: { xs: 2, md: 8 } }}>
+      {/* תוכן הדף המרכזי */}
+      <Box sx={{ pt: 12, px: { xs: 2, md: 8 }, flex: 1 }}>
         <Typography
           variant="h3"
           sx={{
@@ -119,6 +119,7 @@ const MyListPage = () => {
         </Grid>
       </Box>
 
+      {/* פוטר מוצמד לתחתית */}
       {!hasMore && <FooterAccountHomePage />}
     </Box>
   );
