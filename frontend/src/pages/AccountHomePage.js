@@ -3,7 +3,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 
-// 1) "New on Netflix"
 const newOnNetflixImages = [
   "/assets/newOnNetFlix.svg",
   "/assets/newOnNetFlix.svg",
