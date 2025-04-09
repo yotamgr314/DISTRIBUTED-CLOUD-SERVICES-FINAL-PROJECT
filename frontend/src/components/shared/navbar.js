@@ -1,3 +1,5 @@
+// 📁 src/components/shared/Navbar.js
+
 import React, { useState } from "react";
 import {
   AppBar,
@@ -16,7 +18,6 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-// הגדרת הלינקים לתפריט הניווט
 const navLinks = [
   "Home",
   "TV Shows",
@@ -35,19 +36,23 @@ const Navbar = () => {
     setMobileOpen((prevState) => !prevState);
   };
 
-  // פונקציה שמופעלת בלחיצה על האייקון - כרגע לא עושה כלום
   const handleAvatarClick = () => {
-    // לא לעשות כלום כרגע
+    // no action for now
   };
 
-  // תוכן ה-drawer עבור מכשירים ניידים
   const drawer = (
-    <Box sx={{ width: 240 }} onClick={handleDrawerToggle}>
+    <Box
+      sx={{ width: 240, backgroundColor: "#141414", height: "100%" }}
+      onClick={handleDrawerToggle}
+    >
       <List>
         {navLinks.map((link) => (
           <ListItem key={link} disablePadding>
             <ListItemButton>
-              <ListItemText primary={link} />
+              <ListItemText
+                primary={link}
+                primaryTypographyProps={{ sx: { color: "#fff" } }}
+              />
             </ListItemButton>
           </ListItem>
         ))}
@@ -77,7 +82,7 @@ const Navbar = () => {
             justifyContent: "space-between",
           }}
         >
-          {/* צד שמאל: לוגו וקישורי ניווט */}
+          {/* Left: Logo and navigation links */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {isMobile && (
               <IconButton
@@ -99,7 +104,6 @@ const Navbar = () => {
             >
               NETFLIX
             </Typography>
-            {/* הצגת קישורי ניווט רק במצב דסקטופ */}
             {!isMobile && (
               <Box
                 sx={{
@@ -117,7 +121,8 @@ const Navbar = () => {
               </Box>
             )}
           </Box>
-          {/* צד ימין: אייקונים מותאמים אישית */}
+
+          {/* Right: icons */}
           <Box
             sx={{
               display: "flex",
@@ -146,7 +151,6 @@ const Navbar = () => {
                 cursor: "pointer",
               }}
             />
-            {/* אייקון ה-avatar עם כפתור ה-accordion - כרגע, בלחיצה, לא מתבצעת שום פעולה */}
             <IconButton onClick={handleAvatarClick} sx={{ padding: 0 }}>
               <Box
                 component="img"
@@ -163,18 +167,24 @@ const Navbar = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      {/* Drawer למכשירים ניידים */}
+
+      {/* Drawer for mobile */}
       <Box component="nav">
         <Drawer
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // שיפור ביצועים במכשירים ניידים.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: "block", md: "none" },
-            "& .MuiDrawer-paper": { boxSizing: "border-box", width: 240 },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: 240,
+              backgroundColor: "#141414",
+              color: "#fff",
+            },
           }}
         >
           {drawer}
