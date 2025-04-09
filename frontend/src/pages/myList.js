@@ -7,6 +7,7 @@ const MyListPage = () => {
   const [allItems, setAllItems] = useState([]);
   const [visibleItems, setVisibleItems] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const initialBatch = 30;
 
   useEffect(() => {
     const sampleItems = Array.from({ length: 50 }, (_, i) => ({
@@ -15,8 +16,36 @@ const MyListPage = () => {
       title: `Saved Program ${i + 1}`,
     }));
     setAllItems(sampleItems);
-    setVisibleItems(sampleItems.slice(0, 10));
+    setVisibleItems(sampleItems.slice(0, initialBatch));
   }, []);
+
+  // Check if content is tall enough, if not – load more until scroll appears
+  useEffect(() => {
+    let attempts = 0;
+
+    const checkIfMoreNeeded = () => {
+      const hasScroll =
+        document.documentElement.scrollHeight > window.innerHeight;
+
+      if (!hasScroll && hasMore && attempts < 10) {
+        attempts++;
+
+        setVisibleItems((prev) => {
+          const next = allItems.slice(prev.length, prev.length + initialBatch);
+          if (next.length === 0) setHasMore(false);
+          return [...prev, ...next];
+        });
+
+        requestAnimationFrame(() => {
+          setTimeout(checkIfMoreNeeded, 100);
+        });
+      }
+    };
+
+    requestAnimationFrame(() => {
+      setTimeout(checkIfMoreNeeded, 100);
+    });
+  }, [allItems, hasMore]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,7 +54,10 @@ const MyListPage = () => {
       if (bottom && hasMore) {
         setTimeout(() => {
           setVisibleItems((prev) => {
-            const next = allItems.slice(prev.length, prev.length + 10);
+            const next = allItems.slice(
+              prev.length,
+              prev.length + initialBatch
+            );
             if (next.length === 0) setHasMore(false);
             return [...prev, ...next];
           });
@@ -42,8 +74,10 @@ const MyListPage = () => {
       sx={{
         backgroundColor: "#000",
         minHeight: "100vh",
+        height: "auto",
         color: "#fff",
-        overflowX: "hidden", // ✅ prevents horizontal scrollbar
+        overflowX: "hidden",
+        overflowY: "auto",
       }}
     >
       <Navbar />
