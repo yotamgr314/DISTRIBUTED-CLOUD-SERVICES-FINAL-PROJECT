@@ -7,7 +7,7 @@ import AccountHomePage from "./pages/AccountHomePage";
 import ReviewProgram from "./pages/ReviewProgram";
 import MyListPage from "./pages/myList";
 import NewAndPopular from "./pages/newAndPopular";
-
+import MoviesPage from "./pages/movies";
 function App() {
   return (
     <Router>
@@ -23,6 +23,7 @@ function App() {
         <Route path="/ReviewProgram" element={<ReviewProgram />} />
         <Route path="/MyListPage" element={<MyListPage />} />
         <Route path="/NewAndPopular" element={<NewAndPopular />} />
+        <Route path="/MoviesPage" element={<MoviesPage />} />
       </Routes>
     </Router>
   );

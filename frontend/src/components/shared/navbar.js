@@ -1,5 +1,3 @@
-// 📁 src/components/shared/Navbar.js
-
 import React, { useState } from "react";
 import {
   AppBar,
@@ -17,20 +15,22 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { NavLink, useLocation } from "react-router-dom";
 
 const navLinks = [
-  "Home",
-  "TV Shows",
-  "Movies",
-  "New & Popular",
-  "My List",
-  "Browse",
+  { label: "Home", path: "/AccountHomePage" },
+  { label: "TV Shows", path: "/TvShowsPage" },
+  { label: "Movies", path: "/MoviesPage" },
+  { label: "New & Popular", path: "/NewAndPopular" },
+  { label: "My List", path: "/MyListPage" },
+  { label: "Browse", path: null },
 ];
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const location = useLocation();
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -46,16 +46,52 @@ const Navbar = () => {
       onClick={handleDrawerToggle}
     >
       <List>
-        {navLinks.map((link) => (
-          <ListItem key={link} disablePadding>
-            <ListItemButton>
-              <ListItemText
-                primary={link}
-                primaryTypographyProps={{ sx: { color: "#fff" } }}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        {navLinks.map((link) =>
+          link.path ? (
+            <NavLink
+              key={link.label}
+              to={link.path}
+              style={{ textDecoration: "none" }}
+            >
+              <ListItem disablePadding>
+                <ListItemButton selected={location.pathname === link.path}>
+                  <ListItemText
+                    primary={link.label}
+                    primaryTypographyProps={{
+                      sx: {
+                        color:
+                          location.pathname === link.path ? "#fff" : "#E5E5E5",
+                        fontWeight:
+                          location.pathname === link.path ? "bold" : 400,
+                        fontFamily: "Netflix Sans, Arial, sans-serif",
+                        fontSize: "14px",
+                        lineHeight: "17px",
+                      },
+                    }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
+          ) : (
+            <ListItem key={link.label} disablePadding>
+              <ListItemButton>
+                <ListItemText
+                  primary={link.label}
+                  primaryTypographyProps={{
+                    sx: {
+                      color: "#E5E5E5",
+                      fontWeight: 400,
+                      fontFamily: "Netflix Sans, Arial, sans-serif",
+                      fontSize: "14px",
+                      lineHeight: "17px",
+                      cursor: "pointer",
+                    },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          )
+        )}
       </List>
     </Box>
   );
@@ -104,6 +140,7 @@ const Navbar = () => {
             >
               NETFLIX
             </Typography>
+
             {!isMobile && (
               <Box
                 sx={{
@@ -113,11 +150,54 @@ const Navbar = () => {
                   ml: 2,
                 }}
               >
-                {navLinks.map((link) => (
-                  <Typography key={link} sx={{ cursor: "pointer" }}>
-                    {link}
-                  </Typography>
-                ))}
+                {navLinks.map((link) => {
+                  const isActive = link.path && location.pathname === link.path;
+
+                  return link.path ? (
+                    <NavLink
+                      key={link.label}
+                      to={link.path}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Typography
+                        sx={{
+                          cursor: "pointer",
+                          fontFamily: "Netflix Sans, Arial, sans-serif",
+                          fontSize: "14px",
+                          fontWeight: 400,
+                          lineHeight: "17px",
+                          color: isActive ? "#fff" : "#E5E5E5",
+                          opacity: isActive ? 1 : 0.8,
+                          transition: "opacity 0.3s ease",
+                          "&:hover": {
+                            opacity: 1,
+                          },
+                        }}
+                      >
+                        {link.label}
+                      </Typography>
+                    </NavLink>
+                  ) : (
+                    <Typography
+                      key={link.label}
+                      sx={{
+                        cursor: "pointer",
+                        fontFamily: "Netflix Sans, Arial, sans-serif",
+                        fontSize: "14px",
+                        fontWeight: 400,
+                        lineHeight: "17px",
+                        color: "#E5E5E5",
+                        opacity: 0.7,
+                        transition: "opacity 0.3s ease",
+                        "&:hover": {
+                          opacity: 1,
+                        },
+                      }}
+                    >
+                      {link.label}
+                    </Typography>
+                  );
+                })}
               </Box>
             )}
           </Box>
