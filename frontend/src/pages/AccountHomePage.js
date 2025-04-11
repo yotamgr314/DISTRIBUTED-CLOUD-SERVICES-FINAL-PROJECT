@@ -16,7 +16,6 @@ const weekInOneWeekendImages = new Array(6).fill("/assets/newOnNetFlix.svg");
 const criticallyAcclaimedImages = new Array(6).fill("/assets/newOnNetFlix.svg");
 const inspiringMoviesImages = new Array(6).fill("/assets/newOnNetFlix.svg");
 const adultAnimationImages = new Array(6).fill("/assets/newOnNetFlix.svg");
-const freshPicksImages = new Array(6).fill("/assets/newOnNetFlix.svg");
 
 /**
  * SectionRow: Generic component to display images in a horizontal scroll.
@@ -196,7 +195,7 @@ const AccountHomePage = () => {
       {/* MAIN CONTENT */}
       <Box sx={{ px: "58px", py: 4 }}>
         <SectionRow
-          title="New on Netflix"
+          title="We think You'll Love These"
           images={newOnNetflixImages}
           imageWidth={218}
           imageHeight={123}
@@ -204,7 +203,7 @@ const AccountHomePage = () => {
           onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
-          title="Top 10 in the U.S. Today"
+          title="New on Netflix"
           images={top10Images}
           imageWidth={215}
           imageHeight={154}
@@ -212,39 +211,34 @@ const AccountHomePage = () => {
           onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
-          title="We Think You'll Love These"
+          title="Top 10 in the U.S. today"
           images={weThinkYoullLoveImages}
           onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
-          title="Continue Watching for Yotam"
+          title="Recently rated"
           images={continueForYotamImages}
           showProgressBar
           onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
-          title="Week In One Weekend"
+          title="Most popular"
           images={weekInOneWeekendImages}
           onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
-          title="Critically Acclaimed Movies"
+          title="Animation"
           images={criticallyAcclaimedImages}
           onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
-          title="Inspiring Movies"
+          title="Action"
           images={inspiringMoviesImages}
           onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
-          title="Adult Animation"
+          title="My list"
           images={adultAnimationImages}
-          onImageClick={handleOpenDetailsModal}
-        />
-        <SectionRow
-          title="Todays Fresh Picks for You"
-          images={freshPicksImages}
           onImageClick={handleOpenDetailsModal}
         />
       </Box>

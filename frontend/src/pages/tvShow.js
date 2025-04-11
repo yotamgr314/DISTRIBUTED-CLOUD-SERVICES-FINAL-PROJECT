@@ -5,37 +5,37 @@ import Navbar from "../components/shared/navbar";
 import ProgramDetailsModal from "../components/moreInfoModal/ProgramDetailsModal";
 
 // Demo content
-const movieSections = [
+const tvSections = [
   {
-    title: "Movies we think you'll love",
+    title: "TV shows we think you'll love",
     images: new Array(10).fill("/assets/newOnNetFlix.svg"),
   },
   {
-    title: "New Movies on Netflix",
+    title: "New TV shows on Netflix",
     images: new Array(9).fill("/assets/newOnNetFlix.svg"),
   },
   {
-    title: "Top 10 Movies in the U.S. today",
+    title: "Top 10 TV shows in the U.S. today",
     images: new Array(9).fill("/assets/newOnNetFlix.svg"),
   },
   {
-    title: "Recently rated Movies",
+    title: "Recently rated TV shows",
     images: new Array(9).fill("/assets/newOnNetFlix.svg"),
   },
   {
-    title: "Most popular Movies",
+    title: "Most popular TV shows",
     images: new Array(9).fill("/assets/newOnNetFlix.svg"),
   },
   {
-    title: "Animation Movies",
+    title: "Animation TV shows",
     images: new Array(9).fill("/assets/newOnNetFlix.svg"),
   },
   {
-    title: "Action Movies",
+    title: "Action TV shows",
     images: new Array(9).fill("/assets/newOnNetFlix.svg"),
   },
   {
-    title: "My Movies list",
+    title: "My TV shows list",
     images: new Array(9).fill("/assets/newOnNetFlix.svg"),
   },
 ];
@@ -92,7 +92,7 @@ const SectionRow = ({
   );
 };
 
-const MoviesPage = () => {
+const TvShowsPage = () => {
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
   const handleOpenDetailsModal = () => {
@@ -103,10 +103,10 @@ const MoviesPage = () => {
   };
 
   const sampleDetails = {
-    title: "The Movie Example",
+    title: "Example TV Show",
     description:
-      "Here you would show detailed info about the movie. This is mock content.",
-    isSeries: false,
+      "This is an example TV show with mock data. In the real version we'll load show info from API.",
+    isSeries: true,
     episodes: [],
     trailers: [],
   };
@@ -124,7 +124,7 @@ const MoviesPage = () => {
 
       {/* Main Content */}
       <Box sx={{ px: "58px", pt: 12, pb: 4 }}>
-        {movieSections.map((section, idx) => (
+        {tvSections.map((section, idx) => (
           <SectionRow
             key={idx}
             title={section.title}
@@ -145,4 +145,4 @@ const MoviesPage = () => {
   );
 };
 
-export default MoviesPage;
+export default TvShowsPage;
