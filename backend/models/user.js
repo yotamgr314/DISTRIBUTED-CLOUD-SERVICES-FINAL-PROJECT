@@ -25,6 +25,12 @@ const userSchema = new mongoose.Schema(
         "Password must be at least 8 characters, including a letter and a number",
       ],
     },
+    profiles: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Profile",
+      },
+    ],
   },
   { timestamps: true }
 );
