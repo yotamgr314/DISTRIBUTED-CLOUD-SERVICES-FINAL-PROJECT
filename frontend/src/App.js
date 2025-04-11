@@ -8,6 +8,8 @@ import ReviewProgram from "./pages/ReviewProgram";
 import MyListPage from "./pages/myList";
 import NewAndPopular from "./pages/newAndPopular";
 import MoviesPage from "./pages/movies";
+import TvShowsPage from "./pages/tvShow";
+
 function App() {
   return (
     <Router>
@@ -24,6 +26,7 @@ function App() {
         <Route path="/MyListPage" element={<MyListPage />} />
         <Route path="/NewAndPopular" element={<NewAndPopular />} />
         <Route path="/MoviesPage" element={<MoviesPage />} />
+        <Route path="/TvShowsPage" element={<TvShowsPage />} />
       </Routes>
     </Router>
   );
