@@ -107,6 +107,24 @@ const Navbar = () => {
             </ListItem>
           )
         )}
+
+        {/* Logout item at the bottom */}
+        <ListItem disablePadding>
+          <ListItemButton onClick={handleLogout}>
+            <ListItemText
+              primary="Logout"
+              primaryTypographyProps={{
+                sx: {
+                  color: "#E50914",
+                  fontWeight: 600,
+                  fontFamily: "Netflix Sans, Arial, sans-serif",
+                  fontSize: "14px",
+                  lineHeight: "17px",
+                },
+              }}
+            />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
@@ -308,6 +326,7 @@ const Navbar = () => {
               width: 240,
               backgroundColor: "#141414",
               color: "#fff",
+              overflowX: "hidden", // ✅ גם כאן ליתר ביטחון
             },
           }}
         >
