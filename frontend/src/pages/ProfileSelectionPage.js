@@ -31,7 +31,7 @@ const ProfileSelectionPage = () => {
   // לחיצה על תמונת הפרופיל בוחרת את הפרופיל ומעבירה לדף הבית
   const handleSelectProfile = (profileId) => {
     console.log("Selected profile:", profileId);
-    navigate("/home");
+    navigate("/AccountHomePage");
   };
 
   // מחיקה של פרופיל

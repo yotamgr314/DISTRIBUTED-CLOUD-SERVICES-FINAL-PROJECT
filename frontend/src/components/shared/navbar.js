@@ -12,10 +12,13 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
+  Menu,
+  MenuItem as MuiMenuItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { clearAuth } from "../../services/authService"; // ✅ הוספנו
 
 const navLinks = [
   { label: "Home", path: "/AccountHomePage" },
@@ -28,16 +31,28 @@ const navLinks = [
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null); // ✅ לתפריט
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const location = useLocation();
+  const navigate = useNavigate();
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
 
-  const handleAvatarClick = () => {
-    // no action for now
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget); // ✅ פתיחה
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    clearAuth();
+    handleCloseMenu();
+    navigate("/SignIn");
   };
 
   const drawer = (
@@ -244,6 +259,35 @@ const Navbar = () => {
               />
               <ArrowDropDownIcon sx={{ color: "white" }} />
             </IconButton>
+
+            {/* Dropdown */}
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleCloseMenu}
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
+              disableScrollLock // ✅ prevents scrollbar side jump
+              sx={{
+                mt: 1,
+                "& .MuiPaper-root": {
+                  backgroundColor: "#141414",
+                  color: "#fff",
+                  border: "1px solid #333",
+                },
+              }}
+            >
+              <MuiMenuItem
+                onClick={handleLogout}
+                sx={{
+                  fontFamily: "Netflix Sans, Arial, sans-serif",
+                  fontSize: "14px",
+                  lineHeight: "17px",
+                }}
+              >
+                Logout
+              </MuiMenuItem>
+            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
