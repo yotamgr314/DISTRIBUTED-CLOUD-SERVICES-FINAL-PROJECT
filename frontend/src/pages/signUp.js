@@ -1,8 +1,77 @@
-import React from "react";
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import Footer from "../components/shared/footerSignInUp";
+// src/pages/SignUp.js
 
-const LoginPage = () => {
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Container,
+  TextField,
+  Typography,
+  MenuItem,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import Footer from "../components/shared/footerSignInUp";
+import { useNavigate } from "react-router-dom";
+
+const SignUp = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user");
+  const [remember, setRemember] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+    if (!emailRegex.test(email)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    if (!passwordRegex.test(password)) {
+      alert(
+        "Password must be at least 8 characters, including a letter and a number"
+      );
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, role }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Registration failed");
+        return;
+      }
+
+      if (remember) {
+        const now = new Date();
+        now.setTime(now.getTime() + 60 * 60 * 1000); // שעה קדימה
+        document.cookie = `token=${
+          data.token
+        }; expires=${now.toUTCString()}; path=/`;
+      } else {
+        sessionStorage.setItem("token", data.token);
+      }
+
+      sessionStorage.setItem("role", data.role);
+      navigate("/SignIn");
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong.");
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -32,7 +101,7 @@ const LoginPage = () => {
         }}
       />
 
-      {/* מבנה עוטף (Flex-column) כדי שהתוכן יהיה בזרימה טבעית */}
+      {/* מבנה עוטף (Flex-column) */}
       <Box
         sx={{
           position: "relative",
@@ -60,7 +129,7 @@ const LoginPage = () => {
           </Typography>
         </Box>
 
-        {/* Main Content - טופס התחברות */}
+        {/* Main Content - טופס הרשמה */}
         <Box
           sx={{
             flex: 1,
@@ -72,8 +141,10 @@ const LoginPage = () => {
           }}
         >
           <Container
+            component="form"
+            onSubmit={handleSubmit}
             sx={{
-              position: "relative", // חלק מהזרימה – לא absolute
+              position: "relative",
               width: { xs: "90%", sm: "70%", md: "450px" },
               backgroundColor: "rgba(0, 0, 0, 0.75)",
               borderRadius: "4px",
@@ -81,7 +152,7 @@ const LoginPage = () => {
               display: "flex",
               flexDirection: "column",
               gap: "20px",
-              mb: 4, // מרווח תחתון למניעת התנגשות עם ה-footer
+              mb: 4,
             }}
           >
             <Typography
@@ -93,13 +164,16 @@ const LoginPage = () => {
                 fontFamily: "ABeeZee",
               }}
             >
-              Log In
+              Sign Up
             </Typography>
+
             <TextField
               variant="filled"
-              label="Email or phone number"
+              label="Email"
               type="email"
               fullWidth
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               sx={{
                 mb: 2,
                 backgroundColor: "rgba(0, 0, 0, 0.8)",
@@ -107,11 +181,14 @@ const LoginPage = () => {
                 "& .MuiInputLabel-root": { color: "#8c8c8c" },
               }}
             />
+
             <TextField
               variant="filled"
               label="Password"
               type="password"
               fullWidth
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               sx={{
                 mb: 2,
                 backgroundColor: "rgba(0, 0, 0, 0.8)",
@@ -119,7 +196,46 @@ const LoginPage = () => {
                 "& .MuiInputLabel-root": { color: "#8c8c8c" },
               }}
             />
+
+            <TextField
+              variant="filled"
+              select
+              label="User Role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              fullWidth
+              SelectProps={{
+                IconComponent: ArrowDropDownIcon,
+              }}
+              sx={{
+                mb: 2,
+                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                "& .MuiSelect-icon": { color: "#fff" },
+                "& .MuiFilledInput-input": { color: "#fff" },
+                "& .MuiInputLabel-root": { color: "#8c8c8c" },
+              }}
+            >
+              <MenuItem value="user">Registered User</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+            </TextField>
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={remember}
+                  onChange={(e) => setRemember(e.target.checked)}
+                  sx={{ color: "#fff", "&.Mui-checked": { color: "#fff" } }}
+                />
+              }
+              label={
+                <Typography sx={{ color: "#fff", fontSize: "14px" }}>
+                  Remember me
+                </Typography>
+              }
+            />
+
             <Button
+              type="submit"
               variant="contained"
               fullWidth
               sx={{
@@ -133,8 +249,9 @@ const LoginPage = () => {
                 },
               }}
             >
-              Log In
+              Sign Up
             </Button>
+
             <Typography
               variant="body2"
               sx={{
@@ -154,11 +271,11 @@ const LoginPage = () => {
           </Container>
         </Box>
 
-        {/* Footer - בתור אלמנט זרימה, לא absolute */}
+        {/* Footer */}
         <Footer />
       </Box>
     </Box>
   );
 };
 
-export default LoginPage;
+export default SignUp;

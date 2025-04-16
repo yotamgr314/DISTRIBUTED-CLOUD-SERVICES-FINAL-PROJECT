@@ -9,27 +9,52 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
-  MenuItem, // ייבוא MenuItem
+  MenuItem,
 } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"; // ייבוא האייקון
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/shared/footerSignInUp";
 
 const SignIn = () => {
   const [remember, setRemember] = useState(false);
-  const [role, setRole] = useState("Registered User"); // ברירת מחדל "Registered User"
+  const [role, setRole] = useState("Registered User");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (remember) {
-      const now = new Date();
-      now.setTime(now.getTime() + 60 * 60 * 1000); // שעה אחת
-      document.cookie =
-        "rememberMe=true; expires=" + now.toUTCString() + "; path=/";
+
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Login failed");
+        return;
+      }
+
+      // שמירה של הטוקן לפי ההעדפה
+      if (remember) {
+        const now = new Date();
+        now.setTime(now.getTime() + 60 * 60 * 1000); // שעה אחת
+        document.cookie =
+          "token=" + data.token + "; expires=" + now.toUTCString() + "; path=/";
+      } else {
+        sessionStorage.setItem("token", data.token);
+      }
+
+      sessionStorage.setItem("role", data.role);
+      navigate("/ProfileSelectionPage");
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong during login.");
     }
-    // כאן תוכל להוסיף לוגיקת התחברות (API וכו')
-    console.log("Sign in submitted. Remember me:", remember, "Role:", role);
   };
 
   return (
@@ -130,6 +155,8 @@ const SignIn = () => {
               label="Email or phone number"
               type="email"
               fullWidth
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               sx={{
                 mb: 2,
                 backgroundColor: "rgba(0, 0, 0, 0.8)",
@@ -144,6 +171,8 @@ const SignIn = () => {
               label="Password"
               type="password"
               fullWidth
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               sx={{
                 mb: 2,
                 backgroundColor: "rgba(0, 0, 0, 0.8)",
@@ -152,7 +181,7 @@ const SignIn = () => {
               }}
             />
 
-            {/* שדה תפקיד משתמש עם אייקון חץ כלפי מטה */}
+            {/* שדה תפקיד משתמש */}
             <TextField
               variant="filled"
               select
@@ -161,21 +190,21 @@ const SignIn = () => {
               onChange={(e) => setRole(e.target.value)}
               fullWidth
               SelectProps={{
-                IconComponent: ArrowDropDownIcon, // מציג חץ כלפי מטה
+                IconComponent: ArrowDropDownIcon,
               }}
               sx={{
                 mb: 2,
                 backgroundColor: "rgba(0, 0, 0, 0.8)",
                 "& .MuiFilledInput-input": { color: "#fff" },
                 "& .MuiInputLabel-root": { color: "#8c8c8c" },
-                "& .MuiSelect-icon": { color: "#fff" }, // שינוי צבע האייקון ללבן
+                "& .MuiSelect-icon": { color: "#fff" },
               }}
             >
               <MenuItem value="Registered User">Registered User</MenuItem>
               <MenuItem value="Admin">Admin</MenuItem>
             </TextField>
 
-            {/* כפתור Sign In */}
+            {/* כפתור התחברות */}
             <Button
               type="submit"
               variant="contained"
@@ -192,7 +221,7 @@ const SignIn = () => {
               Sign In
             </Button>
 
-            {/* Forgot Password? - ממוקם במרכז */}
+            {/* לינקים נוספים */}
             <Box sx={{ textAlign: "center" }}>
               <Typography
                 variant="body2"
@@ -210,7 +239,6 @@ const SignIn = () => {
               </Typography>
             </Box>
 
-            {/* Remember me */}
             <FormControlLabel
               control={
                 <Checkbox
@@ -232,7 +260,6 @@ const SignIn = () => {
               }
             />
 
-            {/* New to Netflix? Sign Up Now */}
             <Box sx={{ textAlign: "center" }}>
               <Typography
                 variant="body2"
@@ -242,9 +269,6 @@ const SignIn = () => {
                   fontWeight: 400,
                   fontSize: "16px",
                   lineHeight: "100%",
-                  letterSpacing: "0px",
-                  width: "212px",
-                  height: "24px",
                   color: "#FFFFFF",
                   display: "flex",
                   alignItems: "center",
@@ -256,7 +280,6 @@ const SignIn = () => {
               </Typography>
             </Box>
 
-            {/* reCAPTCHA Note */}
             <Typography
               variant="body2"
               sx={{

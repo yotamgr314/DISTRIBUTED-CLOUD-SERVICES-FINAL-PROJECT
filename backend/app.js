@@ -3,11 +3,13 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const programRoutes = require("./routes/programRoutes");
+const corsMiddleware = require("./middlewares/corsMiddleware");
 
 const app = express();
 
 // Connect to DB
 connectDB();
+app.use(corsMiddleware); // 👈 לפני כל route
 
 // Middleware
 app.use(express.json());
