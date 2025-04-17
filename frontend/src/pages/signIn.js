@@ -9,15 +9,12 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
-  MenuItem,
 } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/shared/footerSignInUp";
 
 const SignIn = () => {
   const [remember, setRemember] = useState(false);
-  const [role, setRole] = useState("Registered User");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -50,7 +47,12 @@ const SignIn = () => {
       }
 
       sessionStorage.setItem("role", data.role);
-      navigate("/ProfileSelectionPage");
+
+      if (data.role === "admin") {
+        navigate("/AccountHomePage");
+      } else {
+        navigate("/ProfileSelectionPage");
+      }
     } catch (err) {
       console.error(err);
       alert("Something went wrong during login.");
@@ -180,29 +182,6 @@ const SignIn = () => {
                 "& .MuiInputLabel-root": { color: "#8c8c8c" },
               }}
             />
-
-            {/* שדה תפקיד משתמש */}
-            <TextField
-              variant="filled"
-              select
-              label="User Role"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              fullWidth
-              SelectProps={{
-                IconComponent: ArrowDropDownIcon,
-              }}
-              sx={{
-                mb: 2,
-                backgroundColor: "rgba(0, 0, 0, 0.8)",
-                "& .MuiFilledInput-input": { color: "#fff" },
-                "& .MuiInputLabel-root": { color: "#8c8c8c" },
-                "& .MuiSelect-icon": { color: "#fff" },
-              }}
-            >
-              <MenuItem value="Registered User">Registered User</MenuItem>
-              <MenuItem value="Admin">Admin</MenuItem>
-            </TextField>
 
             {/* כפתור התחברות */}
             <Button
