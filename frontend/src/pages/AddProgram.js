@@ -8,7 +8,7 @@ import {
   Typography,
   TextField,
   MenuItem,
-  ToggleButton,
+  ToggleButton, // ✅ added
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "../services/authService";
@@ -125,7 +125,7 @@ const AddProgram = () => {
             Add New Program
           </Typography>
 
-          {/* Program Title */}
+          {/* Title */}
           <TextField
             label="Program Title"
             value={form.title}
@@ -164,7 +164,7 @@ const AddProgram = () => {
             sx={{ backgroundColor: "#1f1f1f" }}
           />
 
-          {/* This show is */}
+          {/* This show is... */}
           <TextField
             label="This show is..."
             value={form.thisShowIs}
@@ -201,15 +201,15 @@ const AddProgram = () => {
                 flex: 1,
                 color: "#ccc",
                 transition: "none",
-                "&:hover": {
-                  backgroundColor: form.type !== "movie" ? "#333" : undefined,
-                },
                 "&.Mui-selected": {
-                  backgroundColor: "#E50914",
+                  backgroundColor: "#0E1B2E", // exact side‑nav selected color
                   color: "#fff",
-                  "&:hover": {
-                    backgroundColor: "#E50914",
-                  },
+                },
+                "&:not(.Mui-selected):hover": {
+                  backgroundColor: "rgba(255,255,255,0.08)",
+                },
+                "&.Mui-selected:hover": {
+                  backgroundColor: "#0E1B2E",
                 },
               }}
             >
@@ -224,15 +224,15 @@ const AddProgram = () => {
                 flex: 1,
                 color: "#ccc",
                 transition: "none",
-                "&:hover": {
-                  backgroundColor: form.type !== "tv" ? "#333" : undefined,
-                },
                 "&.Mui-selected": {
-                  backgroundColor: "#E50914",
+                  backgroundColor: "#0E1B2E",
                   color: "#fff",
-                  "&:hover": {
-                    backgroundColor: "#E50914",
-                  },
+                },
+                "&:not(.Mui-selected):hover": {
+                  backgroundColor: "rgba(255,255,255,0.08)",
+                },
+                "&.Mui-selected:hover": {
+                  backgroundColor: "#0E1B2E",
                 },
               }}
             >
@@ -240,7 +240,7 @@ const AddProgram = () => {
             </ToggleButton>
           </Box>
 
-          {/* Upload Poster Image */}
+          {/* Poster Upload */}
           <Box>
             <Typography variant="h6" sx={{ mb: 1 }}>
               Upload Poster Image
@@ -286,7 +286,7 @@ const AddProgram = () => {
             sx={{ backgroundColor: "#1f1f1f" }}
           />
 
-          {/* Upload Program Photos */}
+          {/* Multiple Image Upload */}
           <Box>
             <Typography variant="h6" sx={{ mb: 1 }}>
               Upload Program Photos (Up to 3)
