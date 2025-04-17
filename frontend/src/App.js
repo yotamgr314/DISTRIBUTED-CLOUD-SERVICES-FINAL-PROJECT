@@ -9,6 +9,7 @@ import MyListPage from "./pages/myList";
 import NewAndPopular from "./pages/newAndPopular";
 import MoviesPage from "./pages/movies";
 import TvShowsPage from "./pages/tvShow";
+import AddProgram from "./pages/AddProgram";
 import ProtectedRoute from "./components/shared/ProtectedRoute";
 
 function App() {
@@ -22,6 +23,14 @@ function App() {
           element={
             <ProtectedRoute>
               <ProfileSelectionPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/AddProgram"
+          element={
+            <ProtectedRoute>
+              <AddProgram />
             </ProtectedRoute>
           }
         />
