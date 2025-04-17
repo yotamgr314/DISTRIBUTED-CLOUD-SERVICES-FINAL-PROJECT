@@ -11,50 +11,59 @@ import { useNavigate } from "react-router-dom";
 import { getToken } from "../services/authService";
 import Navbar from "../components/shared/navbar";
 import FooterAccountHomePage from "../components/shared/footerAccountHomePage";
+import { useMemo } from "react";
 
 const AddProgram = () => {
   const navigate = useNavigate();
+
+  const containerEl = useMemo(
+    () => document.getElementById("add-program-root"),
+    []
+  );
+
   const [form, setForm] = useState({
     title: "",
     cast: "",
     genres: "",
     thisShowIs: "",
     type: "movie",
-    posterURL: "",
+    posterFile: null, // ✅ was posterURL
     summary: "",
-    programPhotos: [null, null, null],
+    programPhotos: [], // ✅ allow 1–3
   });
-  const [photoPreviews, setPhotoPreviews] = useState(["", "", ""]);
+  const [posterPreview, setPosterPreview] = useState("");
+  const [photoPreviews, setPhotoPreviews] = useState([]);
 
   useEffect(() => {
     const token = getToken();
     const role = sessionStorage.getItem("role");
-
-    if (!token) {
-      navigate("/SignIn");
-    } else if (role !== "admin") {
-      navigate("/AccountHomePage");
-    }
+    if (!token) navigate("/SignIn");
+    else if (role !== "admin") navigate("/AccountHomePage");
   }, [navigate]);
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handlePhotoChange = (index, file) => {
-    const updatedPhotos = [...form.programPhotos];
-    updatedPhotos[index] = file;
+  const handlePosterChange = (file) => {
+    if (!file) return;
+    setForm((prev) => ({ ...prev, posterFile: file }));
+    setPosterPreview(URL.createObjectURL(file));
+  };
 
-    const previewURLs = [...photoPreviews];
-    previewURLs[index] = file ? URL.createObjectURL(file) : "";
+  const handlePhotosChange = (files) => {
+    const selectedFiles = Array.from(files);
 
-    setForm((prev) => ({ ...prev, programPhotos: updatedPhotos }));
-    setPhotoPreviews(previewURLs);
+    const combined = [...form.programPhotos, ...selectedFiles].slice(0, 3);
+    const previews = combined.map((file) => URL.createObjectURL(file));
+
+    setForm((prev) => ({ ...prev, programPhotos: combined }));
+    setPhotoPreviews(previews);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitted program:", form);
+    console.log("Form data:", form);
   };
 
   return (
@@ -181,9 +190,14 @@ const AddProgram = () => {
             fullWidth
             SelectProps={{
               MenuProps: {
-                container: document.getElementById("add-program-root"), // ✅ עיקר התיקון
+                container: () => document.getElementById("add-program-root"),
+                disableScrollLock: false, // ✅ פותר גרירת תפריט בגלילה
                 PaperProps: {
-                  sx: { backgroundColor: "#1f1f1f" },
+                  sx: {
+                    backgroundColor: "#141414",
+                    color: "#E5E5E5",
+                    border: "1px solid #333",
+                  },
                 },
               },
             }}
@@ -191,20 +205,66 @@ const AddProgram = () => {
             InputLabelProps={{ sx: { color: "#aaa" } }}
             sx={{ backgroundColor: "#1f1f1f" }}
           >
-            <MenuItem value="movie">Movie</MenuItem>
-            <MenuItem value="tv">TV Series</MenuItem>
+            <MenuItem
+              value="movie"
+              sx={{
+                fontFamily: "Netflix Sans, Arial, sans-serif",
+                fontSize: "14px",
+                lineHeight: "17px",
+                color: form.type === "movie" ? "#fff" : "#E5E5E5",
+                fontWeight: form.type === "movie" ? 600 : 400,
+                mb: 0,
+              }}
+            >
+              Movie
+            </MenuItem>
+
+            <MenuItem
+              value="tv"
+              sx={{
+                fontFamily: "Netflix Sans, Arial, sans-serif",
+                fontSize: "14px",
+                lineHeight: "17px",
+                color: form.type === "tv" ? "#fff" : "#E5E5E5",
+                fontWeight: form.type === "tv" ? 600 : 400,
+                mb: 0, // ✅ מבטל רווח תחתון
+              }}
+            >
+              TV Series
+            </MenuItem>
           </TextField>
 
-          <TextField
-            label="Poster URL"
-            value={form.posterURL}
-            onChange={(e) => handleChange("posterURL", e.target.value)}
-            variant="filled"
-            fullWidth
-            InputProps={{ sx: { color: "#fff" } }}
-            InputLabelProps={{ sx: { color: "#aaa" } }}
-            sx={{ backgroundColor: "#1f1f1f" }}
-          />
+          {/* Poster Upload */}
+          <Box>
+            <Typography variant="h6" sx={{ mb: 1 }}>
+              Upload Poster Image
+            </Typography>
+            <Button variant="outlined" component="label">
+              Choose Poster
+              <input
+                hidden
+                accept="image/*"
+                type="file"
+                onChange={(e) =>
+                  handlePosterChange(e.target.files?.[0] || null)
+                }
+              />
+            </Button>
+            {posterPreview && (
+              <Box
+                component="img"
+                src={posterPreview}
+                alt="Poster Preview"
+                sx={{
+                  width: "100%",
+                  maxHeight: "200px",
+                  objectFit: "cover",
+                  borderRadius: 1,
+                  mt: 2,
+                }}
+              />
+            )}
+          </Box>
 
           <TextField
             label="Summary"
@@ -219,37 +279,40 @@ const AddProgram = () => {
             sx={{ backgroundColor: "#1f1f1f" }}
           />
 
-          <Typography variant="h6" sx={{ mt: 2 }}>
-            Program Photos (Upload 3 Images)
-          </Typography>
-
-          {form.programPhotos.map((_, index) => (
-            <Box
-              key={index}
-              sx={{ display: "flex", flexDirection: "column", gap: 1 }}
-            >
+          {/* Multiple Image Upload */}
+          <Box>
+            <Typography variant="h6" sx={{ mb: 1 }}>
+              Upload Program Photos (Up to 3)
+            </Typography>
+            <Button variant="outlined" component="label">
+              Choose Images
               <input
+                hidden
+                multiple
                 accept="image/*"
                 type="file"
-                onChange={(e) =>
-                  handlePhotoChange(index, e.target.files?.[0] || null)
-                }
+                onChange={(e) => handlePhotosChange(e.target.files)}
               />
-              {photoPreviews[index] && (
+            </Button>
+
+            <Box sx={{ display: "flex", gap: 2, mt: 2, flexWrap: "wrap" }}>
+              {photoPreviews.map((url, index) => (
                 <Box
+                  key={index}
                   component="img"
-                  src={photoPreviews[index]}
-                  alt={`Preview ${index + 1}`}
+                  src={url}
+                  alt={`Program ${index + 1}`}
                   sx={{
                     width: "100%",
-                    maxHeight: "200px",
+                    maxWidth: "200px",
+                    height: "auto",
                     objectFit: "cover",
                     borderRadius: 1,
                   }}
                 />
-              )}
+              ))}
             </Box>
-          ))}
+          </Box>
 
           <Button
             type="submit"
@@ -262,7 +325,7 @@ const AddProgram = () => {
               "&:hover": { backgroundColor: "#b81d24" },
             }}
           >
-            Save Program (Mock)
+            Save Program
           </Button>
         </Container>
       </Box>
