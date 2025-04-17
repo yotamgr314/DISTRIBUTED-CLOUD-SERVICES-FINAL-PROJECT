@@ -8,6 +8,7 @@ import {
   Typography,
   TextField,
   MenuItem,
+  ToggleButton,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "../services/authService";
@@ -124,7 +125,7 @@ const AddProgram = () => {
             Add New Program
           </Typography>
 
-          {/* Title */}
+          {/* Program Title */}
           <TextField
             label="Program Title"
             value={form.title}
@@ -178,77 +179,68 @@ const AddProgram = () => {
             sx={{ backgroundColor: "#1f1f1f" }}
           />
 
-          <TextField
-            label="Type"
-            select
-            value={form.type}
-            onChange={(e) => handleChange("type", e.target.value)}
-            variant="filled"
-            fullWidth
-            SelectProps={{
-              MenuProps: {
-                // allow the body to scroll while menu is open
-                disableScrollLock: true,
-                // no container override, so menu is portalled to <body>
-                PaperProps: {
-                  sx: {
-                    p: 0,
-                    backgroundColor: "#141414",
-                    color: "#E5E5E5",
-                    border: "1px solid #333",
-                  },
-                },
-                MenuListProps: {
-                  sx: {
-                    p: 0, // remove bottom padding
-                  },
-                },
-              },
-            }}
-            InputProps={{
-              sx: {
-                color: "#fff",
-                fontSize: "16px", // prevent mobile zoom on focus
-              },
-            }}
-            InputLabelProps={{
-              sx: { color: "#aaa", fontSize: "16px" },
-            }}
+          {/* Type using ToggleButtons */}
+          <Typography variant="subtitle1" sx={{ color: "#aaa" }}>
+            Type
+          </Typography>
+          <Box
             sx={{
+              display: "flex",
+              border: "1px solid #333",
+              borderRadius: 1,
+              overflow: "hidden",
               backgroundColor: "#1f1f1f",
-              "& .MuiSelect-select": {
-                fontSize: "16px", // ensure the rendered select text is ≥16px
-              },
             }}
           >
-            <MenuItem
+            <ToggleButton
               value="movie"
+              selected={form.type === "movie"}
+              onClick={() => handleChange("type", "movie")}
+              disableRipple
               sx={{
-                fontFamily: "Netflix Sans, Arial, sans-serif",
-                fontSize: "14px",
-                lineHeight: "17px",
-                color: form.type === "movie" ? "#fff" : "#E5E5E5",
-                fontWeight: form.type === "movie" ? 600 : 400,
-                mb: 0,
+                flex: 1,
+                color: "#ccc",
+                transition: "none",
+                "&:hover": {
+                  backgroundColor: form.type !== "movie" ? "#333" : undefined,
+                },
+                "&.Mui-selected": {
+                  backgroundColor: "#E50914",
+                  color: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#E50914",
+                  },
+                },
               }}
             >
               Movie
-            </MenuItem>
-            <MenuItem
+            </ToggleButton>
+            <ToggleButton
               value="tv"
+              selected={form.type === "tv"}
+              onClick={() => handleChange("type", "tv")}
+              disableRipple
               sx={{
-                fontFamily: "Netflix Sans, Arial, sans-serif",
-                fontSize: "14px",
-                lineHeight: "17px",
-                color: form.type === "tv" ? "#fff" : "#E5E5E5",
-                fontWeight: form.type === "tv" ? 600 : 400,
-                mb: 0,
+                flex: 1,
+                color: "#ccc",
+                transition: "none",
+                "&:hover": {
+                  backgroundColor: form.type !== "tv" ? "#333" : undefined,
+                },
+                "&.Mui-selected": {
+                  backgroundColor: "#E50914",
+                  color: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#E50914",
+                  },
+                },
               }}
             >
               TV Series
-            </MenuItem>
-          </TextField>
-          {/* Poster Upload */}
+            </ToggleButton>
+          </Box>
+
+          {/* Upload Poster Image */}
           <Box>
             <Typography variant="h6" sx={{ mb: 1 }}>
               Upload Poster Image
@@ -294,7 +286,7 @@ const AddProgram = () => {
             sx={{ backgroundColor: "#1f1f1f" }}
           />
 
-          {/* Multiple Image Upload */}
+          {/* Upload Program Photos */}
           <Box>
             <Typography variant="h6" sx={{ mb: 1 }}>
               Upload Program Photos (Up to 3)
