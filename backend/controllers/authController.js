@@ -24,5 +24,5 @@ exports.loginUser = async (req, res) => {
   }
 
   const token = generateToken(user);
-  res.status(200).json({ token });
+  res.status(200).json({ token, role: user.role });
 };
