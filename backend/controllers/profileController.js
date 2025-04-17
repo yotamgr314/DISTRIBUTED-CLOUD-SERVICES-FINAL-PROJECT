@@ -1,4 +1,5 @@
 const Profile = require("../models/profile");
+const User = require("../models/user");
 
 // GET /api/profiles/me
 exports.getMyProfiles = async (req, res) => {
@@ -17,6 +18,11 @@ exports.createProfile = async (req, res) => {
     name: req.body.name || "New Profile",
     avatarIndex: Math.floor(Math.random() * 4),
     user: req.user.id,
+  });
+
+  // ✅ Push profile reference into user's 'profiles' array
+  await User.findByIdAndUpdate(req.user.id, {
+    $push: { profiles: newProfile._id },
   });
 
   res.status(201).json(newProfile);
@@ -41,6 +47,13 @@ exports.deleteProfile = async (req, res) => {
     _id: req.params.id,
     user: req.user.id,
   });
+
   if (!deleted) return res.status(404).json({ message: "Profile not found" });
+
+  // ✅ Remove reference from user's 'profiles' array
+  await User.findByIdAndUpdate(req.user.id, {
+    $pull: { profiles: deleted._id },
+  });
+
   res.status(200).json({ message: "Profile deleted" });
 };

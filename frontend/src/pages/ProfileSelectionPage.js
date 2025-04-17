@@ -1,11 +1,11 @@
 // src/pages/ProfileSelectionPage.js
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, IconButton, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
+import { getToken } from "../services/authService";
 
-// עדכון הנתיבים לתמונות האוואטר בהתאם לשמות שבחרת
 const avatars = [
   "/assets/redIcon.svg",
   "/assets/blueIcon.svg",
@@ -13,68 +13,118 @@ const avatars = [
   "/assets/yellowIcon.svg",
 ];
 
-function getRandomAvatarIndex() {
-  return Math.floor(Math.random() * avatars.length);
-}
-
 const ProfileSelectionPage = () => {
   const navigate = useNavigate();
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // מצב מקומי של רשימת הפרופילים
-  const [profiles, setProfiles] = useState([
-    { id: 1, name: "Jennifer", avatarIndex: 0, isEditing: false },
-    { id: 2, name: "Bill", avatarIndex: 1, isEditing: false },
-    { id: 3, name: "Alice", avatarIndex: 2, isEditing: false },
-    { id: 4, name: "James", avatarIndex: 3, isEditing: false },
-  ]);
+  useEffect(() => {
+    const token = getToken();
+    const role = sessionStorage.getItem("role");
 
-  // לחיצה על תמונת הפרופיל בוחרת את הפרופיל ומעבירה לדף הבית
+    if (!token) {
+      navigate("/SignIn", { replace: true });
+      return;
+    }
+    if (role !== "user") {
+      navigate("/AccountHomePage", { replace: true });
+      return;
+    }
+
+    fetchProfiles();
+  }, [navigate]);
+
+  const fetchProfiles = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/profiles/me", {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+      if (!res.ok) throw new Error("Failed to fetch profiles");
+      const data = await res.json();
+      setProfiles(data.map((p) => ({ ...p, isEditing: false })));
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSelectProfile = (profileId) => {
     console.log("Selected profile:", profileId);
     navigate("/AccountHomePage");
   };
 
-  // מחיקה של פרופיל
-  const handleDeleteProfile = (profileId) => {
-    setProfiles((prev) => prev.filter((p) => p.id !== profileId));
-  };
-
-  // לחיצה על שם הפרופיל לעריכה
-  const handleEditName = (profileId) => {
-    setProfiles((prev) =>
-      prev.map((p) => (p.id === profileId ? { ...p, isEditing: true } : p))
-    );
-  };
-
-  // שינוי שם הפרופיל
-  const handleNameChange = (profileId, newName) => {
-    setProfiles((prev) =>
-      prev.map((p) => (p.id === profileId ? { ...p, name: newName } : p))
-    );
-  };
-
-  // שמירת שם בפרופיל בעת לחיצה על Enter
-  const handleNameKeyDown = (e, profileId) => {
-    if (e.key === "Enter") {
-      setProfiles((prev) =>
-        prev.map((p) => (p.id === profileId ? { ...p, isEditing: false } : p))
+  const handleDeleteProfile = async (profileId) => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/profiles/${profileId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${getToken()}` },
+        }
       );
+      if (!res.ok) throw new Error("Delete failed");
+      setProfiles((prev) => prev.filter((p) => p._id !== profileId));
+    } catch (err) {
+      alert(err.message);
     }
   };
 
-  // הוספת פרופיל חדש
-  const handleAddProfile = () => {
-    const newId = Date.now();
-    const randomAvatar = getRandomAvatarIndex();
-    setProfiles((prev) => [
-      ...prev,
-      {
-        id: newId,
-        name: "New Profile",
-        avatarIndex: randomAvatar,
-        isEditing: false,
-      },
-    ]);
+  const handleEditName = (profileId) => {
+    setProfiles((prev) =>
+      prev.map((p) => (p._id === profileId ? { ...p, isEditing: true } : p))
+    );
+  };
+
+  const handleNameChange = (profileId, newName) => {
+    setProfiles((prev) =>
+      prev.map((p) => (p._id === profileId ? { ...p, name: newName } : p))
+    );
+  };
+
+  const handleNameKeyDown = async (e, profileId) => {
+    if (e.key === "Enter") {
+      const profile = profiles.find((p) => p._id === profileId);
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/profiles/${profileId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getToken()}`,
+            },
+            body: JSON.stringify({ name: profile.name }),
+          }
+        );
+        if (!res.ok) throw new Error("Rename failed");
+        setProfiles((prev) =>
+          prev.map((p) =>
+            p._id === profileId ? { ...p, isEditing: false } : p
+          )
+        );
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+  };
+
+  const handleAddProfile = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/profiles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+        body: JSON.stringify({ name: "New Profile" }),
+      });
+      if (!res.ok) throw new Error("Add profile failed");
+      const newProfile = await res.json();
+      setProfiles((prev) => [...prev, { ...newProfile, isEditing: false }]);
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   return (
@@ -89,7 +139,6 @@ const ProfileSelectionPage = () => {
         pt: 8,
       }}
     >
-      {/* כותרת */}
       <Typography
         sx={{
           fontFamily: "ABeeZee",
@@ -103,7 +152,6 @@ const ProfileSelectionPage = () => {
         Who's watching?
       </Typography>
 
-      {/* אזור הבחירה של הפרופילים */}
       <Box
         sx={{
           display: "flex",
@@ -114,14 +162,13 @@ const ProfileSelectionPage = () => {
       >
         {profiles.map((profile) => (
           <Box
-            key={profile.id}
+            key={profile._id}
             sx={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
             }}
           >
-            {/* תמונת אוואטר + כפתור מחיקה */}
             <Box
               sx={{
                 position: "relative",
@@ -131,7 +178,7 @@ const ProfileSelectionPage = () => {
               }}
             >
               <IconButton
-                onClick={() => handleDeleteProfile(profile.id)}
+                onClick={() => handleDeleteProfile(profile._id)}
                 sx={{
                   position: "absolute",
                   top: 0,
@@ -150,18 +197,17 @@ const ProfileSelectionPage = () => {
                   height: "144px",
                   cursor: "pointer",
                 }}
-                onClick={() => handleSelectProfile(profile.id)}
+                onClick={() => handleSelectProfile(profile._id)}
               />
             </Box>
 
-            {/* שם הפרופיל - עריכה או טקסט */}
             {profile.isEditing ? (
               <TextField
                 variant="outlined"
                 size="small"
                 value={profile.name}
-                onChange={(e) => handleNameChange(profile.id, e.target.value)}
-                onKeyDown={(e) => handleNameKeyDown(e, profile.id)}
+                onChange={(e) => handleNameChange(profile._id, e.target.value)}
+                onKeyDown={(e) => handleNameKeyDown(e, profile._id)}
                 sx={{
                   width: "144px",
                   "& .MuiOutlinedInput-root": {
@@ -179,7 +225,7 @@ const ProfileSelectionPage = () => {
                   textAlign: "center",
                   width: "144px",
                 }}
-                onClick={() => handleEditName(profile.id)}
+                onClick={() => handleEditName(profile._id)}
               >
                 {profile.name}
               </Typography>
