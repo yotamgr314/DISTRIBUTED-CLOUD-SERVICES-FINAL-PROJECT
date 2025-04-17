@@ -1,3 +1,5 @@
+// src/pages/AddProgram.js
+
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -11,25 +13,18 @@ import { useNavigate } from "react-router-dom";
 import { getToken } from "../services/authService";
 import Navbar from "../components/shared/navbar";
 import FooterAccountHomePage from "../components/shared/footerAccountHomePage";
-import { useMemo } from "react";
 
 const AddProgram = () => {
   const navigate = useNavigate();
-
-  const containerEl = useMemo(
-    () => document.getElementById("add-program-root"),
-    []
-  );
-
   const [form, setForm] = useState({
     title: "",
     cast: "",
     genres: "",
     thisShowIs: "",
     type: "movie",
-    posterFile: null, // ✅ was posterURL
+    posterFile: null,
     summary: "",
-    programPhotos: [], // ✅ allow 1–3
+    programPhotos: [],
   });
   const [posterPreview, setPosterPreview] = useState("");
   const [photoPreviews, setPhotoPreviews] = useState([]);
@@ -53,10 +48,8 @@ const AddProgram = () => {
 
   const handlePhotosChange = (files) => {
     const selectedFiles = Array.from(files);
-
     const combined = [...form.programPhotos, ...selectedFiles].slice(0, 3);
     const previews = combined.map((file) => URL.createObjectURL(file));
-
     setForm((prev) => ({ ...prev, programPhotos: combined }));
     setPhotoPreviews(previews);
   };
@@ -131,6 +124,7 @@ const AddProgram = () => {
             Add New Program
           </Typography>
 
+          {/* Title */}
           <TextField
             label="Program Title"
             value={form.title}
@@ -142,6 +136,7 @@ const AddProgram = () => {
             sx={{ backgroundColor: "#1f1f1f" }}
           />
 
+          {/* Cast */}
           <TextField
             label="Cast"
             value={form.cast}
@@ -156,6 +151,7 @@ const AddProgram = () => {
             sx={{ backgroundColor: "#1f1f1f" }}
           />
 
+          {/* Genres */}
           <TextField
             label="Genres (comma separated)"
             value={form.genres}
@@ -167,6 +163,7 @@ const AddProgram = () => {
             sx={{ backgroundColor: "#1f1f1f" }}
           />
 
+          {/* This show is */}
           <TextField
             label="This show is..."
             value={form.thisShowIs}
@@ -190,20 +187,39 @@ const AddProgram = () => {
             fullWidth
             SelectProps={{
               MenuProps: {
-                container: () => document.getElementById("add-program-root"),
-                disableScrollLock: false, // ✅ פותר גרירת תפריט בגלילה
+                // allow the body to scroll while menu is open
+                disableScrollLock: true,
+                // no container override, so menu is portalled to <body>
                 PaperProps: {
                   sx: {
+                    p: 0,
                     backgroundColor: "#141414",
                     color: "#E5E5E5",
                     border: "1px solid #333",
                   },
                 },
+                MenuListProps: {
+                  sx: {
+                    p: 0, // remove bottom padding
+                  },
+                },
               },
             }}
-            InputProps={{ sx: { color: "#fff" } }}
-            InputLabelProps={{ sx: { color: "#aaa" } }}
-            sx={{ backgroundColor: "#1f1f1f" }}
+            InputProps={{
+              sx: {
+                color: "#fff",
+                fontSize: "16px", // prevent mobile zoom on focus
+              },
+            }}
+            InputLabelProps={{
+              sx: { color: "#aaa", fontSize: "16px" },
+            }}
+            sx={{
+              backgroundColor: "#1f1f1f",
+              "& .MuiSelect-select": {
+                fontSize: "16px", // ensure the rendered select text is ≥16px
+              },
+            }}
           >
             <MenuItem
               value="movie"
@@ -218,7 +234,6 @@ const AddProgram = () => {
             >
               Movie
             </MenuItem>
-
             <MenuItem
               value="tv"
               sx={{
@@ -227,13 +242,12 @@ const AddProgram = () => {
                 lineHeight: "17px",
                 color: form.type === "tv" ? "#fff" : "#E5E5E5",
                 fontWeight: form.type === "tv" ? 600 : 400,
-                mb: 0, // ✅ מבטל רווח תחתון
+                mb: 0,
               }}
             >
               TV Series
             </MenuItem>
           </TextField>
-
           {/* Poster Upload */}
           <Box>
             <Typography variant="h6" sx={{ mb: 1 }}>
@@ -266,6 +280,7 @@ const AddProgram = () => {
             )}
           </Box>
 
+          {/* Summary */}
           <TextField
             label="Summary"
             value={form.summary}
@@ -294,7 +309,6 @@ const AddProgram = () => {
                 onChange={(e) => handlePhotosChange(e.target.files)}
               />
             </Button>
-
             <Box sx={{ display: "flex", gap: 2, mt: 2, flexWrap: "wrap" }}>
               {photoPreviews.map((url, index) => (
                 <Box
@@ -314,6 +328,7 @@ const AddProgram = () => {
             </Box>
           </Box>
 
+          {/* Save */}
           <Button
             type="submit"
             variant="contained"
