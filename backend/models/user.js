@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const Profile = require("./profile"); // ✅ ייבוא schema של פרופילים
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
@@ -34,6 +35,14 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Mongoose middlewhere to track user removal and then delete all his profiles.
+userSchema.post("findOneAndDelete", async function (doc) {
+  if (doc) {
+    await Profile.deleteMany({ user: doc._id });
+    console.log(`Cascade delete: deleted profiles for user ${doc._id}`);
+  }
+});
 
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
