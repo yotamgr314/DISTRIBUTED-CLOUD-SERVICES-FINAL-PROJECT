@@ -9,6 +9,7 @@ import MyListPage from "./pages/myList";
 import NewAndPopular from "./pages/newAndPopular";
 import MoviesPage from "./pages/movies";
 import TvShowsPage from "./pages/tvShow";
+import ProtectedRoute from "./components/shared/ProtectedRoute";
 
 function App() {
   return (
@@ -18,8 +19,13 @@ function App() {
         <Route path="/SignIn" element={<SignIn />} />
         <Route
           path="/ProfileSelectionPage"
-          element={<ProfileSelectionPage />}
+          element={
+            <ProtectedRoute>
+              <ProfileSelectionPage />
+            </ProtectedRoute>
+          }
         />
+
         <Route path="/AccountHomePage" element={<AccountHomePage />} />
         <Route path="/ReviewProgram" element={<ReviewProgram />} />
         <Route path="/MyListPage" element={<MyListPage />} />
