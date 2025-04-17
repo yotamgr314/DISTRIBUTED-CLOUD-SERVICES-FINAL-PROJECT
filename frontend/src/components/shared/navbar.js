@@ -18,7 +18,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { clearAuth } from "../../services/authService"; // ✅ הוספנו
+import { clearAuth } from "../../services/authService";
 
 const navLinks = [
   { label: "Home", path: "/AccountHomePage" },
@@ -31,18 +31,20 @@ const navLinks = [
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null); // ✅ לתפריט
+  const [anchorEl, setAnchorEl] = useState(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const location = useLocation();
   const navigate = useNavigate();
+
+  const role = sessionStorage.getItem("role");
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
 
   const handleAvatarClick = (event) => {
-    setAnchorEl(event.currentTarget); // ✅ פתיחה
+    setAnchorEl(event.currentTarget);
   };
 
   const handleCloseMenu = () => {
@@ -108,7 +110,33 @@ const Navbar = () => {
           )
         )}
 
-        {/* Logout item at the bottom */}
+        {/* Add New Program - admin only */}
+        {role === "admin" && (
+          <NavLink to="/AddProgram" style={{ textDecoration: "none" }}>
+            <ListItem disablePadding>
+              <ListItemButton selected={location.pathname === "/AddProgram"}>
+                <ListItemText
+                  primary="Add New Program"
+                  primaryTypographyProps={{
+                    sx: {
+                      color:
+                        location.pathname === "/AddProgram"
+                          ? "#fff"
+                          : "#E5E5E5",
+                      fontWeight:
+                        location.pathname === "/AddProgram" ? "bold" : 400,
+                      fontFamily: "Netflix Sans, Arial, sans-serif",
+                      fontSize: "14px",
+                      lineHeight: "17px",
+                    },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </NavLink>
+        )}
+
+        {/* Logout */}
         <ListItem disablePadding>
           <ListItemButton onClick={handleLogout}>
             <ListItemText
@@ -151,7 +179,6 @@ const Navbar = () => {
             justifyContent: "space-between",
           }}
         >
-          {/* Left: Logo and navigation links */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {isMobile && (
               <IconButton
@@ -231,11 +258,37 @@ const Navbar = () => {
                     </Typography>
                   );
                 })}
+
+                {/* Add New Program - admin only */}
+                {role === "admin" && (
+                  <NavLink to="/AddProgram" style={{ textDecoration: "none" }}>
+                    <Typography
+                      sx={{
+                        cursor: "pointer",
+                        fontFamily: "Netflix Sans, Arial, sans-serif",
+                        fontSize: "14px",
+                        fontWeight: 400,
+                        lineHeight: "17px",
+                        color:
+                          location.pathname === "/AddProgram"
+                            ? "#fff"
+                            : "#E5E5E5",
+                        opacity: location.pathname === "/AddProgram" ? 1 : 0.8,
+                        transition: "opacity 0.3s ease",
+                        "&:hover": {
+                          opacity: 1,
+                        },
+                      }}
+                    >
+                      Add New Program
+                    </Typography>
+                  </NavLink>
+                )}
               </Box>
             )}
           </Box>
 
-          {/* Right: icons */}
+          {/* Right Icons + Dropdown */}
           <Box
             sx={{
               display: "flex",
@@ -248,44 +301,31 @@ const Navbar = () => {
               component="img"
               src="/assets/searchIcon.svg"
               alt="Search Icon"
-              sx={{
-                width: 24,
-                height: 24,
-                cursor: "pointer",
-              }}
+              sx={{ width: 24, height: 24, cursor: "pointer" }}
             />
             <Box
               component="img"
               src="/assets/alertbellIcons.svg"
               alt="Alerts"
-              sx={{
-                width: 24,
-                height: 24,
-                cursor: "pointer",
-              }}
+              sx={{ width: 24, height: 24, cursor: "pointer" }}
             />
             <IconButton onClick={handleAvatarClick} sx={{ padding: 0 }}>
               <Box
                 component="img"
                 src="/assets/smallAvatarUserIcon.svg"
                 alt="User Avatar"
-                sx={{
-                  width: 32,
-                  height: 32,
-                  objectFit: "contain",
-                }}
+                sx={{ width: 32, height: 32, objectFit: "contain" }}
               />
               <ArrowDropDownIcon sx={{ color: "white" }} />
             </IconButton>
 
-            {/* Dropdown */}
             <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleCloseMenu}
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               transformOrigin={{ vertical: "top", horizontal: "right" }}
-              disableScrollLock // ✅ prevents scrollbar side jump
+              disableScrollLock
               sx={{
                 mt: 1,
                 "& .MuiPaper-root": {
@@ -310,15 +350,13 @@ const Navbar = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Drawer for mobile */}
+      {/* Drawer */}
       <Box component="nav">
         <Drawer
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
+          ModalProps={{ keepMounted: true }}
           sx={{
             display: { xs: "block", md: "none" },
             "& .MuiDrawer-paper": {
@@ -326,7 +364,7 @@ const Navbar = () => {
               width: 240,
               backgroundColor: "#141414",
               color: "#fff",
-              overflowX: "hidden", // ✅ גם כאן ליתר ביטחון
+              overflowX: "hidden",
             },
           }}
         >
