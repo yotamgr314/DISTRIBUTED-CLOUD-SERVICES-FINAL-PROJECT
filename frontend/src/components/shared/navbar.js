@@ -19,6 +19,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { clearAuth, getToken } from "../../services/authService";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings"; // הוספה
 
 const navLinks = [
   { label: "Home", path: "/AccountHomePage" },
@@ -335,16 +336,23 @@ const Navbar = () => {
               alt="Alerts"
               sx={{ width: 24, height: 24, cursor: "pointer" }}
             />
-            {avatarUrl && (
+            {role === "admin" ? (
               <IconButton onClick={handleAvatarClick} sx={{ padding: 0 }}>
-                <Box
-                  component="img"
-                  src={avatarUrl}
-                  alt="User Avatar"
-                  sx={{ width: 32, height: 32, objectFit: "contain" }}
-                />
+                <AdminPanelSettingsIcon sx={{ color: "#fff", fontSize: 32 }} />
                 <ArrowDropDownIcon sx={{ color: "white" }} />
               </IconButton>
+            ) : (
+              avatarUrl && (
+                <IconButton onClick={handleAvatarClick} sx={{ padding: 0 }}>
+                  <Box
+                    component="img"
+                    src={avatarUrl}
+                    alt="User Avatar"
+                    sx={{ width: 32, height: 32, objectFit: "contain" }}
+                  />
+                  <ArrowDropDownIcon sx={{ color: "white" }} />
+                </IconButton>
+              )
             )}
 
             <Menu
