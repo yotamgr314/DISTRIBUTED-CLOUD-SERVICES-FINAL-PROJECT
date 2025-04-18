@@ -3,6 +3,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const programRoutes = require("./routes/programRoutes");
+const userRoutes = require("./routes/userRoutes");
 const corsMiddleware = require("./middlewares/corsMiddleware");
 
 const app = express();
@@ -18,5 +19,6 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/profiles", profileRoutes);
 app.use("/api/programs", programRoutes);
+app.use("/api/users", userRoutes);
 
 module.exports = app;

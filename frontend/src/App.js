@@ -35,7 +35,15 @@ function App() {
           }
         />
 
-        <Route path="/AccountHomePage" element={<AccountHomePage />} />
+        <Route
+          path="/AccountHomePage"
+          element={
+            <ProtectedRoute>
+              <AccountHomePage />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/ReviewProgram" element={<ReviewProgram />} />
         <Route path="/MyListPage" element={<MyListPage />} />
         <Route path="/NewAndPopular" element={<NewAndPopular />} />

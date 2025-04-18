@@ -57,3 +57,13 @@ exports.deleteProfile = async (req, res) => {
 
   res.status(200).json({ message: "Profile deleted" });
 };
+
+// הוסף את זה בסוף הקובץ:
+exports.getProfileById = async (req, res) => {
+  const { id } = req.params;
+
+  const profile = await Profile.findOne({ _id: id, user: req.user.id });
+  if (!profile) return res.status(404).json({ message: "Profile not found" });
+
+  res.status(200).json(profile);
+};

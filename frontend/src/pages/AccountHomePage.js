@@ -1,6 +1,6 @@
 // src/pages/AccountHomePage.js
-
-import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import FooterAccountHomePage from "../components/shared/footerAccountHomePage";
@@ -84,6 +84,13 @@ const SectionRow = ({
 };
 
 const AccountHomePage = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const selectedProfileId = sessionStorage.getItem("selectedProfileId");
+    if (!selectedProfileId) {
+      navigate("/ProfileSelectionPage");
+    }
+  }, [navigate]);
   // State to control opening of the modal with program details
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 

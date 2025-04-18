@@ -50,7 +50,7 @@ const ProfileSelectionPage = () => {
   };
 
   const handleSelectProfile = (profileId) => {
-    console.log("Selected profile:", profileId);
+    sessionStorage.setItem("selectedProfileId", profileId); // ✅ שומר רק את ה־ID
     navigate("/AccountHomePage");
   };
 
