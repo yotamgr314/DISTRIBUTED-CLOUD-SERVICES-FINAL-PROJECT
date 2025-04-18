@@ -10,8 +10,8 @@ export const getUserRole = () => {
 export const clearAuth = () => {
   sessionStorage.removeItem("token");
   sessionStorage.removeItem("role");
+  sessionStorage.removeItem("selectedAvatarIndex");
   sessionStorage.removeItem("selectedProfileId");
-  sessionStorage.removeItem("selectedProfile");
 
   // מוחק את ה-cookie של הטוקן
   document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
