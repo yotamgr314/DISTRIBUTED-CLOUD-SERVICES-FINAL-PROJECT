@@ -1,6 +1,5 @@
 // src/pages/AccountHomePage.js
-import { useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import FooterAccountHomePage from "../components/shared/footerAccountHomePage";
