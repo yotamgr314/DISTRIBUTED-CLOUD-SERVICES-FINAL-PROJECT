@@ -50,9 +50,23 @@ const Navbar = () => {
   const role = sessionStorage.getItem("role");
 
   useEffect(() => {
-    const profileId = sessionStorage.getItem("selectedProfileId");
     const token = getToken();
+    const avatarIndex = sessionStorage.getItem("selectedAvatarIndex");
+    const profileId = sessionStorage.getItem("selectedProfileId");
 
+    if (role === "admin") {
+      // מנהל לא צריך אווטאר פרופיל
+      setAvatarUrl(null);
+      return;
+    }
+
+    if (avatarIndex !== null) {
+      // נטען מהזיכרון המקומי אם קיים
+      setAvatarUrl(avatars[parseInt(avatarIndex, 10)] || avatars[2]);
+      return;
+    }
+
+    // אם אין בזיכרון אבל יש פרופיל שמור – נביא מהשרת
     if (profileId && token) {
       fetch(`http://localhost:5000/api/profiles/${profileId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -60,7 +74,11 @@ const Navbar = () => {
         .then((res) => (res.ok ? res.json() : null))
         .then((profile) => {
           if (profile && typeof profile.avatarIndex === "number") {
-            setAvatarUrl(avatars[profile.avatarIndex] || avatars[2]); // fallback: purple
+            sessionStorage.setItem(
+              "selectedAvatarIndex",
+              profile.avatarIndex.toString()
+            );
+            setAvatarUrl(avatars[profile.avatarIndex] || avatars[2]);
           }
         })
         .catch((err) => {

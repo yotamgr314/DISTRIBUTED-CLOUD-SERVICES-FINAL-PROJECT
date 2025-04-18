@@ -49,8 +49,9 @@ const ProfileSelectionPage = () => {
     }
   };
 
-  const handleSelectProfile = (profileId) => {
-    sessionStorage.setItem("selectedProfileId", profileId); // ✅ שומר רק את ה־ID
+  const handleSelectProfile = (profile) => {
+    sessionStorage.setItem("selectedProfileId", profile._id);
+    sessionStorage.setItem("selectedAvatarIndex", profile.avatarIndex); // ✅ נשמר בזיכרון
     navigate("/AccountHomePage");
   };
 
@@ -197,7 +198,7 @@ const ProfileSelectionPage = () => {
                   height: "144px",
                   cursor: "pointer",
                 }}
-                onClick={() => handleSelectProfile(profile._id)}
+                onClick={() => handleSelectProfile(profile)} // ✅ לא רק ID
               />
             </Box>
 
