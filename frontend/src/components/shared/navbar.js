@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Box,
@@ -18,7 +18,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { clearAuth } from "../../services/authService";
+import { clearAuth, getToken } from "../../services/authService";
 
 const navLinks = [
   { label: "Home", path: "/AccountHomePage" },
@@ -29,15 +29,44 @@ const navLinks = [
   { label: "Browse", path: null },
 ];
 
+const avatars = [
+  "/assets/redIcon.svg",
+  "/assets/blueIcon.svg",
+  "/assets/purpleIcon.svg",
+  "/assets/yellowIcon.svg",
+];
+
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [avatarUrl, setAvatarUrl] = useState(null);
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const location = useLocation();
   const navigate = useNavigate();
 
   const role = sessionStorage.getItem("role");
+
+  useEffect(() => {
+    const profileId = sessionStorage.getItem("selectedProfileId");
+    const token = getToken();
+
+    if (profileId && token) {
+      fetch(`http://localhost:5000/api/profiles/${profileId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((profile) => {
+          if (profile && typeof profile.avatarIndex === "number") {
+            setAvatarUrl(avatars[profile.avatarIndex] || avatars[2]); // fallback: purple
+          }
+        })
+        .catch((err) => {
+          console.error("Failed to fetch profile:", err);
+        });
+    }
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -110,7 +139,6 @@ const Navbar = () => {
           )
         )}
 
-        {/* Add New Program - admin only */}
         {role === "admin" && (
           <NavLink to="/AddProgram" style={{ textDecoration: "none" }}>
             <ListItem disablePadding>
@@ -136,7 +164,6 @@ const Navbar = () => {
           </NavLink>
         )}
 
-        {/* Logout */}
         <ListItem disablePadding>
           <ListItemButton onClick={handleLogout}>
             <ListItemText
@@ -259,7 +286,6 @@ const Navbar = () => {
                   );
                 })}
 
-                {/* Add New Program - admin only */}
                 {role === "admin" && (
                   <NavLink to="/AddProgram" style={{ textDecoration: "none" }}>
                     <Typography
@@ -288,7 +314,7 @@ const Navbar = () => {
             )}
           </Box>
 
-          {/* Right Icons + Dropdown */}
+          {/* Right Icons + Avatar */}
           <Box
             sx={{
               display: "flex",
@@ -309,15 +335,17 @@ const Navbar = () => {
               alt="Alerts"
               sx={{ width: 24, height: 24, cursor: "pointer" }}
             />
-            <IconButton onClick={handleAvatarClick} sx={{ padding: 0 }}>
-              <Box
-                component="img"
-                src="/assets/smallAvatarUserIcon.svg"
-                alt="User Avatar"
-                sx={{ width: 32, height: 32, objectFit: "contain" }}
-              />
-              <ArrowDropDownIcon sx={{ color: "white" }} />
-            </IconButton>
+            {avatarUrl && (
+              <IconButton onClick={handleAvatarClick} sx={{ padding: 0 }}>
+                <Box
+                  component="img"
+                  src={avatarUrl}
+                  alt="User Avatar"
+                  sx={{ width: 32, height: 32, objectFit: "contain" }}
+                />
+                <ArrowDropDownIcon sx={{ color: "white" }} />
+              </IconButton>
+            )}
 
             <Menu
               anchorEl={anchorEl}
@@ -350,7 +378,6 @@ const Navbar = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Drawer */}
       <Box component="nav">
         <Drawer
           variant="temporary"
