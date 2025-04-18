@@ -1,16 +1,29 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { getToken } from "../../services/authService";
 
+// This file protects ALL routes (admin + user) based on token, role, and selected profile
 const ProtectedRoute = ({ children }) => {
   const token = getToken();
+  const role = sessionStorage.getItem("role");
+  const profileId = sessionStorage.getItem("selectedProfileId");
+  const location = useLocation();
 
+  // אם אין טוקן בכלל – שלח תמיד לעמוד התחברות
   if (!token) {
-    // משתמש לא מזוהה – שלח לעמוד התחברות
     return <Navigate to="/SignIn" replace />;
   }
 
-  // משתמש מחובר – אפשר להמשיך לדף המבוקש
+  // אם זה משתמש רגיל ועדיין לא בחר פרופיל
+  if (
+    role === "user" &&
+    !profileId &&
+    location.pathname !== "/ProfileSelectionPage"
+  ) {
+    return <Navigate to="/ProfileSelectionPage" replace />;
+  }
+
+  // אחרת – הכל תקין
   return children;
 };
 
