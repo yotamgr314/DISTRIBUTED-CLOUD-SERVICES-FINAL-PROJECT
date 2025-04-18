@@ -84,13 +84,6 @@ const SectionRow = ({
 };
 
 const AccountHomePage = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    const selectedProfileId = sessionStorage.getItem("selectedProfileId");
-    if (!selectedProfileId) {
-      navigate("/ProfileSelectionPage");
-    }
-  }, [navigate]);
   // State to control opening of the modal with program details
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 

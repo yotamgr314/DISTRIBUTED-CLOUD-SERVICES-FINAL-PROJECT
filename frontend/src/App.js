@@ -1,4 +1,3 @@
-// src/App.js
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUp from "./pages/signUp";
 import SignIn from "./pages/signIn";
@@ -16,8 +15,11 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Public routes */}
         <Route path="/SignUp" element={<SignUp />} />
         <Route path="/SignIn" element={<SignIn />} />
+
+        {/* Protected routes */}
         <Route
           path="/ProfileSelectionPage"
           element={
@@ -34,7 +36,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/AccountHomePage"
           element={
@@ -43,15 +44,49 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        <Route path="/ReviewProgram" element={<ReviewProgram />} />
-        <Route path="/MyListPage" element={<MyListPage />} />
-        <Route path="/NewAndPopular" element={<NewAndPopular />} />
-        <Route path="/MoviesPage" element={<MoviesPage />} />
-        <Route path="/TvShowsPage" element={<TvShowsPage />} />
+        <Route
+          path="/ReviewProgram"
+          element={
+            <ProtectedRoute>
+              <ReviewProgram />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/MyListPage"
+          element={
+            <ProtectedRoute>
+              <MyListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/NewAndPopular"
+          element={
+            <ProtectedRoute>
+              <NewAndPopular />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/MoviesPage"
+          element={
+            <ProtectedRoute>
+              <MoviesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/TvShowsPage"
+          element={
+            <ProtectedRoute>
+              <TvShowsPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
 }
-/* HELLO */
+
 export default App;
