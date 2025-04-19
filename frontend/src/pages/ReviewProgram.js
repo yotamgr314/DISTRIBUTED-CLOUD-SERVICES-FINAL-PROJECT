@@ -13,6 +13,8 @@ import {
   DialogContent,
   DialogActions,
   IconButton,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Navbar from "../components/shared/navbar";
@@ -59,6 +61,10 @@ const ReviewProgram = () => {
 
   // מצביע (ref) שינטר האם אנו ב"גרירה" (drag/swipe) או לא
   const isDraggingRef = useRef(false);
+
+  // hook לזיהוי מסך קטן מ-640px
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery("(max-width: 640px)");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -236,7 +242,7 @@ const ReviewProgram = () => {
             Submit Review
           </Button>
 
-          {/* REVIEWS CAROUSEL INSIDE MODAL */}
+          {/* REVIEWS CAROUSEL */}
           <Box sx={{ mt: 4, px: 1, position: "relative" }}>
             <Typography
               variant="h5"
@@ -261,10 +267,15 @@ const ReviewProgram = () => {
                 slideOffset: 10,
               }}
               pagination={{ clickable: true }}
-              navigation={{
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-              }}
+              // אם זה מסך קטן - החצים מבוטלים. אחרת יש חצים.
+              navigation={
+                isSmallScreen
+                  ? false
+                  : {
+                      nextEl: ".swiper-button-next",
+                      prevEl: ".swiper-button-prev",
+                    }
+              }
               modules={[EffectCoverflow, Pagination, Navigation]}
               style={{
                 padding: "0 40px 4rem",
@@ -272,40 +283,16 @@ const ReviewProgram = () => {
                 "--swiper-navigation-color": "#E50914",
               }}
               onTouchStart={() => {
-                // תחילת משיכת אצבע במובייל
                 isDraggingRef.current = false;
               }}
               onTouchMove={() => {
-                // אם מתבצעת תנועה של האצבע, מעדכנים שהמשתמש גרר
                 isDraggingRef.current = true;
               }}
-              onTouchEnd={() => {
-                // בסיום, אין צורך להגדיר כלום כאן - ההחלטה תתקבל בonClick של השקופית
-              }}
               onMouseDown={() => {
-                // תחילת לחיצה בעכבר (בדסקטופ)
                 isDraggingRef.current = false;
               }}
               onMouseMove={() => {
-                // תנועה בעכבר => גרירה
                 isDraggingRef.current = true;
-              }}
-              onMouseUp={() => {
-                // בסיום, אין צורך להגדיר כלום כאן - ההחלטה בonClick של השקופית
-              }}
-              breakpoints={{
-                640: {
-                  coverflowEffect: {
-                    slideOffset: 20,
-                  },
-                  spaceBetween: 30,
-                },
-                1024: {
-                  coverflowEffect: {
-                    slideOffset: 30,
-                  },
-                  spaceBetween: 40,
-                },
               }}
             >
               {dummyReviews.map((review, index) => (
@@ -351,9 +338,13 @@ const ReviewProgram = () => {
               ))}
             </Swiper>
 
-            {/* Navigation Arrows */}
-            <div className="swiper-button-prev"></div>
-            <div className="swiper-button-next"></div>
+            {/* Navigation Arrows - יוצגו רק אם לא מסך קטן */}
+            {!isSmallScreen && (
+              <>
+                <div className="swiper-button-prev"></div>
+                <div className="swiper-button-next"></div>
+              </>
+            )}
           </Box>
         </Box>
       </Box>
