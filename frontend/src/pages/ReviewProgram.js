@@ -327,8 +327,15 @@ const ReviewProgram = () => {
 
             {!isSmallScreen && (
               <>
-                <div className="swiper-button-prev" />
-                <div className="swiper-button-next" />
+                <Box
+                  sx={{
+                    position: "relative",
+                    width: "100%",
+                  }}
+                >
+                  <div className="swiper-button-prev" />
+                  <div className="swiper-button-next" />
+                </Box>
               </>
             )}
           </Box>
