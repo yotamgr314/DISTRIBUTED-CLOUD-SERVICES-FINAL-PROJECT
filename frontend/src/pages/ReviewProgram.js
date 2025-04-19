@@ -1,3 +1,5 @@
+// 📁 src/pages/ReviewProgram.js
+
 import React, { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -22,10 +24,12 @@ import FooterAccountHomePage from "../components/shared/footerAccountHomePage";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
+
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import "./reviewCarousel.css";
 
 const dummyReviews = [
   {
@@ -44,6 +48,18 @@ const dummyReviews = [
       "It started slow but picked up quickly. I loved the suspense and twists!",
     rating: 4,
   },
+  {
+    user: "Alice",
+    content:
+      "It started slow but picked up quickly. I loved the suspense and twists!",
+    rating: 4,
+  },
+  {
+    user: "Alice",
+    content:
+      "It started slow but picked up quickly. I loved the suspense and twists!",
+    rating: 4,
+  },
 ];
 
 const ReviewProgram = () => {
@@ -54,17 +70,12 @@ const ReviewProgram = () => {
   const [isPublic, setIsPublic] = useState(true);
   const [rating, setRating] = useState(0);
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
-
-  // state/modal עבור הצגת התוכן הנבחר
   const [selectedReview, setSelectedReview] = useState(null);
   const [openModal, setOpenModal] = useState(false);
 
-  // מצביע (ref) שינטר האם אנו ב"גרירה" (drag/swipe) או לא
   const isDraggingRef = useRef(false);
-
-  // hook לזיהוי מסך קטן מ-640px
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery("(max-width: 640px)");
+  const isSmallScreen = useMediaQuery("(max-width:1200px)");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -86,15 +97,16 @@ const ReviewProgram = () => {
     navigate("/AccountHomePage");
   };
 
-  // כאשר לוחצים על כרטיסייה ואין גרירה – נפתח את המודאל
   const handleCardClick = (review) => {
-    setSelectedReview(review);
-    setOpenModal(true);
+    if (!isDraggingRef.current) {
+      setSelectedReview(review);
+      setOpenModal(true);
+    }
   };
 
   const handleCloseModal = () => {
-    setOpenModal(false);
     setSelectedReview(null);
+    setOpenModal(false);
   };
 
   return (
@@ -111,7 +123,6 @@ const ReviewProgram = () => {
         overflowX: "hidden",
       }}
     >
-      {/* Overlay */}
       <Box
         sx={{
           position: "absolute",
@@ -123,13 +134,10 @@ const ReviewProgram = () => {
           zIndex: 1,
         }}
       />
-
-      {/* Navbar */}
       <Box sx={{ position: "relative", zIndex: 2 }}>
         <Navbar />
       </Box>
 
-      {/* Main Content */}
       <Box
         sx={{
           position: "relative",
@@ -160,22 +168,16 @@ const ReviewProgram = () => {
             overflow: "hidden",
           }}
         >
-          {/* Exit Button */}
           <IconButton
             onClick={handleExit}
-            sx={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-              color: "#fff",
-            }}
+            sx={{ position: "absolute", top: 8, right: 8, color: "#fff" }}
           >
             <CloseIcon />
           </IconButton>
 
           <Typography
             variant="h4"
-            sx={{ fontWeight: "bold", color: "#fff", textAlign: "center" }}
+            sx={{ fontWeight: "bold", textAlign: "center" }}
           >
             Leave a Review
           </Typography>
@@ -221,9 +223,7 @@ const ReviewProgram = () => {
               precision={1}
               size="large"
               sx={{
-                "& .MuiRating-iconEmpty": {
-                  color: "#888",
-                },
+                "& .MuiRating-iconEmpty": { color: "#888" },
               }}
             />
           </Box>
@@ -242,8 +242,8 @@ const ReviewProgram = () => {
             Submit Review
           </Button>
 
-          {/* REVIEWS CAROUSEL */}
-          <Box sx={{ mt: 4, px: 1, position: "relative" }}>
+          {/* Carousel */}
+          <Box sx={{ mt: 4, px: 1 }}>
             <Typography
               variant="h5"
               sx={{ fontWeight: "bold", mb: 2, textAlign: "center" }}
@@ -252,22 +252,20 @@ const ReviewProgram = () => {
             </Typography>
 
             <Swiper
-              effect="coverflow"
               grabCursor
-              centeredSlides
               loop
-              slidesPerView="auto"
-              spaceBetween={20}
+              centeredSlides={!isSmallScreen}
+              effect={isSmallScreen ? undefined : "coverflow"}
+              slidesPerView={isSmallScreen ? 3 : "auto"}
+              spaceBetween={isSmallScreen ? 20 : 40}
               coverflowEffect={{
                 rotate: 0,
                 stretch: 0,
                 depth: 100,
                 modifier: 2.5,
                 slideShadows: true,
-                slideOffset: 10,
               }}
               pagination={{ clickable: true }}
-              // אם זה מסך קטן - החצים מבוטלים. אחרת יש חצים.
               navigation={
                 isSmallScreen
                   ? false
@@ -277,6 +275,12 @@ const ReviewProgram = () => {
                     }
               }
               modules={[EffectCoverflow, Pagination, Navigation]}
+              breakpoints={{
+                0: { slidesPerView: 1 },
+                480: { slidesPerView: 2 },
+                640: { slidesPerView: 3 },
+                1200: { slidesPerView: "auto" },
+              }}
               style={{
                 padding: "0 40px 4rem",
                 "--swiper-navigation-size": "30px",
@@ -295,9 +299,9 @@ const ReviewProgram = () => {
                 isDraggingRef.current = true;
               }}
             >
-              {dummyReviews.map((review, index) => (
+              {dummyReviews.map((review, idx) => (
                 <SwiperSlide
-                  key={index}
+                  key={idx}
                   style={{
                     width: 300,
                     backgroundColor: "#1f1f1f",
@@ -307,12 +311,7 @@ const ReviewProgram = () => {
                     boxSizing: "border-box",
                     cursor: "pointer",
                   }}
-                  onClick={() => {
-                    // רק אם לא גררנו – נפתח מודל
-                    if (!isDraggingRef.current) {
-                      handleCardClick(review);
-                    }
-                  }}
+                  onClick={() => handleCardClick(review)}
                 >
                   <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
                     {review.user}
@@ -338,18 +337,17 @@ const ReviewProgram = () => {
               ))}
             </Swiper>
 
-            {/* Navigation Arrows - יוצגו רק אם לא מסך קטן */}
             {!isSmallScreen && (
               <>
-                <div className="swiper-button-prev"></div>
-                <div className="swiper-button-next"></div>
+                <div className="swiper-button-prev" />
+                <div className="swiper-button-next" />
               </>
             )}
           </Box>
         </Box>
       </Box>
 
-      {/* Exit Confirmation Dialog */}
+      {/* Exit Dialog */}
       <Dialog
         open={exitDialogOpen}
         onClose={() => setExitDialogOpen(false)}
@@ -360,16 +358,14 @@ const ReviewProgram = () => {
           <Typography>The review will not be saved.</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setExitDialogOpen(false)} color="primary">
-            Cancel
-          </Button>
+          <Button onClick={() => setExitDialogOpen(false)}>Cancel</Button>
           <Button onClick={confirmExit} color="error" variant="contained">
             Leave
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/* מודאל להצגת תוכן הכרטיסייה שנבחרה */}
+      {/* Review Modal */}
       <Dialog open={openModal} onClose={handleCloseModal}>
         <DialogTitle>{selectedReview?.user}</DialogTitle>
         <DialogContent>
@@ -381,13 +377,10 @@ const ReviewProgram = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseModal} color="primary">
-            Close
-          </Button>
+          <Button onClick={handleCloseModal}>Close</Button>
         </DialogActions>
       </Dialog>
 
-      {/* Footer */}
       <Box sx={{ position: "relative", zIndex: 2 }}>
         <FooterAccountHomePage />
       </Box>
