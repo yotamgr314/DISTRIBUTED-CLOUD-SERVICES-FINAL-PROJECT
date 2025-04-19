@@ -313,6 +313,9 @@ const ReviewProgram = () => {
                     readOnly
                     sx={{
                       color: "#fbc02d",
+                      "& .MuiRating-iconEmpty": {
+                        color: "#777", // אפור בהיר יותר שמורגש גם ברקע כהה
+                      },
                       overflow: "hidden",
                       whiteSpace: "nowrap",
                       maxWidth: "100%",
@@ -351,12 +354,32 @@ const ReviewProgram = () => {
       </Dialog>
 
       {/* Review Modal */}
-      <Dialog open={openModal} onClose={handleCloseModal}>
+      <Dialog
+        open={openModal}
+        onClose={handleCloseModal}
+        PaperProps={{
+          sx: {
+            backgroundColor: "#141414",
+            color: "#fff",
+            borderRadius: 2,
+            p: 2,
+          },
+        }}
+      >
         <DialogTitle>{selectedReview?.user}</DialogTitle>
         <DialogContent>
           {selectedReview && (
             <>
-              <Rating value={selectedReview.rating} readOnly />
+              <Rating
+                value={selectedReview.rating}
+                readOnly
+                sx={{
+                  color: "#fbc02d",
+                  "& .MuiRating-iconEmpty": {
+                    color: "#777", // אפור בהיר יותר שמורגש טוב על רקע שחור
+                  },
+                }}
+              />
               <Typography sx={{ mt: 2 }}>{selectedReview.content}</Typography>
             </>
           )}
