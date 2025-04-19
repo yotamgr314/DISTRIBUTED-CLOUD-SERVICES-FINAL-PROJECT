@@ -60,6 +60,24 @@ const dummyReviews = [
       "It started slow but picked up quickly. I loved the suspense and twists!",
     rating: 4,
   },
+  {
+    user: "Alice",
+    content:
+      "It started slow but picked up quickly. I loved the suspense and twists!",
+    rating: 4,
+  },
+  {
+    user: "Alice",
+    content:
+      "It started slow but picked up quickly. I loved the suspense and twists!",
+    rating: 4,
+  },
+  {
+    user: "Alice",
+    content:
+      "It started slow but picked up quickly. I loved the suspense and twists!",
+    rating: 4,
+  },
 ];
 
 const ReviewProgram = () => {
@@ -303,7 +321,9 @@ const ReviewProgram = () => {
                 <SwiperSlide
                   key={idx}
                   style={{
-                    width: 300,
+                    width: "100%",
+                    maxWidth: 320, // ✅ Limit width for desktop
+                    maxHeight: 280, // optional height cap
                     backgroundColor: "#1f1f1f",
                     borderRadius: "16px",
                     padding: "20px",
@@ -347,7 +367,6 @@ const ReviewProgram = () => {
         </Box>
       </Box>
 
-      {/* Exit Dialog */}
       <Dialog
         open={exitDialogOpen}
         onClose={() => setExitDialogOpen(false)}
@@ -365,7 +384,6 @@ const ReviewProgram = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Review Modal */}
       <Dialog open={openModal} onClose={handleCloseModal}>
         <DialogTitle>{selectedReview?.user}</DialogTitle>
         <DialogContent>
