@@ -11,8 +11,11 @@ This project replicates core Netflix functionalities:
 - **Profile Selection:** Supports up to 5 profiles per account.
 - **Home Page:** Displays multiple rows of content (recommended, new releases, popular titles, etc.).
 - **Details Pages:** Comprehensive movie/series details including gallery, cast information, and review functionality.
-- **Browse:** Advanced search and filtering capabilities.
 - **AI Recommendations:** Uses an external AI module for personalized content suggestions.
+- **Review Pages:** displays a form where users can insert a review for a cetrain programn.
+- - **Review Pages(admin):** displays all the reviews in the system.
+- - **insert programn(admin):** allows the admin to insert new programn to the system.
+
 
 ---
 
@@ -77,7 +80,6 @@ This project replicates core Netflix functionalities:
 
 - **backend:** Deployed on Render.
 - **frontend:** Deployed on Netlify.
-- 
 ---
 
 ## Technologies Used
@@ -85,13 +87,12 @@ This project replicates core Netflix functionalities:
 - **Frontend:**
   - React, React Router
   - Material UI (MUI)
-  - Axios for API calls
 - **Backend:**
   - Node.js, Express
   - MongoDB, Mongoose
   - JWT for authentication
 - **External Services:**
-  - Free movies/TV series API (e.g., TMDb or OMDB)
+  - Free movies/TV series API (TMDb)
   - AI library for recommendation algorithms
 - **Deployment:**
   - Render (backend)
