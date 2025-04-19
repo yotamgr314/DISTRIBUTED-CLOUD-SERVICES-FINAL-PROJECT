@@ -357,6 +357,7 @@ const ReviewProgram = () => {
       <Dialog
         open={openModal}
         onClose={handleCloseModal}
+        container={document.getElementById("review-root")}
         PaperProps={{
           sx: {
             backgroundColor: "#141414",
