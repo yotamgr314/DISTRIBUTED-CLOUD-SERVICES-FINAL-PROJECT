@@ -1,3 +1,5 @@
+// src/components/shared/ProtectedRoute.js
+
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { getToken } from "../../services/authService";
@@ -9,18 +11,27 @@ const ProtectedRoute = ({ children }) => {
   const profileId = sessionStorage.getItem("selectedProfileId");
   const location = useLocation();
 
-  // אם אין טוקן בכלל – שלח תמיד לעמוד התחברות
+  // אין טוקן בכלל – שלח תמיד לעמוד התחברות
   if (!token) {
     return <Navigate to="/SignIn" replace />;
   }
 
-  // אם זה משתמש רגיל ועדיין לא בחר פרופיל
+  // משתמש רגיל שעדיין לא בחר פרופיל – הפנה לבחירת פרופיל
   if (
     role === "user" &&
     !profileId &&
     location.pathname !== "/ProfileSelectionPage"
   ) {
     return <Navigate to="/ProfileSelectionPage" replace />;
+  }
+
+  // מנהל מערכת שמנסה להיכנס לעמודים שלא רלוונטיים עבורו
+  if (
+    role === "admin" &&
+    location.pathname !== "/AddProgram" &&
+    location.pathname !== "/AdminReviews"
+  ) {
+    return <Navigate to="/AddProgram" replace />;
   }
 
   // אחרת – הכל תקין

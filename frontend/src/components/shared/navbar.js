@@ -111,53 +111,55 @@ const Navbar = () => {
       onClick={handleDrawerToggle}
     >
       <List>
-        {navLinks.map((link) =>
-          link.path ? (
-            <NavLink
-              key={link.label}
-              to={link.path}
-              style={{ textDecoration: "none" }}
-            >
-              <ListItem disablePadding>
-                <ListItemButton selected={location.pathname === link.path}>
+        {role !== "admin" &&
+          navLinks.map((link) =>
+            link.path ? (
+              <NavLink
+                key={link.label}
+                to={link.path}
+                style={{ textDecoration: "none" }}
+              >
+                <ListItem disablePadding>
+                  <ListItemButton selected={location.pathname === link.path}>
+                    <ListItemText
+                      primary={link.label}
+                      primaryTypographyProps={{
+                        sx: {
+                          color:
+                            location.pathname === link.path
+                              ? "#fff"
+                              : "#E5E5E5",
+                          fontWeight:
+                            location.pathname === link.path ? "bold" : 400,
+                          fontFamily: "Netflix Sans, Arial, sans-serif",
+                          fontSize: "14px",
+                          lineHeight: "17px",
+                        },
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </NavLink>
+            ) : (
+              <ListItem key={link.label} disablePadding>
+                <ListItemButton>
                   <ListItemText
                     primary={link.label}
                     primaryTypographyProps={{
                       sx: {
-                        color:
-                          location.pathname === link.path ? "#fff" : "#E5E5E5",
-                        fontWeight:
-                          location.pathname === link.path ? "bold" : 400,
+                        color: "#E5E5E5",
+                        fontWeight: 400,
                         fontFamily: "Netflix Sans, Arial, sans-serif",
                         fontSize: "14px",
                         lineHeight: "17px",
+                        cursor: "pointer",
                       },
                     }}
                   />
                 </ListItemButton>
               </ListItem>
-            </NavLink>
-          ) : (
-            <ListItem key={link.label} disablePadding>
-              <ListItemButton>
-                <ListItemText
-                  primary={link.label}
-                  primaryTypographyProps={{
-                    sx: {
-                      color: "#E5E5E5",
-                      fontWeight: 400,
-                      fontFamily: "Netflix Sans, Arial, sans-serif",
-                      fontSize: "14px",
-                      lineHeight: "17px",
-                      cursor: "pointer",
-                    },
-                  }}
-                />
-              </ListItemButton>
-            </ListItem>
-          )
-        )}
-
+            )
+          )}
         {role === "admin" && (
           <NavLink to="/AddProgram" style={{ textDecoration: "none" }}>
             <ListItem disablePadding>
@@ -256,24 +258,46 @@ const Navbar = () => {
                   ml: 2,
                 }}
               >
-                {navLinks.map((link) => {
-                  const isActive = link.path && location.pathname === link.path;
+                {role !== "admin" &&
+                  navLinks.map((link) => {
+                    const isActive =
+                      link.path && location.pathname === link.path;
 
-                  return link.path ? (
-                    <NavLink
-                      key={link.label}
-                      to={link.path}
-                      style={{ textDecoration: "none" }}
-                    >
+                    return link.path ? (
+                      <NavLink
+                        key={link.label}
+                        to={link.path}
+                        style={{ textDecoration: "none" }}
+                      >
+                        <Typography
+                          sx={{
+                            cursor: "pointer",
+                            fontFamily: "Netflix Sans, Arial, sans-serif",
+                            fontSize: "14px",
+                            fontWeight: 400,
+                            lineHeight: "17px",
+                            color: isActive ? "#fff" : "#E5E5E5",
+                            opacity: isActive ? 1 : 0.8,
+                            transition: "opacity 0.3s ease",
+                            "&:hover": {
+                              opacity: 1,
+                            },
+                          }}
+                        >
+                          {link.label}
+                        </Typography>
+                      </NavLink>
+                    ) : (
                       <Typography
+                        key={link.label}
                         sx={{
                           cursor: "pointer",
                           fontFamily: "Netflix Sans, Arial, sans-serif",
                           fontSize: "14px",
                           fontWeight: 400,
                           lineHeight: "17px",
-                          color: isActive ? "#fff" : "#E5E5E5",
-                          opacity: isActive ? 1 : 0.8,
+                          color: "#E5E5E5",
+                          opacity: 0.7,
                           transition: "opacity 0.3s ease",
                           "&:hover": {
                             opacity: 1,
@@ -282,28 +306,8 @@ const Navbar = () => {
                       >
                         {link.label}
                       </Typography>
-                    </NavLink>
-                  ) : (
-                    <Typography
-                      key={link.label}
-                      sx={{
-                        cursor: "pointer",
-                        fontFamily: "Netflix Sans, Arial, sans-serif",
-                        fontSize: "14px",
-                        fontWeight: 400,
-                        lineHeight: "17px",
-                        color: "#E5E5E5",
-                        opacity: 0.7,
-                        transition: "opacity 0.3s ease",
-                        "&:hover": {
-                          opacity: 1,
-                        },
-                      }}
-                    >
-                      {link.label}
-                    </Typography>
-                  );
-                })}
+                    );
+                  })}
 
                 {role === "admin" && (
                   <NavLink to="/AddProgram" style={{ textDecoration: "none" }}>
