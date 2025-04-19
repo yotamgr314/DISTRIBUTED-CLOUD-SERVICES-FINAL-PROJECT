@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -42,11 +42,6 @@ const dummyReviews = [
       "It started slow but picked up quickly. I loved the suspense and twists!",
     rating: 4,
   },
-  {
-    user: "Dan",
-    content: "It was okay, not amazing but watchable.",
-    rating: 2,
-  },
 ];
 
 const ReviewProgram = () => {
@@ -57,6 +52,13 @@ const ReviewProgram = () => {
   const [isPublic, setIsPublic] = useState(true);
   const [rating, setRating] = useState(0);
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
+
+  // state/modal עבור הצגת התוכן הנבחר
+  const [selectedReview, setSelectedReview] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+
+  // מצביע (ref) שינטר האם אנו ב"גרירה" (drag/swipe) או לא
+  const isDraggingRef = useRef(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -76,6 +78,17 @@ const ReviewProgram = () => {
 
   const confirmExit = () => {
     navigate("/AccountHomePage");
+  };
+
+  // כאשר לוחצים על כרטיסייה ואין גרירה – נפתח את המודאל
+  const handleCardClick = (review) => {
+    setSelectedReview(review);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedReview(null);
   };
 
   return (
@@ -129,7 +142,7 @@ const ReviewProgram = () => {
           onSubmit={handleSubmit}
           sx={{
             width: "100%",
-            maxWidth: "960px",
+            maxWidth: "1100px",
             backgroundColor: "rgba(20,20,20,0.95)",
             p: 4,
             borderRadius: 2,
@@ -233,11 +246,11 @@ const ReviewProgram = () => {
             </Typography>
 
             <Swiper
-              effect={"coverflow"}
-              grabCursor={true}
-              centeredSlides={true}
-              loop={true}
-              slidesPerView={"auto"}
+              effect="coverflow"
+              grabCursor
+              centeredSlides
+              loop
+              slidesPerView="auto"
               spaceBetween={20}
               coverflowEffect={{
                 rotate: 0,
@@ -257,6 +270,28 @@ const ReviewProgram = () => {
                 padding: "0 40px 4rem",
                 "--swiper-navigation-size": "30px",
                 "--swiper-navigation-color": "#E50914",
+              }}
+              onTouchStart={() => {
+                // תחילת משיכת אצבע במובייל
+                isDraggingRef.current = false;
+              }}
+              onTouchMove={() => {
+                // אם מתבצעת תנועה של האצבע, מעדכנים שהמשתמש גרר
+                isDraggingRef.current = true;
+              }}
+              onTouchEnd={() => {
+                // בסיום, אין צורך להגדיר כלום כאן - ההחלטה תתקבל בonClick של השקופית
+              }}
+              onMouseDown={() => {
+                // תחילת לחיצה בעכבר (בדסקטופ)
+                isDraggingRef.current = false;
+              }}
+              onMouseMove={() => {
+                // תנועה בעכבר => גרירה
+                isDraggingRef.current = true;
+              }}
+              onMouseUp={() => {
+                // בסיום, אין צורך להגדיר כלום כאן - ההחלטה בonClick של השקופית
               }}
               breakpoints={{
                 640: {
@@ -285,6 +320,12 @@ const ReviewProgram = () => {
                     boxSizing: "border-box",
                     cursor: "pointer",
                   }}
+                  onClick={() => {
+                    // רק אם לא גררנו – נפתח מודל
+                    if (!isDraggingRef.current) {
+                      handleCardClick(review);
+                    }
+                  }}
                 >
                   <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
                     {review.user}
@@ -311,14 +352,8 @@ const ReviewProgram = () => {
             </Swiper>
 
             {/* Navigation Arrows */}
-            <div
-              className="swiper-button-prev"
-              style={{ color: "#E50914" }}
-            ></div>
-            <div
-              className="swiper-button-next"
-              style={{ color: "#E50914" }}
-            ></div>
+            <div className="swiper-button-prev"></div>
+            <div className="swiper-button-next"></div>
           </Box>
         </Box>
       </Box>
@@ -339,6 +374,24 @@ const ReviewProgram = () => {
           </Button>
           <Button onClick={confirmExit} color="error" variant="contained">
             Leave
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* מודאל להצגת תוכן הכרטיסייה שנבחרה */}
+      <Dialog open={openModal} onClose={handleCloseModal}>
+        <DialogTitle>{selectedReview?.user}</DialogTitle>
+        <DialogContent>
+          {selectedReview && (
+            <>
+              <Rating value={selectedReview.rating} readOnly />
+              <Typography sx={{ mt: 2 }}>{selectedReview.content}</Typography>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} color="primary">
+            Close
           </Button>
         </DialogActions>
       </Dialog>
