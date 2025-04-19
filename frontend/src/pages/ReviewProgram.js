@@ -1,5 +1,3 @@
-// 📁 src/pages/ReviewProgram.js
-
 import React, { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -23,11 +21,9 @@ import Navbar from "../components/shared/navbar";
 import FooterAccountHomePage from "../components/shared/footerAccountHomePage";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
-
+import { EffectCoverflow, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
-import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "./reviewCarousel.css";
 
@@ -49,34 +45,9 @@ const dummyReviews = [
     rating: 4,
   },
   {
-    user: "Alice",
-    content:
-      "It started slow but picked up quickly. I loved the suspense and twists!",
-    rating: 4,
-  },
-  {
-    user: "Alice",
-    content:
-      "It started slow but picked up quickly. I loved the suspense and twists!",
-    rating: 4,
-  },
-  {
-    user: "Alice",
-    content:
-      "It started slow but picked up quickly. I loved the suspense and twists!",
-    rating: 4,
-  },
-  {
-    user: "Alice",
-    content:
-      "It started slow but picked up quickly. I loved the suspense and twists!",
-    rating: 4,
-  },
-  {
-    user: "Alice",
-    content:
-      "It started slow but picked up quickly. I loved the suspense and twists!",
-    rating: 4,
+    user: "Noah",
+    content: "Amazing soundtrack and visuals. Must-watch!",
+    rating: 5,
   },
 ];
 
@@ -141,6 +112,7 @@ const ReviewProgram = () => {
         overflowX: "hidden",
       }}
     >
+      {/* Overlay */}
       <Box
         sx={{
           position: "absolute",
@@ -240,9 +212,7 @@ const ReviewProgram = () => {
               onChange={(e, newValue) => setRating(newValue)}
               precision={1}
               size="large"
-              sx={{
-                "& .MuiRating-iconEmpty": { color: "#888" },
-              }}
+              sx={{ "& .MuiRating-iconEmpty": { color: "#888" } }}
             />
           </Box>
 
@@ -271,11 +241,11 @@ const ReviewProgram = () => {
 
             <Swiper
               grabCursor
-              loop
-              centeredSlides={!isSmallScreen}
+              loop={false}
+              centeredSlides={true}
               effect={isSmallScreen ? undefined : "coverflow"}
-              slidesPerView={isSmallScreen ? 3 : "auto"}
-              spaceBetween={isSmallScreen ? 20 : 40}
+              slidesPerView="auto"
+              spaceBetween={20}
               coverflowEffect={{
                 rotate: 0,
                 stretch: 0,
@@ -283,7 +253,6 @@ const ReviewProgram = () => {
                 modifier: 2.5,
                 slideShadows: true,
               }}
-              pagination={{ clickable: true }}
               navigation={
                 isSmallScreen
                   ? false
@@ -292,7 +261,7 @@ const ReviewProgram = () => {
                       prevEl: ".swiper-button-prev",
                     }
               }
-              modules={[EffectCoverflow, Pagination, Navigation]}
+              modules={[EffectCoverflow, Navigation]}
               breakpoints={{
                 0: { slidesPerView: 1 },
                 480: { slidesPerView: 2 },
@@ -304,26 +273,17 @@ const ReviewProgram = () => {
                 "--swiper-navigation-size": "30px",
                 "--swiper-navigation-color": "#E50914",
               }}
-              onTouchStart={() => {
-                isDraggingRef.current = false;
-              }}
-              onTouchMove={() => {
-                isDraggingRef.current = true;
-              }}
-              onMouseDown={() => {
-                isDraggingRef.current = false;
-              }}
-              onMouseMove={() => {
-                isDraggingRef.current = true;
-              }}
+              onTouchStart={() => (isDraggingRef.current = false)}
+              onTouchMove={() => (isDraggingRef.current = true)}
+              onMouseDown={() => (isDraggingRef.current = false)}
+              onMouseMove={() => (isDraggingRef.current = true)}
             >
               {dummyReviews.map((review, idx) => (
                 <SwiperSlide
                   key={idx}
                   style={{
                     width: "100%",
-                    maxWidth: 320, // ✅ Limit width for desktop
-                    maxHeight: 280, // optional height cap
+                    maxWidth: 320, // ✅ רק מגבלת רוחב ב-desktop
                     backgroundColor: "#1f1f1f",
                     borderRadius: "16px",
                     padding: "20px",
@@ -367,6 +327,7 @@ const ReviewProgram = () => {
         </Box>
       </Box>
 
+      {/* Exit Confirmation Dialog */}
       <Dialog
         open={exitDialogOpen}
         onClose={() => setExitDialogOpen(false)}
@@ -384,6 +345,7 @@ const ReviewProgram = () => {
         </DialogActions>
       </Dialog>
 
+      {/* Review Modal */}
       <Dialog open={openModal} onClose={handleCloseModal}>
         <DialogTitle>{selectedReview?.user}</DialogTitle>
         <DialogContent>
