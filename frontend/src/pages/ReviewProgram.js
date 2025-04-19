@@ -48,36 +48,6 @@ const dummyReviews = [
       "It started slow but picked up quickly. I loved the suspense and twists!",
     rating: 4,
   },
-  {
-    user: "Alice",
-    content:
-      "It started slow but picked up quickly. I loved the suspense and twists!",
-    rating: 4,
-  },
-  {
-    user: "Alice",
-    content:
-      "It started slow but picked up quickly. I loved the suspense and twists!",
-    rating: 4,
-  },
-  {
-    user: "Alice",
-    content:
-      "It started slow but picked up quickly. I loved the suspense and twists!",
-    rating: 4,
-  },
-  {
-    user: "Alice",
-    content:
-      "It started slow but picked up quickly. I loved the suspense and twists!",
-    rating: 4,
-  },
-  {
-    user: "Alice",
-    content:
-      "It started slow but picked up quickly. I loved the suspense and twists!",
-    rating: 4,
-  },
 ];
 
 const ReviewProgram = () => {
@@ -271,7 +241,7 @@ const ReviewProgram = () => {
 
             <Swiper
               grabCursor
-              loop
+              loop={false}
               centeredSlides={!isSmallScreen}
               effect={isSmallScreen ? undefined : "coverflow"}
               slidesPerView={isSmallScreen ? 3 : "auto"}
@@ -283,7 +253,6 @@ const ReviewProgram = () => {
                 modifier: 2.5,
                 slideShadows: true,
               }}
-              pagination={{ clickable: true }}
               navigation={
                 isSmallScreen
                   ? false
@@ -292,7 +261,7 @@ const ReviewProgram = () => {
                       prevEl: ".swiper-button-prev",
                     }
               }
-              modules={[EffectCoverflow, Pagination, Navigation]}
+              modules={[EffectCoverflow, Navigation]}
               breakpoints={{
                 0: { slidesPerView: 1 },
                 480: { slidesPerView: 2 },
