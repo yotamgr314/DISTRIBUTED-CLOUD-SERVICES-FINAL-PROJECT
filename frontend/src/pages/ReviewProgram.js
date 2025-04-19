@@ -1,5 +1,3 @@
-// 📁 src/pages/ReviewProgram.js
-
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -226,7 +224,7 @@ const ReviewProgram = () => {
           </Button>
 
           {/* REVIEWS CAROUSEL INSIDE MODAL */}
-          <Box sx={{ mt: 4, px: 1 }}>
+          <Box sx={{ mt: 4, px: 1, position: "relative" }}>
             <Typography
               variant="h5"
               sx={{ fontWeight: "bold", mb: 2, textAlign: "center" }}
@@ -240,16 +238,40 @@ const ReviewProgram = () => {
               centeredSlides={true}
               loop={true}
               slidesPerView={"auto"}
+              spaceBetween={20}
               coverflowEffect={{
                 rotate: 0,
                 stretch: 0,
                 depth: 100,
                 modifier: 2.5,
+                slideShadows: true,
+                slideOffset: 10,
               }}
               pagination={{ clickable: true }}
-              navigation={true}
+              navigation={{
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+              }}
               modules={[EffectCoverflow, Pagination, Navigation]}
-              style={{ paddingBottom: "4rem" }}
+              style={{
+                padding: "0 40px 4rem",
+                "--swiper-navigation-size": "30px",
+                "--swiper-navigation-color": "#E50914",
+              }}
+              breakpoints={{
+                640: {
+                  coverflowEffect: {
+                    slideOffset: 20,
+                  },
+                  spaceBetween: 30,
+                },
+                1024: {
+                  coverflowEffect: {
+                    slideOffset: 30,
+                  },
+                  spaceBetween: 40,
+                },
+              }}
             >
               {dummyReviews.map((review, index) => (
                 <SwiperSlide
@@ -287,6 +309,16 @@ const ReviewProgram = () => {
                 </SwiperSlide>
               ))}
             </Swiper>
+
+            {/* Navigation Arrows */}
+            <div
+              className="swiper-button-prev"
+              style={{ color: "#E50914" }}
+            ></div>
+            <div
+              className="swiper-button-next"
+              style={{ color: "#E50914" }}
+            ></div>
           </Box>
         </Box>
       </Box>

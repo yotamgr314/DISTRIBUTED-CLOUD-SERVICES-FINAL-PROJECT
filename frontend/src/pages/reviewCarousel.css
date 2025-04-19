@@ -1,0 +1,10 @@
+/* סגנון לשקופיות */
+.review-slide {
+  width: 300px !important;
+  background-color: #1f1f1f;
+  border-radius: 16px;
+  padding: 20px;
+  color: #fff;
+  box-sizing: border-box;
+  cursor: pointer;
+}
