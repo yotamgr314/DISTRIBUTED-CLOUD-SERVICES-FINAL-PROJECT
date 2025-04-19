@@ -17,9 +17,39 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-
 import Navbar from "../components/shared/navbar";
 import FooterAccountHomePage from "../components/shared/footerAccountHomePage";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/effect-coverflow";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+
+const dummyReviews = [
+  {
+    user: "Jane",
+    content: "Beautiful visuals and strong characters.",
+    rating: 5,
+  },
+  {
+    user: "Bob",
+    content: "A bit predictable but entertaining overall.",
+    rating: 3,
+  },
+  {
+    user: "Alice",
+    content:
+      "It started slow but picked up quickly. I loved the suspense and twists!",
+    rating: 4,
+  },
+  {
+    user: "Dan",
+    content: "It was okay, not amazing but watchable.",
+    rating: 2,
+  },
+];
 
 const ReviewProgram = () => {
   const { programId } = useParams();
@@ -101,7 +131,7 @@ const ReviewProgram = () => {
           onSubmit={handleSubmit}
           sx={{
             width: "100%",
-            maxWidth: "600px",
+            maxWidth: "960px",
             backgroundColor: "rgba(20,20,20,0.95)",
             p: 4,
             borderRadius: 2,
@@ -110,6 +140,7 @@ const ReviewProgram = () => {
             gap: 3,
             color: "#fff",
             position: "relative",
+            overflow: "hidden",
           }}
         >
           {/* Exit Button */}
@@ -193,6 +224,70 @@ const ReviewProgram = () => {
           >
             Submit Review
           </Button>
+
+          {/* REVIEWS CAROUSEL INSIDE MODAL */}
+          <Box sx={{ mt: 4, px: 1 }}>
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: "bold", mb: 2, textAlign: "center" }}
+            >
+              What Others Are Saying
+            </Typography>
+
+            <Swiper
+              effect={"coverflow"}
+              grabCursor={true}
+              centeredSlides={true}
+              loop={true}
+              slidesPerView={"auto"}
+              coverflowEffect={{
+                rotate: 0,
+                stretch: 0,
+                depth: 100,
+                modifier: 2.5,
+              }}
+              pagination={{ clickable: true }}
+              navigation={true}
+              modules={[EffectCoverflow, Pagination, Navigation]}
+              style={{ paddingBottom: "4rem" }}
+            >
+              {dummyReviews.map((review, index) => (
+                <SwiperSlide
+                  key={index}
+                  style={{
+                    width: 300,
+                    backgroundColor: "#1f1f1f",
+                    borderRadius: "16px",
+                    padding: "20px",
+                    color: "#fff",
+                    boxSizing: "border-box",
+                    cursor: "pointer",
+                  }}
+                >
+                  <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
+                    {review.user}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: "0.95rem",
+                      color: "#ccc",
+                      mb: 2,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {review.content}
+                  </Typography>
+                  <Rating
+                    value={review.rating}
+                    readOnly
+                    sx={{ color: "#fbc02d" }}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </Box>
         </Box>
       </Box>
 
