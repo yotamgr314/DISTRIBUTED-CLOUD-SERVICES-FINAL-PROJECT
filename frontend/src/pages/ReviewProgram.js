@@ -311,7 +311,12 @@ const ReviewProgram = () => {
                   <Rating
                     value={review.rating}
                     readOnly
-                    sx={{ color: "#fbc02d" }}
+                    sx={{
+                      color: "#fbc02d",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      maxWidth: "100%",
+                    }}
                   />
                 </SwiperSlide>
               ))}
