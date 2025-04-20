@@ -1,3 +1,5 @@
+// src/components/shared/navbar.js
+
 import React, { useState, useEffect } from "react";
 import {
   AppBar,
@@ -19,7 +21,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { clearAuth, getToken } from "../../services/authService";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings"; // הוספה
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 const navLinks = [
   { label: "Home", path: "/AccountHomePage" },
@@ -55,18 +57,15 @@ const Navbar = () => {
     const profileId = sessionStorage.getItem("selectedProfileId");
 
     if (role === "admin") {
-      // מנהל לא צריך אווטאר פרופיל
       setAvatarUrl(null);
       return;
     }
 
     if (avatarIndex !== null) {
-      // נטען מהזיכרון המקומי אם קיים
       setAvatarUrl(avatars[parseInt(avatarIndex, 10)] || avatars[2]);
       return;
     }
 
-    // אם אין בזיכרון אבל יש פרופיל שמור – נביא מהשרת
     if (profileId && token) {
       fetch(`http://localhost:5000/api/profiles/${profileId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -160,6 +159,7 @@ const Navbar = () => {
               </ListItem>
             )
           )}
+
         {role === "admin" && (
           <NavLink to="/AddProgram" style={{ textDecoration: "none" }}>
             <ListItem disablePadding>
@@ -174,6 +174,35 @@ const Navbar = () => {
                           : "#E5E5E5",
                       fontWeight:
                         location.pathname === "/AddProgram" ? "bold" : 400,
+                      fontFamily: "Netflix Sans, Arial, sans-serif",
+                      fontSize: "14px",
+                      lineHeight: "17px",
+                    },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </NavLink>
+        )}
+
+        {role === "admin" && (
+          <NavLink to="/AdminReviewsPage" style={{ textDecoration: "none" }}>
+            <ListItem disablePadding>
+              <ListItemButton
+                selected={location.pathname === "/AdminReviewsPage"}
+              >
+                <ListItemText
+                  primary="User Reviews"
+                  primaryTypographyProps={{
+                    sx: {
+                      color:
+                        location.pathname === "/AdminReviewsPage"
+                          ? "#fff"
+                          : "#E5E5E5",
+                      fontWeight:
+                        location.pathname === "/AdminReviewsPage"
+                          ? "bold"
+                          : 400,
                       fontFamily: "Netflix Sans, Arial, sans-serif",
                       fontSize: "14px",
                       lineHeight: "17px",
@@ -258,11 +287,11 @@ const Navbar = () => {
                   ml: 2,
                 }}
               >
+                {/* Regular user links */}
                 {role !== "admin" &&
                   navLinks.map((link) => {
                     const isActive =
                       link.path && location.pathname === link.path;
-
                     return link.path ? (
                       <NavLink
                         key={link.label}
@@ -279,9 +308,7 @@ const Navbar = () => {
                             color: isActive ? "#fff" : "#E5E5E5",
                             opacity: isActive ? 1 : 0.8,
                             transition: "opacity 0.3s ease",
-                            "&:hover": {
-                              opacity: 1,
-                            },
+                            "&:hover": { opacity: 1 },
                           }}
                         >
                           {link.label}
@@ -299,9 +326,7 @@ const Navbar = () => {
                           color: "#E5E5E5",
                           opacity: 0.7,
                           transition: "opacity 0.3s ease",
-                          "&:hover": {
-                            opacity: 1,
-                          },
+                          "&:hover": { opacity: 1 },
                         }}
                       >
                         {link.label}
@@ -309,6 +334,7 @@ const Navbar = () => {
                     );
                   })}
 
+                {/* Admin links */}
                 {role === "admin" && (
                   <NavLink to="/AddProgram" style={{ textDecoration: "none" }}>
                     <Typography
@@ -324,12 +350,37 @@ const Navbar = () => {
                             : "#E5E5E5",
                         opacity: location.pathname === "/AddProgram" ? 1 : 0.8,
                         transition: "opacity 0.3s ease",
-                        "&:hover": {
-                          opacity: 1,
-                        },
+                        "&:hover": { opacity: 1 },
                       }}
                     >
                       Add New Program
+                    </Typography>
+                  </NavLink>
+                )}
+
+                {role === "admin" && (
+                  <NavLink
+                    to="/AdminReviewsPage"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Typography
+                      sx={{
+                        cursor: "pointer",
+                        fontFamily: "Netflix Sans, Arial, sans-serif",
+                        fontSize: "14px",
+                        fontWeight: 400,
+                        lineHeight: "17px",
+                        color:
+                          location.pathname === "/AdminReviewsPage"
+                            ? "#fff"
+                            : "#E5E5E5",
+                        opacity:
+                          location.pathname === "/AdminReviewsPage" ? 1 : 0.8,
+                        transition: "opacity 0.3s ease",
+                        "&:hover": { opacity: 1 },
+                      }}
+                    >
+                      User Reviews
                     </Typography>
                   </NavLink>
                 )}
@@ -337,7 +388,7 @@ const Navbar = () => {
             )}
           </Box>
 
-          {/* Right Icons + Avatar */}
+          {/* Right icons & avatar */}
           <Box
             sx={{
               display: "flex",
@@ -370,7 +421,11 @@ const Navbar = () => {
                     component="img"
                     src={avatarUrl}
                     alt="User Avatar"
-                    sx={{ width: 32, height: 32, objectFit: "contain" }}
+                    sx={{
+                      width: 32,
+                      height: 32,
+                      objectFit: "contain",
+                    }}
                   />
                   <ArrowDropDownIcon sx={{ color: "white" }} />
                 </IconButton>
