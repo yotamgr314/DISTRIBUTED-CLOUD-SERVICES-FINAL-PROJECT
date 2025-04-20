@@ -126,7 +126,6 @@ const AdminReviewsPage = () => {
             sx={{
               backgroundColor: "#222",
               flex: 1,
-              "& .MuiFilledInput-input": { color: "#fff", fontSize: "16px" },
               "& .MuiInputLabel-root": { color: "#aaa", fontSize: "16px" },
             }}
           />
@@ -209,7 +208,12 @@ const AdminReviewsPage = () => {
                 value={r.rating}
                 readOnly
                 size="small"
-                sx={{ color: "#fbc02d" }}
+                sx={{
+                  color: "#fbc02d", // זהב למלאים
+                  "& .MuiRating-iconEmpty": {
+                    color: "#888", // אפור ברקע כהה
+                  },
+                }}
               />
             </Typography>
             <Typography
@@ -268,7 +272,12 @@ const AdminReviewsPage = () => {
                   value={selected.rating}
                   readOnly
                   size="medium"
-                  sx={{ color: "#fbc02d" }}
+                  sx={{
+                    color: "#fbc02d", // זהב למלאים
+                    "& .MuiRating-iconEmpty": {
+                      color: "#888", // אפור ברקע כהה
+                    },
+                  }}
                 />
               </Typography>
               <Typography whiteSpace="pre-line">{selected.text}</Typography>
