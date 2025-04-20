@@ -46,54 +46,7 @@ const dummyReviews = [
     rating: 3,
     text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well.",
   },
-  {
-    program: "Friends",
-    user: "Mike",
-    type: "TV Show",
-    genre: "Comedy",
-    rating: 3,
-    text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well.",
-  },
-  {
-    program: "Friends",
-    user: "Mike",
-    type: "TV Show",
-    genre: "Comedy",
-    rating: 3,
-    text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well.",
-  },
-  {
-    program: "Friends",
-    user: "Mike",
-    type: "TV Show",
-    genre: "Comedy",
-    rating: 3,
-    text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well.",
-  },
-  {
-    program: "Friends",
-    user: "Mike",
-    type: "TV Show",
-    genre: "Comedy",
-    rating: 3,
-    text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well.",
-  },
-  {
-    program: "Friends",
-    user: "Mike",
-    type: "TV Show",
-    genre: "Comedy",
-    rating: 3,
-    text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well.",
-  },
-  {
-    program: "Friends",
-    user: "Mike",
-    type: "TV Show",
-    genre: "Comedy",
-    rating: 3,
-    text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well.",
-  },
+  // … עוד dummy data
 ];
 
 const genres = ["All", "Drama", "Comedy", "Action", "Thriller", "Sci-Fi"];
@@ -173,8 +126,25 @@ const AdminReviewsPage = () => {
             sx={{
               backgroundColor: "#222",
               flex: 1,
-              "& .MuiFilledInput-input": { color: "#fff", fontSize: "16px" },
-              "& .MuiInputLabel-root": { color: "#aaa", fontSize: "16px" },
+              // hide the underline when not focused
+              "& .MuiFilledInput-underline:before": {
+                borderBottom: "none",
+              },
+              "& .MuiFilledInput-root:hover:before": {
+                borderBottom: "none",
+              },
+              // make the typed text white
+              "& .MuiFilledInput-input": {
+                color: "#fff",
+              },
+              // label styling
+              "& .MuiInputLabel-root": {
+                color: "#aaa",
+                fontSize: "16px",
+              },
+            }}
+            InputProps={{
+              disableUnderline: false,
             }}
           />
 
@@ -188,7 +158,11 @@ const AdminReviewsPage = () => {
             }}
           >
             <InputLabel>Genre</InputLabel>
-            <Select value={genre} onChange={(e) => setGenre(e.target.value)}>
+            <Select
+              value={genre}
+              onChange={(e) => setGenre(e.target.value)}
+              MenuProps={{ disableScrollLock: true }} // ✅ מונע zoom
+            >
               {genres.map((g) => (
                 <MenuItem key={g} value={g}>
                   {g}
@@ -207,7 +181,11 @@ const AdminReviewsPage = () => {
             }}
           >
             <InputLabel>Type</InputLabel>
-            <Select value={type} onChange={(e) => setType(e.target.value)}>
+            <Select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              MenuProps={{ disableScrollLock: true }} // ✅ מונע zoom
+            >
               {types.map((t) => (
                 <MenuItem key={t} value={t}>
                   {t}
@@ -248,7 +226,12 @@ const AdminReviewsPage = () => {
                 value={r.rating}
                 readOnly
                 size="small"
-                sx={{ color: "#fbc02d" }}
+                sx={{
+                  color: "#fbc02d", // זהב למלאים
+                  "& .MuiRating-iconEmpty": {
+                    color: "#888", // אפור ברקע כהה
+                  },
+                }}
               />
             </Typography>
             <Typography
@@ -268,8 +251,10 @@ const AdminReviewsPage = () => {
         )}
       </Box>
 
-      {/* Footer always at bottom */}
-      <FooterAccountHomePage />
+      {/* Footer תמיד בתחתית */}
+      <Box sx={{ mt: "auto" }}>
+        <FooterAccountHomePage />
+      </Box>
 
       {/* Review Detail Modal */}
       <Dialog
@@ -305,7 +290,12 @@ const AdminReviewsPage = () => {
                   value={selected.rating}
                   readOnly
                   size="medium"
-                  sx={{ color: "#fbc02d" }}
+                  sx={{
+                    color: "#fbc02d", // זהב למלאים
+                    "& .MuiRating-iconEmpty": {
+                      color: "#888", // אפור ברקע כהה
+                    },
+                  }}
                 />
               </Typography>
               <Typography whiteSpace="pre-line">{selected.text}</Typography>
