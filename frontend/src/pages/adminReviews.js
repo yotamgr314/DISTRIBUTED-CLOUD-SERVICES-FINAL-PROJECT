@@ -46,54 +46,7 @@ const dummyReviews = [
     rating: 3,
     text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well.",
   },
-  {
-    program: "Friends",
-    user: "Mike",
-    type: "TV Show",
-    genre: "Comedy",
-    rating: 3,
-    text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well. Still makes me laugh, though some jokes haven't aged well.",
-  },
-  {
-    program: "Friends",
-    user: "Mike",
-    type: "TV Show",
-    genre: "Comedy",
-    rating: 3,
-    text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well.",
-  },
-  {
-    program: "Friends",
-    user: "Mike",
-    type: "TV Show",
-    genre: "Comedy",
-    rating: 3,
-    text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well.",
-  },
-  {
-    program: "Friends",
-    user: "Mike",
-    type: "TV Show",
-    genre: "Comedy",
-    rating: 3,
-    text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well.",
-  },
-  {
-    program: "Friends",
-    user: "Mike",
-    type: "TV Show",
-    genre: "Comedy",
-    rating: 3,
-    text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well.",
-  },
-  {
-    program: "Friends",
-    user: "Mike",
-    type: "TV Show",
-    genre: "Comedy",
-    rating: 3,
-    text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well.",
-  },
+  // … עוד dummy data
 ];
 
 const genres = ["All", "Drama", "Comedy", "Action", "Thriller", "Sci-Fi"];
@@ -188,7 +141,11 @@ const AdminReviewsPage = () => {
             }}
           >
             <InputLabel>Genre</InputLabel>
-            <Select value={genre} onChange={(e) => setGenre(e.target.value)}>
+            <Select
+              value={genre}
+              onChange={(e) => setGenre(e.target.value)}
+              MenuProps={{ disableScrollLock: true }} // ✅ מונע zoom
+            >
               {genres.map((g) => (
                 <MenuItem key={g} value={g}>
                   {g}
@@ -207,7 +164,11 @@ const AdminReviewsPage = () => {
             }}
           >
             <InputLabel>Type</InputLabel>
-            <Select value={type} onChange={(e) => setType(e.target.value)}>
+            <Select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              MenuProps={{ disableScrollLock: true }} // ✅ מונע zoom
+            >
               {types.map((t) => (
                 <MenuItem key={t} value={t}>
                   {t}
@@ -268,8 +229,10 @@ const AdminReviewsPage = () => {
         )}
       </Box>
 
-      {/* Footer always at bottom */}
-      <FooterAccountHomePage />
+      {/* Footer תמיד בתחתית */}
+      <Box sx={{ mt: "auto" }}>
+        <FooterAccountHomePage />
+      </Box>
 
       {/* Review Detail Modal */}
       <Dialog
