@@ -1,6 +1,6 @@
 // 📁 src/pages/AdminReviewsPage.js
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -46,10 +46,9 @@ const dummyReviews = [
     rating: 3,
     text: "Classic and fun but a bit outdated. Still makes me laugh, though some jokes haven't aged well.",
   },
-  // … עוד dummy data
 ];
 
-const genres = ["All", "Drama", "Comedy", "Action", "Thriller", "Sci-Fi"];
+const genres = ["All", "Drama", "Comedy", "Action", "Thriller", "Sci‑Fi"];
 const types = ["All", "Movie", "TV Show"];
 
 const AdminReviewsPage = () => {
@@ -60,6 +59,25 @@ const AdminReviewsPage = () => {
   const [search, setSearch] = useState("");
   const [genre, setGenre] = useState("All");
   const [type, setType] = useState("All");
+
+  // track whether each dropdown is open
+  const [genreMenuOpen, setGenreMenuOpen] = useState(false);
+  const [typeMenuOpen, setTypeMenuOpen] = useState(false);
+
+  // close the open dropdown if the user scrolls
+  useEffect(() => {
+    if (!genreMenuOpen) return;
+    const onScroll = () => setGenreMenuOpen(false);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [genreMenuOpen]);
+
+  useEffect(() => {
+    if (!typeMenuOpen) return;
+    const onScroll = () => setTypeMenuOpen(false);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [typeMenuOpen]);
 
   // Modal state
   const [selected, setSelected] = useState(null);
@@ -99,14 +117,14 @@ const AdminReviewsPage = () => {
       <Box
         component="main"
         sx={{
-          flex: 1,
+          flex: 1, // <-- makes this expand to push footer to bottom
           px: 3,
           pt: 10,
           pb: 4,
         }}
       >
         <Typography variant="h4" sx={{ mb: 4, fontWeight: "bold" }}>
-          Admin – All User Reviews
+          Users reviews
         </Typography>
 
         {/* Filters */}
@@ -119,32 +137,17 @@ const AdminReviewsPage = () => {
           }}
         >
           <TextField
-            label="Search Program"
+            label="Search Program"
             variant="filled"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             sx={{
               backgroundColor: "#222",
               flex: 1,
-              // hide the underline when not focused
-              "& .MuiFilledInput-underline:before": {
-                borderBottom: "none",
-              },
-              "& .MuiFilledInput-root:hover:before": {
-                borderBottom: "none",
-              },
-              // make the typed text white
-              "& .MuiFilledInput-input": {
-                color: "#fff",
-              },
-              // label styling
-              "& .MuiInputLabel-root": {
-                color: "#aaa",
-                fontSize: "16px",
-              },
-            }}
-            InputProps={{
-              disableUnderline: false,
+              "& .MuiFilledInput-underline:before": { borderBottom: "none" },
+              "& .MuiFilledInput-root:hover:before": { borderBottom: "none" },
+              "& .MuiFilledInput-input": { color: "#fff" },
+              "& .MuiInputLabel-root": { color: "#aaa", fontSize: "16px" },
             }}
           />
 
@@ -161,7 +164,10 @@ const AdminReviewsPage = () => {
             <Select
               value={genre}
               onChange={(e) => setGenre(e.target.value)}
-              MenuProps={{ disableScrollLock: true }} // ✅ מונע zoom
+              open={genreMenuOpen}
+              onOpen={() => setGenreMenuOpen(true)}
+              onClose={() => setGenreMenuOpen(false)}
+              MenuProps={{ disableScrollLock: true }}
             >
               {genres.map((g) => (
                 <MenuItem key={g} value={g}>
@@ -184,7 +190,10 @@ const AdminReviewsPage = () => {
             <Select
               value={type}
               onChange={(e) => setType(e.target.value)}
-              MenuProps={{ disableScrollLock: true }} // ✅ מונע zoom
+              open={typeMenuOpen}
+              onOpen={() => setTypeMenuOpen(true)}
+              onClose={() => setTypeMenuOpen(false)}
+              MenuProps={{ disableScrollLock: true }}
             >
               {types.map((t) => (
                 <MenuItem key={t} value={t}>
@@ -215,22 +224,20 @@ const AdminReviewsPage = () => {
             }}
           >
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              {r.program} — {r.user}
+              {r.program} — {r.user}
             </Typography>
             <Typography
               variant="body2"
               sx={{ mb: 1, color: "#aaa", fontSize: "0.9rem" }}
             >
-              {r.type} | {r.genre} |{" "}
+              {r.type} | {r.genre} |{" "}
               <Rating
                 value={r.rating}
                 readOnly
                 size="small"
                 sx={{
-                  color: "#fbc02d", // זהב למלאים
-                  "& .MuiRating-iconEmpty": {
-                    color: "#888", // אפור ברקע כהה
-                  },
+                  color: "#fbc02d",
+                  "& .MuiRating-iconEmpty": { color: "#888" },
                 }}
               />
             </Typography>
@@ -272,7 +279,7 @@ const AdminReviewsPage = () => {
         }}
       >
         <DialogTitle>
-          {selected?.program} — {selected?.user}
+          {selected?.program} — {selected?.user}
         </DialogTitle>
         <DialogContent
           dividers
@@ -291,10 +298,8 @@ const AdminReviewsPage = () => {
                   readOnly
                   size="medium"
                   sx={{
-                    color: "#fbc02d", // זהב למלאים
-                    "& .MuiRating-iconEmpty": {
-                      color: "#888", // אפור ברקע כהה
-                    },
+                    color: "#fbc02d",
+                    "& .MuiRating-iconEmpty": { color: "#888" },
                   }}
                 />
               </Typography>
