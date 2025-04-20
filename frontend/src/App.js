@@ -9,6 +9,7 @@ import NewAndPopular from "./pages/newAndPopular";
 import MoviesPage from "./pages/movies";
 import TvShowsPage from "./pages/tvShow";
 import AddProgram from "./pages/AddProgram";
+import AdminReviewsPage from "./pages/adminReviews";
 import ProtectedRoute from "./components/shared/ProtectedRoute";
 
 function App() {
@@ -33,6 +34,14 @@ function App() {
           element={
             <ProtectedRoute>
               <AddProgram />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/AdminReviewsPage"
+          element={
+            <ProtectedRoute>
+              <AdminReviewsPage />
             </ProtectedRoute>
           }
         />
