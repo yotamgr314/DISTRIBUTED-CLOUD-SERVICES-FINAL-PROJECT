@@ -126,7 +126,25 @@ const AdminReviewsPage = () => {
             sx={{
               backgroundColor: "#222",
               flex: 1,
-              "& .MuiInputLabel-root": { color: "#aaa", fontSize: "16px" },
+              // hide the underline when not focused
+              "& .MuiFilledInput-underline:before": {
+                borderBottom: "none",
+              },
+              "& .MuiFilledInput-root:hover:before": {
+                borderBottom: "none",
+              },
+              // make the typed text white
+              "& .MuiFilledInput-input": {
+                color: "#fff",
+              },
+              // label styling
+              "& .MuiInputLabel-root": {
+                color: "#aaa",
+                fontSize: "16px",
+              },
+            }}
+            InputProps={{
+              disableUnderline: false,
             }}
           />
 
