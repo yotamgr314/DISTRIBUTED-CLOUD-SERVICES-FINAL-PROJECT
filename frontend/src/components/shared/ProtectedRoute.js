@@ -25,13 +25,24 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/ProfileSelectionPage" replace />;
   }
 
+  // user trying to access pages belongs to admin.
+
+  if (
+    role === "user" &&
+    profileId &&
+    (location.pathname === "/AddProgram" ||
+      location.pathname === "/AdminReviewsPage")
+  ) {
+    return <Navigate to="/AccountHomePage" replace />;
+  }
+
   // מנהל מערכת שמנסה להיכנס לעמודים שלא רלוונטיים עבורו
   if (
     role === "admin" &&
     location.pathname !== "/AddProgram" &&
-    location.pathname !== "/AdminReviews"
+    location.pathname !== "/AdminReviewsPage"
   ) {
-    return <Navigate to="/AddProgram" replace />;
+    return <Navigate to="/AdminReviewsPage" replace />;
   }
 
   // אחרת – הכל תקין
