@@ -1,11 +1,10 @@
-// 📁 routes/programRoutes.js
-
+// 📁 backend/routes/programRoutes.js
 const express = require("express");
 const router = express.Router();
 const auth = require("../middlewares/authMiddleware");
 const { getHomePage } = require("../controllers/programController");
 
-// this endpoint returns both the rotating cover and the "New on Netflix" row
+// returns cover + four rows (two static, two dynamic)
 router.get("/homepage", auth, getHomePage);
 
 module.exports = router;
