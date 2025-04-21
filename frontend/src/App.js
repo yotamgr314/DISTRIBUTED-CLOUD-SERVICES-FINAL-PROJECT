@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import SignUp from "./pages/signUp";
 import SignIn from "./pages/signIn";
 import ProfileSelectionPage from "./pages/ProfileSelectionPage";
@@ -16,6 +21,9 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Default route */}
+        <Route path="/" element={<Navigate replace to="/SignIn" />} />
+
         {/* Public routes */}
         <Route path="/SignUp" element={<SignUp />} />
         <Route path="/SignIn" element={<SignIn />} />
@@ -93,6 +101,9 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Catch-all: כל שאר הכתובות יפנו ל-SignIn */}
+        <Route path="*" element={<Navigate replace to="/SignIn" />} />
       </Routes>
     </Router>
   );
