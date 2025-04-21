@@ -1,20 +1,21 @@
 // src/pages/AccountHomePage.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import FooterAccountHomePage from "../components/shared/footerAccountHomePage";
 import Navbar from "../components/shared/navbar";
 import ProgramDetailsModal from "../components/moreInfoModal/ProgramDetailsModal";
+import { getToken } from "../services/authService";
 
-// Example image arrays
-const newOnNetflixImages = new Array(9).fill("/assets/newOnNetFlix.svg");
-const top10Images = new Array(10).fill("/assets/newOnNetFlix.svg");
+// Static example image arrays for sections not yet dynamic
 const weThinkYoullLoveImages = new Array(9).fill("/assets/newOnNetFlix.svg");
+const top10Images = new Array(10).fill("/assets/newOnNetFlix.svg");
 const continueForYotamImages = new Array(6).fill("/assets/newOnNetFlix.svg");
 const weekInOneWeekendImages = new Array(6).fill("/assets/newOnNetFlix.svg");
 const criticallyAcclaimedImages = new Array(6).fill("/assets/newOnNetFlix.svg");
-const inspiringMoviesImages = new Array(6).fill("/assets/newOnNetFlix.svg");
 const adultAnimationImages = new Array(6).fill("/assets/newOnNetFlix.svg");
+
+const BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 
 /**
  * SectionRow: Generic component to display images in a horizontal scroll.
@@ -27,73 +28,82 @@ const SectionRow = ({
   borderRadius = 2,
   showProgressBar = false,
   onImageClick,
-}) => {
-  return (
-    <Box sx={{ mb: 4 }}>
-      <Typography
-        variant="h6"
-        sx={{
-          mb: 2,
-          fontWeight: "bold",
-          fontSize: "1.2rem",
-        }}
-      >
-        {title}
-      </Typography>
-      <Box
-        sx={{
-          display: "flex",
-          overflowX: "auto",
-          gap: "20px",
-          scrollBehavior: "smooth",
-          "::-webkit-scrollbar": { display: "none" },
-        }}
-      >
-        {images.map((img, idx) => (
-          <Box key={idx} sx={{ flex: "0 0 auto" }}>
+}) => (
+  <Box sx={{ mb: 4 }}>
+    <Typography
+      variant="h6"
+      sx={{ mb: 2, fontWeight: "bold", fontSize: "1.2rem" }}
+    >
+      {title}
+    </Typography>
+    <Box
+      sx={{
+        display: "flex",
+        overflowX: "auto",
+        gap: "20px",
+        scrollBehavior: "smooth",
+        "::-webkit-scrollbar": { display: "none" },
+      }}
+    >
+      {images.map((img, idx) => (
+        <Box key={idx} sx={{ flex: "0 0 auto" }}>
+          <Box
+            component="img"
+            src={img}
+            alt={`${title} ${idx}`}
+            sx={{
+              width: `${imageWidth}px`,
+              height: `${imageHeight}px`,
+              borderRadius: `${borderRadius}px`,
+              objectFit: "cover",
+              cursor: "pointer",
+              display: "block",
+              mb: showProgressBar ? 1 : 0,
+            }}
+            onClick={onImageClick}
+          />
+          {showProgressBar && (
             <Box
-              component="img"
-              src={img}
-              alt={`${title} ${idx}`}
-              sx={{
-                width: `${imageWidth}px`,
-                height: `${imageHeight}px`,
-                borderRadius: `${borderRadius}px`,
-                objectFit: "cover",
-                cursor: "pointer",
-                display: "block",
-                mb: showProgressBar ? 1 : 0,
-              }}
-              onClick={onImageClick}
+              sx={{ width: "132px", height: "3px", backgroundColor: "#E50914" }}
             />
-            {showProgressBar && (
-              <Box
-                sx={{
-                  width: "132px",
-                  height: "3px",
-                  backgroundColor: "#E50914",
-                }}
-              />
-            )}
-          </Box>
-        ))}
-      </Box>
+          )}
+        </Box>
+      ))}
     </Box>
-  );
-};
+  </Box>
+);
 
 const AccountHomePage = () => {
-  // State to control opening of the modal with program details
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [coverPrograms, setCoverPrograms] = useState([]);
+  const [newOnNetflixPrograms, setNewOnNetflixPrograms] = useState([]);
+  const [animationPrograms, setAnimationPrograms] = useState([]);
+  const [actionPrograms, setActionPrograms] = useState([]);
 
-  const handleOpenDetailsModal = () => {
-    setDetailsModalOpen(true);
-  };
-  const handleCloseDetailsModal = () => {
-    setDetailsModalOpen(false);
-  };
+  const handleOpenDetailsModal = () => setDetailsModalOpen(true);
+  const handleCloseDetailsModal = () => setDetailsModalOpen(false);
 
-  // Sample details with a non-empty trailers array so that the Trailers & More section renders.
+  useEffect(() => {
+    const fetchHome = async () => {
+      try {
+        const token = getToken();
+        const res = await fetch("/api/programs/homepage", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error("Failed to load homepage");
+        const { cover, newOnNetflix, animation, action } = await res.json();
+        setCoverPrograms(cover);
+        setNewOnNetflixPrograms(newOnNetflix);
+        setAnimationPrograms(animation);
+        setActionPrograms(action);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchHome();
+  }, []);
+
+  // Sample details for ProgramDetailsModal
   const sampleDetails = {
     title: "House of Ninjas",
     description:
@@ -110,7 +120,6 @@ const AccountHomePage = () => {
       "/assets/example3.jpg",
     ],
     crew: "במאי: דוגמה, מפיק: דוגמה, ועוד...",
-    // Added trailers array so TrailersSection will render
     trailers: [
       {
         image: "/assets/newOnNetFlix.svg",
@@ -138,13 +147,15 @@ const AccountHomePage = () => {
     >
       {/* HERO / COVER SECTION */}
       <Box sx={{ position: "relative", width: "100%" }}>
-        {/* Navbar as a reusable component */}
         <Navbar />
-        {/* HERO IMAGE */}
         <Box
           component="img"
-          src="/assets/houseOfNinjasCover.png"
-          alt="House of Ninjas"
+          src={
+            coverPrograms[0]
+              ? `${BASE_IMAGE_URL}${coverPrograms[0].backdrop_path}`
+              : "/assets/houseOfNinjasCover.png"
+          }
+          alt={coverPrograms[0]?.title || coverPrograms[0]?.name || "Cover"}
           sx={{
             display: "block",
             width: "100%",
@@ -172,7 +183,11 @@ const AccountHomePage = () => {
               fontSize: { xs: "1.5rem", md: "3rem" },
             }}
           >
-            HOUSE OF NINJAS
+            {(
+              coverPrograms[0]?.title ||
+              coverPrograms[0]?.name ||
+              "FEATURE"
+            ).toUpperCase()}
           </Typography>
           <Box sx={{ display: "flex", gap: 2 }}>
             <Button
@@ -195,15 +210,14 @@ const AccountHomePage = () => {
       <Box sx={{ px: "58px", py: 4 }}>
         <SectionRow
           title="We think You'll Love These"
-          images={newOnNetflixImages}
-          imageWidth={218}
-          imageHeight={123}
-          borderRadius={2}
+          images={weThinkYoullLoveImages}
           onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
           title="New on Netflix"
-          images={top10Images}
+          images={newOnNetflixPrograms.map(
+            (p) => `${BASE_IMAGE_URL}${p.poster_path}`
+          )}
           imageWidth={215}
           imageHeight={154}
           borderRadius={0}
@@ -211,7 +225,7 @@ const AccountHomePage = () => {
         />
         <SectionRow
           title="Top 10 in the U.S. today"
-          images={weThinkYoullLoveImages}
+          images={top10Images}
           onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
@@ -227,12 +241,16 @@ const AccountHomePage = () => {
         />
         <SectionRow
           title="Animation"
-          images={criticallyAcclaimedImages}
+          images={animationPrograms.map(
+            (p) => `${BASE_IMAGE_URL}${p.poster_path}`
+          )}
           onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
           title="Action"
-          images={inspiringMoviesImages}
+          images={actionPrograms.map(
+            (p) => `${BASE_IMAGE_URL}${p.poster_path}`
+          )}
           onImageClick={handleOpenDetailsModal}
         />
         <SectionRow
