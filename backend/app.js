@@ -5,6 +5,8 @@ const profileRoutes = require("./routes/profileRoutes");
 const programRoutes = require("./routes/programRoutes");
 const userRoutes = require("./routes/userRoutes");
 const corsMiddleware = require("./middlewares/corsMiddleware");
+const reviewRoutes = require("./routes/reviewRoutes");
+const myListRoutes = require("./routes/myListRoutes");
 
 const app = express();
 
@@ -19,6 +21,8 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/profiles", profileRoutes);
 app.use("/api/programs", programRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/mylist", myListRoutes);
 app.use("/api/users", userRoutes);
 
 module.exports = app;
