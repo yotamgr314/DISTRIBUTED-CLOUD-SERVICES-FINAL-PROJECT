@@ -1,30 +1,27 @@
+// models/User.js
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const Profile = require("./profile"); // ✅ ייבוא schema של פרופילים
 
-const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
 const userSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      required: [true, "Email is required"],
+      required: true,
       unique: true,
-      match: [emailRegex, "Please enter a valid email address"],
+      match: [emailRegex, "Invalid email"],
+    },
+    password: {
+      type: String,
+      required: true,
+      match: [passwordRegex, "Password must have ≥8 chars, letter+digit"],
     },
     role: {
       type: String,
       enum: ["admin", "user"],
       default: "user",
-    },
-    password: {
-      type: String,
-      required: [true, "Password is required"],
-      match: [
-        passwordRegex,
-        "Password must be at least 8 characters, including a letter and a number",
-      ],
     },
     profiles: [
       {
@@ -32,25 +29,35 @@ const userSchema = new mongoose.Schema(
         ref: "Profile",
       },
     ],
+    selectedProfile: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Profile",
+      default: null,
+    },
+    selectedAvatarIndex: {
+      type: Number,
+      min: 0,
+      max: 3,
+      default: null,
+    },
   },
   { timestamps: true }
 );
 
-// Mongoose middlewhere to track user removal and then delete all his profiles.
-userSchema.post("findOneAndDelete", async function (doc) {
-  if (doc) {
-    await Profile.deleteMany({ user: doc._id });
-    console.log(`Cascade delete: deleted profiles for user ${doc._id}`);
-  }
-});
-
+// hash password
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 10);
 });
-
-userSchema.methods.comparePassword = async function (entered) {
-  return await bcrypt.compare(entered, this.password);
+userSchema.methods.comparePassword = function (pw) {
+  return bcrypt.compare(pw, this.password);
 };
+
+// cascade delete profiles on user removal
+userSchema.post("findOneAndDelete", async function (doc) {
+  if (doc) {
+    await mongoose.model("Profile").deleteMany({ user: doc._id });
+  }
+});
 
 module.exports = mongoose.model("User", userSchema);
