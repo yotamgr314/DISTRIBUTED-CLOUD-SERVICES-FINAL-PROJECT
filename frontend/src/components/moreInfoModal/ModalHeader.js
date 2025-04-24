@@ -1,19 +1,33 @@
-// 📁 src/components/shared/ModalHeader.js
-
 import React from "react";
 import PropTypes from "prop-types";
 import { Box, Typography, Button, IconButton } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useNavigate } from "react-router-dom";
 
+const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+const BACKDROP_BASE_URL = "https://image.tmdb.org/t/p/original";
+
 const ModalHeader = ({ details, onClose }) => {
   const navigate = useNavigate();
 
+  // אם אין details, נפעיל ברירת מחדל
   const {
-    /*  programId */ _id: heroImage = "/assets/houseOfNinjasCover.png",
-    title = "House of Ninjas",
-    nSeriesLabel = true,
-  } = details;
+    backdropPath,
+    posterPath,
+    title = "Unknown Title",
+    type,
+    _id,
+  } = details || {};
+
+  // נבחר תמונת רקע – קודם נסיון ל–backdrop, אח"כ poster, אחרת ברירת מחדל
+  const heroImage = backdropPath
+    ? `${BACKDROP_BASE_URL}${backdropPath}`
+    : posterPath
+    ? `${IMAGE_BASE_URL}${posterPath}`
+    : `${process.env.PUBLIC_URL}/assets/houseOfNinjasCover.png`;
+
+  // תווית סדרה אם type === 'tv'
+  const nSeriesLabel = type === "tv";
 
   return (
     <Box
@@ -137,10 +151,10 @@ const ModalHeader = ({ details, onClose }) => {
 ModalHeader.propTypes = {
   onClose: PropTypes.func.isRequired,
   details: PropTypes.shape({
-    _id: PropTypes.string,
-    heroImage: PropTypes.string,
+    backdropPath: PropTypes.string,
+    posterPath: PropTypes.string,
     title: PropTypes.string,
-    nSeriesLabel: PropTypes.bool,
+    type: PropTypes.string,
   }),
 };
 
