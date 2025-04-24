@@ -9,9 +9,6 @@ const TrailersSection = ({ trailers = [] }) => {
 
   return (
     <Box sx={{ mb: 4 }}>
-      <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
-        Trailers & More
-      </Typography>
       <Grid container spacing={2}>
         {trailers.slice(0, 3).map((tr, i) => (
           <Grid item xs={12} sm={4} md={4} key={i}>
@@ -28,12 +25,6 @@ const TrailersSection = ({ trailers = [] }) => {
                 borderRadius: 1,
               }}
             />
-            <Typography
-              variant="body2"
-              sx={{ mt: 1, fontWeight: "bold", color: "#ccc" }}
-            >
-              {tr.caption}
-            </Typography>
           </Grid>
         ))}
       </Grid>
