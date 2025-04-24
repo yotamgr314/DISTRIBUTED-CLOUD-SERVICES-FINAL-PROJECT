@@ -4,7 +4,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Box, Typography, Dialog, DialogContent, Slide } from "@mui/material";
 
-import EpisodesList from "./EpisodesList";
 import AboutSection from "./AboutSection";
 import TrailersSection from "./TrailersSection";
 import ModalHeader from "./ModalHeader";
@@ -190,11 +189,6 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
             </Typography>
           </Box>
         </Box>
-
-        {/* EPISODES SECTION */}
-        {episodes.length > 0 && (
-          <EpisodesList episodes={episodes} title={title} />
-        )}
 
         {/* TRAILERS SECTION */}
         {trailers.length > 0 && <TrailersSection trailers={trailers} />}
