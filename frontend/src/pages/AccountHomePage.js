@@ -67,6 +67,8 @@ const SectionRow = ({
 
 const AccountHomePage = () => {
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [cover, setCover] = useState([]);
+  const [coverIndex, setCoverIndex] = useState(0);
   const [newOnNetflix, setNewOnNetflix] = useState([]);
   const [animation, setAnimation] = useState([]);
   const [action, setAction] = useState([]);
@@ -85,6 +87,7 @@ const AccountHomePage = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        setCover(data.cover || []);
         setNewOnNetflix(data.newOnNetflix || []);
         setAnimation(data.animation || []);
         setAction(data.action || []);
@@ -105,17 +108,22 @@ const AccountHomePage = () => {
       .catch((err) => console.error("Failed loading My List:", err));
   }, []);
 
-  // Build the image URLs
-  const newOnNetflixImages = newOnNetflix.map(
-    (p) => `${IMAGE_BASE_URL}${p.posterPath}`
-  );
-  const animationImages = animation.map(
-    (p) => `${IMAGE_BASE_URL}${p.posterPath}`
-  );
-  const actionImages = action.map((p) => `${IMAGE_BASE_URL}${p.posterPath}`);
-  const myListImages = myList.map(
-    (item) => `${IMAGE_BASE_URL}${item.program.posterPath}`
-  );
+  // Build the image URLs, filtering out any missing paths
+  const newOnNetflixImages = newOnNetflix
+    .filter((p) => p.posterPath)
+    .map((p) => `${IMAGE_BASE_URL}${p.posterPath}`);
+
+  const animationImages = animation
+    .filter((p) => p.posterPath)
+    .map((p) => `${IMAGE_BASE_URL}${p.posterPath}`);
+
+  const actionImages = action
+    .filter((p) => p.posterPath)
+    .map((p) => `${IMAGE_BASE_URL}${p.posterPath}`);
+
+  const myListImages = myList
+    .filter((item) => item.program?.posterPath)
+    .map((item) => `${IMAGE_BASE_URL}${item.program.posterPath}`);
 
   // Keep the original sampleDetails for the modal
   const sampleDetails = {
@@ -158,8 +166,12 @@ const AccountHomePage = () => {
         <Navbar />
         <Box
           component="img"
-          src="/assets/houseOfNinjasCover.png"
-          alt="House of Ninjas"
+          src={
+            cover.length
+              ? `${IMAGE_BASE_URL}${cover[coverIndex].backdropPath}`
+              : "/assets/houseOfNinjasCover.png"
+          }
+          alt={cover[coverIndex]?.title || "Cover"}
           sx={{ display: "block", width: "100%", cursor: "pointer" }}
           onClick={handleOpenDetailsModal}
         />
@@ -182,7 +194,7 @@ const AccountHomePage = () => {
               fontSize: { xs: "1.5rem", md: "3rem" },
             }}
           >
-            HOUSE OF NINJAS
+            {cover[coverIndex]?.title?.toUpperCase() || "HOUSE OF NINJAS"}
           </Typography>
           <Box sx={{ display: "flex", gap: 2 }}>
             <Button
