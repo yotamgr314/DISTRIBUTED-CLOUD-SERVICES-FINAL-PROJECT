@@ -8,6 +8,7 @@ import ProgramDetailsModal from "../components/moreInfoModal/ProgramDetailsModal
 import { getToken } from "../services/authService";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+const BACKDROP_BASE_URL = "https://image.tmdb.org/t/p/original";
 
 /**
  * SectionRow: Generic component to display images in a horizontal scroll.
@@ -108,7 +109,16 @@ const AccountHomePage = () => {
       .catch((err) => console.error("Failed loading My List:", err));
   }, []);
 
-  // Build the image URLs, filtering out any missing paths
+  // rotate the cover every 5 seconds
+  useEffect(() => {
+    if (cover.length < 2) return;
+    const id = setInterval(() => {
+      setCoverIndex((i) => (i + 1) % cover.length);
+    }, 5000);
+    return () => clearInterval(id);
+  }, [cover]);
+
+  // Build the image URLs, filtering out missing paths
   const newOnNetflixImages = newOnNetflix
     .filter((p) => p.posterPath)
     .map((p) => `${IMAGE_BASE_URL}${p.posterPath}`);
@@ -125,7 +135,7 @@ const AccountHomePage = () => {
     .filter((item) => item.program?.posterPath)
     .map((item) => `${IMAGE_BASE_URL}${item.program.posterPath}`);
 
-  // Keep the original sampleDetails for the modal
+  // sample details for modal
   const sampleDetails = {
     title: "House of Ninjas",
     description:
@@ -168,7 +178,7 @@ const AccountHomePage = () => {
           component="img"
           src={
             cover.length
-              ? `${IMAGE_BASE_URL}${cover[coverIndex].backdropPath}`
+              ? `${BACKDROP_BASE_URL}${cover[coverIndex].backdropPath}`
               : "/assets/houseOfNinjasCover.png"
           }
           alt={cover[coverIndex]?.title || "Cover"}
