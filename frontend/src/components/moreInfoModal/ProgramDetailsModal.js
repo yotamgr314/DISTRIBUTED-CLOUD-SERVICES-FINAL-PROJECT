@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { Box, Typography, Dialog, DialogContent, Slide } from "@mui/material";
 
 import AboutSection from "./AboutSection";
-import TrailersSection from "./TrailersSection";
+import TrailersSection from "./programImagesSection";
 import ModalHeader from "./ModalHeader";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
