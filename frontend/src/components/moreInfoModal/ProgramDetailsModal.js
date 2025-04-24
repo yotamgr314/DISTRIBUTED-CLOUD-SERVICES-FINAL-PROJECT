@@ -1,43 +1,39 @@
 // src/components/moreInfoModal/ProgramDetailsModal.js
+
 import React from "react";
 import PropTypes from "prop-types";
-import { Box, Typography, Dialog, DialogContent, Slide } from "@mui/material";
-
+import { Box, Typography, Dialog, DialogContent, Slide, IconButton } from "@mui/material";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import ModalHeader from "./ModalHeader";
 import AboutSection from "./AboutSection";
 import TrailersSection from "./programImagesSection";
-import ModalHeader from "./ModalHeader";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-const ProgramDetailsModal = ({ open, onClose, details }) => {
-  const d = details || {};
-
-  // שדות דינמיים מה־API
+const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
+  // dynamic fields from API
   const {
     title = "Unknown Title",
-    description,
+    description = "",
     releaseDate,
     cast: castArr = [],
     genres: genresArr = [],
     crew: crewArr = [],
-    trailers = [],
-  } = d;
+    trailers = []
+  } = details;
 
-  // סטטיים שנשמרו
-  const hdAvailable = true;
-  const adAvailable = true;
-
+  // assemble dynamic values
+  const year = releaseDate ? new Date(releaseDate).getFullYear() : "";
   const summary = description || "No description available.";
   const cast = castArr.join(", ") || "No cast information.";
   const genresList = genresArr.join(", ") || "No genres available.";
   const director = crewArr.length > 0 ? crewArr[0] : "Unknown Director";
-  const year = releaseDate ? new Date(releaseDate).getFullYear() : "";
 
-  // ברירת מחדל ל־disclaimers
-  const aboutMaturityRating = "TV-MA For Mature Audiences";
-  const disclaimers = "smoking, violence For Mature Audiences";
+  // dynamic or undefined—only render if present
+  const aboutMaturityRating = details.maturityRating;
+  const disclaimers = details.disclaimers;
 
   return (
     <Dialog
@@ -63,7 +59,7 @@ const ProgramDetailsModal = ({ open, onClose, details }) => {
       }}
     >
       {/* Header Image + Overlay */}
-      <ModalHeader details={d} onClose={onClose} />
+      <ModalHeader details={details} onClose={onClose} />
 
       {/* MAIN CONTENT */}
       <DialogContent
@@ -97,22 +93,18 @@ const ProgramDetailsModal = ({ open, onClose, details }) => {
               }}
             >
               {year && <Typography>{year}</Typography>}
-              {hdAvailable && (
-                <Box
-                  component="img"
-                  src={`${process.env.PUBLIC_URL}/assets/hdIcon.svg`}
-                  alt="HD"
-                  sx={{ width: 24, height: 16 }}
-                />
-              )}
-              {adAvailable && (
-                <Box
-                  component="img"
-                  src={`${process.env.PUBLIC_URL}/assets/adIcon.svg`}
-                  alt="AD"
-                  sx={{ width: 24, height: 16 }}
-                />
-              )}
+              <Box
+                component="img"
+                src={`${process.env.PUBLIC_URL}/assets/hdIcon.svg`}
+                alt="HD"
+                sx={{ width: 24, height: 16 }}
+              />
+              <Box
+                component="img"
+                src={`${process.env.PUBLIC_URL}/assets/adIcon.svg`}
+                alt="AD"
+                sx={{ width: 24, height: 16 }}
+              />
             </Box>
 
             <Typography
@@ -149,11 +141,16 @@ const ProgramDetailsModal = ({ open, onClose, details }) => {
             <Typography>
               <strong style={{ color: "#fff" }}>Director:</strong> {director}
             </Typography>
-            <Typography>
-              <strong style={{ color: "#fff" }}>Maturity rating:</strong>{" "}
-              {aboutMaturityRating}
-            </Typography>
-            <Typography sx={{ color: "#ccc" }}>{disclaimers}</Typography>
+            {aboutMaturityRating && (
+              <Typography>
+                <strong style={{ color: "#fff" }}>Maturity rating:</strong> {aboutMaturityRating}
+              </Typography>
+            )}
+            {disclaimers && (
+              <Typography sx={{ color: "#ccc" }}>
+                {disclaimers}
+              </Typography>
+            )}
           </Box>
         </Box>
 
@@ -166,7 +163,7 @@ const ProgramDetailsModal = ({ open, onClose, details }) => {
           director={director}
           cast={cast}
           genresList={genresList}
-          showIs={d.type === "tv" ? "TV Show" : "Movie"}
+          showIs={details.type === "tv" ? "TV Show" : "Movie"}
           aboutMaturityRating={aboutMaturityRating}
           disclaimers={disclaimers}
         />

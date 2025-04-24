@@ -5,13 +5,13 @@ import PropTypes from "prop-types";
 import { Box, Typography } from "@mui/material";
 
 const AboutSection = ({
-  title = "House of Ninjas",
-  director = "Dave Boyle",
-  cast = "Kento Kaku, Yosuke Eguchi, Tae Kimura, ...",
-  genresList = "TV Dramas, Japanese, TV Thrillers",
-  showIs = "Dark, Suspenseful, Exciting",
-  aboutMaturityRating = "TV-MA For Mature Audiences",
-  disclaimers = "smoking, violence For Mature Audiences",
+  title,
+  director,
+  cast,
+  genresList,
+  showIs,
+  aboutMaturityRating,
+  disclaimers,           // no default here
 }) => {
   return (
     <Box sx={{ mb: 2 }}>
@@ -30,24 +30,32 @@ const AboutSection = ({
       <Typography variant="body2" sx={{ mb: 1 }}>
         <strong>This show is:</strong> {showIs}
       </Typography>
-      <Typography variant="body2" sx={{ mb: 1 }}>
-        <strong>Maturity rating:</strong> {aboutMaturityRating}
-      </Typography>
-      <Typography variant="body2" sx={{ mb: 1, color: "#ccc" }}>
-        {disclaimers}
-      </Typography>
+
+      {/* Maturity rating always shows if provided */}
+      {aboutMaturityRating && (
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          <strong>Maturity rating:</strong> {aboutMaturityRating}
+        </Typography>
+      )}
+
+      {/* Only render disclaimers if the program actually has one */}
+      {disclaimers && (
+        <Typography variant="body2" sx={{ mb: 1, color: "#ccc" }}>
+          {disclaimers}
+        </Typography>
+      )}
     </Box>
   );
 };
 
 AboutSection.propTypes = {
-  title: PropTypes.string,
+  title: PropTypes.string.isRequired,
   director: PropTypes.string,
   cast: PropTypes.string,
   genresList: PropTypes.string,
   showIs: PropTypes.string,
   aboutMaturityRating: PropTypes.string,
-  disclaimers: PropTypes.string,
+  disclaimers: PropTypes.string,  // now optional
 };
 
 export default AboutSection;

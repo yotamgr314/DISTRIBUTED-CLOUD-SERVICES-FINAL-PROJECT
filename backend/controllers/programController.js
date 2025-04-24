@@ -1,10 +1,12 @@
+// backend/controllers/programController.js
+
 const tmdb = require("../services/tmdbService");
 const Program = require("../models/Program");
 const Review = require("../models/Review");
 
 /**
- * Static mapping of TMDB genre IDs to names.
- * Add or adjust entries as needed based on your TMDB data.
+ * TMDB genre ID → human-readable name mapping.
+ * Extend this list as needed.
  */
 const genreMap = {
   "28": "Action",
@@ -29,19 +31,19 @@ const genreMap = {
 };
 
 /**
- * Helper to map an array of genre-IDs (as strings) to names.
+ * Convert array of genre‐ID strings into array of names.
  */
 function mapGenres(ids = []) {
   return ids.map((id) => genreMap[id] || id);
 }
 
 /**
- * Upsert each external TMDB item into our Mongo `Program` collection,
- * then return a combined object of TMDB + our local fields,
- * with genres converted to names.
+ * Upsert external TMDB items into our `Program` collection,
+ * then merge TMDB data + our local fields, mapping genres to names.
  */
 async function mergeExternalWithLocal(externalItems) {
   const extIds = externalItems.map((it) => it.id.toString());
+  // Grab any existing locals in one go
   const locals = await Program.find({ externalId: { $in: extIds } }).lean();
 
   return Promise.all(
@@ -50,13 +52,13 @@ async function mergeExternalWithLocal(externalItems) {
       let local = locals.find((l) => l.externalId === idStr);
 
       if (!local) {
+        // First time we see this TMDB item → create record
         local = await Program.create({
           externalId: idStr,
           type: ext.media_type === "movie" ? "movie" : "tv",
           title: ext.title || ext.name,
           description: ext.overview,
-          // store the raw IDs, we'll map them when returning
-          genres: (ext.genre_ids || []).map(String),
+          genres: (ext.genre_ids || []).map(String), // store raw IDs
           cast: [],
           crew: [],
           releaseDate: ext.release_date || null,
@@ -66,15 +68,16 @@ async function mergeExternalWithLocal(externalItems) {
         locals.push(local);
       }
 
-      // Merge and map genre IDs to names
       return {
+        // keep all TMDB fields
         ...ext,
+        // override with our local fields
         _id: local._id,
         externalId: local.externalId,
         type: local.type,
         title: local.title,
         description: local.description,
-        genres: mapGenres(local.genres),
+        genres: mapGenres(local.genres),      // <-- mapped to names
         cast: local.cast,
         crew: local.crew,
         releaseDate: local.releaseDate,
@@ -89,39 +92,27 @@ async function mergeExternalWithLocal(externalItems) {
 
 /**
  * GET /api/programs/homepage
- * — Fetch 4 rows from TMDB, upsert them into Mongo, return merged arrays
+ * — Returns cover + 3 rows: new, animation, action
  */
 exports.getHomePage = async (req, res) => {
   try {
-    // 1) Cover = top 4 trending
-    const trendingData = await tmdb.getTrending();
-    const coverExt = trendingData.results.slice(0, 4);
-    const cover = await mergeExternalWithLocal(coverExt);
+    // 1) Cover: top 4 trending
+    const trending = await tmdb.getTrending();
+    const cover = await mergeExternalWithLocal(trending.results.slice(0, 4));
 
-    // 2) New on Netflix (now_playing)
-    const newData = await tmdb.getNewReleases();
-    const newOnNetflix = await mergeExternalWithLocal(
-      newData.results.slice(0, 10)
-    );
+    // 2) New on Netflix
+    const nowPlaying = await tmdb.getNewReleases();
+    const newOnNetflix = await mergeExternalWithLocal(nowPlaying.results.slice(0, 10));
 
     // 3) Animation (genre 16)
-    const animData = await tmdb.getMoviesByGenre(16);
-    const animation = await mergeExternalWithLocal(
-      animData.results.slice(0, 10)
-    );
+    const anim = await tmdb.getMoviesByGenre(16);
+    const animation = await mergeExternalWithLocal(anim.results.slice(0, 10));
 
     // 4) Action (genre 28)
-    const actionData = await tmdb.getMoviesByGenre(28);
-    const action = await mergeExternalWithLocal(
-      actionData.results.slice(0, 10)
-    );
+    const act = await tmdb.getMoviesByGenre(28);
+    const action = await mergeExternalWithLocal(act.results.slice(0, 10));
 
-    return res.status(200).json({
-      cover,
-      newOnNetflix,
-      animation,
-      action,
-    });
+    return res.status(200).json({ cover, newOnNetflix, animation, action });
   } catch (err) {
     console.error("getHomePage error:", err);
     return res.status(500).json({ message: "Failed to load homepage content" });
@@ -130,7 +121,7 @@ exports.getHomePage = async (req, res) => {
 
 /**
  * POST /api/programs
- * — Admin only: manually create a Program
+ * — Admin only: manually add a Program
  */
 exports.createProgram = async (req, res) => {
   const {
@@ -155,14 +146,15 @@ exports.createProgram = async (req, res) => {
       type,
       title,
       description,
-      genres, // expecting names when admin posts
+      genres, // when admin posts, expect names or IDs
       cast,
       crew,
       releaseDate,
       posterPath,
       backdropPath,
     });
-    return res.status(201).json(program);
+    // map genres before return if they were IDs
+    return res.status(201).json({ ...program.toObject(), genres: mapGenres(program.genres) });
   } catch (err) {
     console.error("createProgram error:", err);
     return res.status(500).json({ message: "Server error" });
@@ -171,18 +163,16 @@ exports.createProgram = async (req, res) => {
 
 /**
  * GET /api/programs/:id
- * — Fetch single Program by its Mongo `_id`
- * — Also map stored genre-IDs to names
+ * — Fetch single Program by Mongo _id
  */
 exports.getProgramById = async (req, res) => {
   try {
-    const program = await Program.findById(req.params.id).lean();
-    if (!program) {
+    const prog = await Program.findById(req.params.id).lean();
+    if (!prog) {
       return res.status(404).json({ message: "Program not found" });
     }
-    // map the genres field before returning
-    program.genres = mapGenres(program.genres);
-    return res.status(200).json(program);
+    prog.genres = mapGenres(prog.genres);
+    return res.status(200).json(prog);
   } catch (err) {
     console.error("getProgramById error:", err);
     return res.status(500).json({ message: "Server error" });
@@ -191,14 +181,12 @@ exports.getProgramById = async (req, res) => {
 
 /**
  * GET /api/programs/recommendations
- * — User only, profileMw injects `req.profile`
- * — Return up to 10 Programs in the genres this profile rated most
+ * — User only: recommends up to 10 Programs based on most‐reviewed genres
  */
 exports.getRecommendations = async (req, res) => {
   try {
     const profileId = req.profile._id;
 
-    // 1) Count this profile’s public reviews by genre
     const genreCounts = await Review.aggregate([
       { $match: { profile: profileId, isPublic: true, rating: { $gt: 0 } } },
       {
@@ -227,16 +215,11 @@ exports.getRecommendations = async (req, res) => {
       recs = await Program.find({ genres: { $in: topGenres } })
         .limit(10)
         .lean();
-      // map genres to names
-      recs = recs.map((p) => ({
-        ...p,
-        genres: mapGenres(p.genres),
-      }));
+      recs = recs.map((p) => ({ ...p, genres: mapGenres(p.genres) }));
     } else {
       // fallback to trending
-      const trendingData = await tmdb.getTrending();
-      const ext = trendingData.results.slice(0, 10);
-      recs = await mergeExternalWithLocal(ext);
+      const trending = await tmdb.getTrending();
+      recs = await mergeExternalWithLocal(trending.results.slice(0, 10));
     }
 
     return res.status(200).json(recs);
