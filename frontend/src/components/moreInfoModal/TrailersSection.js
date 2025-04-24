@@ -28,12 +28,6 @@ const TrailersSection = ({ trailers = [] }) => {
                 borderRadius: 1,
               }}
             />
-            <Typography
-              variant="body2"
-              sx={{ mt: 1, fontWeight: "bold", color: "#ccc" }}
-            >
-              {tr.caption}
-            </Typography>
           </Grid>
         ))}
       </Grid>
