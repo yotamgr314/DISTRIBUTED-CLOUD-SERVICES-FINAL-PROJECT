@@ -1,12 +1,44 @@
-// backend/controllers/programController.js
-
 const tmdb = require("../services/tmdbService");
 const Program = require("../models/Program");
 const Review = require("../models/Review");
 
 /**
+ * Static mapping of TMDB genre IDs to names.
+ * Add or adjust entries as needed based on your TMDB data.
+ */
+const genreMap = {
+  "28": "Action",
+  "12": "Adventure",
+  "16": "Animation",
+  "35": "Comedy",
+  "80": "Crime",
+  "99": "Documentary",
+  "18": "Drama",
+  "10751": "Family",
+  "14": "Fantasy",
+  "36": "History",
+  "27": "Horror",
+  "10402": "Music",
+  "9648": "Mystery",
+  "10749": "Romance",
+  "878": "Science Fiction",
+  "10770": "TV Movie",
+  "53": "Thriller",
+  "10752": "War",
+  "37": "Western",
+};
+
+/**
+ * Helper to map an array of genre-IDs (as strings) to names.
+ */
+function mapGenres(ids = []) {
+  return ids.map((id) => genreMap[id] || id);
+}
+
+/**
  * Upsert each external TMDB item into our Mongo `Program` collection,
- * then return a combined object of TMDB + our local fields.
+ * then return a combined object of TMDB + our local fields,
+ * with genres converted to names.
  */
 async function mergeExternalWithLocal(externalItems) {
   const extIds = externalItems.map((it) => it.id.toString());
@@ -23,6 +55,7 @@ async function mergeExternalWithLocal(externalItems) {
           type: ext.media_type === "movie" ? "movie" : "tv",
           title: ext.title || ext.name,
           description: ext.overview,
+          // store the raw IDs, we'll map them when returning
           genres: (ext.genre_ids || []).map(String),
           cast: [],
           crew: [],
@@ -33,7 +66,7 @@ async function mergeExternalWithLocal(externalItems) {
         locals.push(local);
       }
 
-      // return merged object
+      // Merge and map genre IDs to names
       return {
         ...ext,
         _id: local._id,
@@ -41,7 +74,7 @@ async function mergeExternalWithLocal(externalItems) {
         type: local.type,
         title: local.title,
         description: local.description,
-        genres: local.genres,
+        genres: mapGenres(local.genres),
         cast: local.cast,
         crew: local.crew,
         releaseDate: local.releaseDate,
@@ -122,7 +155,7 @@ exports.createProgram = async (req, res) => {
       type,
       title,
       description,
-      genres,
+      genres, // expecting names when admin posts
       cast,
       crew,
       releaseDate,
@@ -139,6 +172,7 @@ exports.createProgram = async (req, res) => {
 /**
  * GET /api/programs/:id
  * — Fetch single Program by its Mongo `_id`
+ * — Also map stored genre-IDs to names
  */
 exports.getProgramById = async (req, res) => {
   try {
@@ -146,6 +180,8 @@ exports.getProgramById = async (req, res) => {
     if (!program) {
       return res.status(404).json({ message: "Program not found" });
     }
+    // map the genres field before returning
+    program.genres = mapGenres(program.genres);
     return res.status(200).json(program);
   } catch (err) {
     console.error("getProgramById error:", err);
@@ -191,6 +227,11 @@ exports.getRecommendations = async (req, res) => {
       recs = await Program.find({ genres: { $in: topGenres } })
         .limit(10)
         .lean();
+      // map genres to names
+      recs = recs.map((p) => ({
+        ...p,
+        genres: mapGenres(p.genres),
+      }));
     } else {
       // fallback to trending
       const trendingData = await tmdb.getTrending();
