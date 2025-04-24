@@ -1,4 +1,3 @@
-// src/pages/AccountHomePage.js
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
@@ -12,6 +11,7 @@ const BACKDROP_BASE_URL = "https://image.tmdb.org/t/p/original";
 
 /**
  * SectionRow: Generic component to display images in a horizontal scroll.
+ * Expects `images` to be an array of { url: string, id: string }.
  */
 const SectionRow = ({
   title,
@@ -38,11 +38,11 @@ const SectionRow = ({
         "::-webkit-scrollbar": { display: "none" },
       }}
     >
-      {images.map((img, idx) => (
-        <Box key={idx} sx={{ flex: "0 0 auto" }}>
+      {images.map(({ url, id }, idx) => (
+        <Box key={idx} sx={{ flex: "0 0 auto" }} onClick={() => onImageClick(id)}>
           <Box
             component="img"
-            src={img}
+            src={url}
             alt={`${title} ${idx}`}
             sx={{
               width: `${imageWidth}px`,
@@ -53,7 +53,6 @@ const SectionRow = ({
               display: "block",
               mb: showProgressBar ? 1 : 0,
             }}
-            onClick={onImageClick}
           />
           {showProgressBar && (
             <Box
@@ -67,7 +66,6 @@ const SectionRow = ({
 );
 
 const AccountHomePage = () => {
-  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [cover, setCover] = useState([]);
   const [coverIndex, setCoverIndex] = useState(0);
   const [newOnNetflix, setNewOnNetflix] = useState([]);
@@ -75,8 +73,19 @@ const AccountHomePage = () => {
   const [action, setAction] = useState([]);
   const [myList, setMyList] = useState([]);
 
-  const handleOpenDetailsModal = () => setDetailsModalOpen(true);
-  const handleCloseDetailsModal = () => setDetailsModalOpen(false);
+  const [selectedProgramId, setSelectedProgramId] = useState(null);
+  const [programDetails, setProgramDetails] = useState(null);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+
+  const handleOpenDetailsModal = (programId) => {
+    setSelectedProgramId(programId);
+    setDetailsModalOpen(true);
+  };
+  const handleCloseDetailsModal = () => {
+    setDetailsModalOpen(false);
+    setSelectedProgramId(null);
+    setProgramDetails(null);
+  };
 
   useEffect(() => {
     const token = getToken();
@@ -103,9 +112,7 @@ const AccountHomePage = () => {
       },
     })
       .then((res) => res.json())
-      .then((items) => {
-        setMyList(items.slice(0, 10));
-      })
+      .then((items) => setMyList(items.slice(0, 10)))
       .catch((err) => console.error("Failed loading My List:", err));
   }, []);
 
@@ -118,49 +125,43 @@ const AccountHomePage = () => {
     return () => clearInterval(id);
   }, [cover]);
 
-  // Build the image URLs, filtering out missing paths
-  const newOnNetflixImages = newOnNetflix
-    .filter((p) => p.posterPath)
-    .map((p) => `${IMAGE_BASE_URL}${p.posterPath}`);
+  // fetch selected program details
+  useEffect(() => {
+    if (!selectedProgramId) return;
+    const token = getToken();
+    fetch(`http://localhost:5000/api/programs/${selectedProgramId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Program not found");
+        return res.json();
+      })
+      .then((data) => setProgramDetails(data))
+      .catch((err) => {
+        console.error("Failed loading program details:", err);
+        setProgramDetails(null);
+      });
+  }, [selectedProgramId]);
 
-  const animationImages = animation
+  // prepare image arrays
+  const newOnNetflixItems = newOnNetflix
     .filter((p) => p.posterPath)
-    .map((p) => `${IMAGE_BASE_URL}${p.posterPath}`);
+    .map((p) => ({ url: `${IMAGE_BASE_URL}${p.posterPath}`, id: p._id }));
 
-  const actionImages = action
+  const animationItems = animation
     .filter((p) => p.posterPath)
-    .map((p) => `${IMAGE_BASE_URL}${p.posterPath}`);
+    .map((p) => ({ url: `${IMAGE_BASE_URL}${p.posterPath}`, id: p._id }));
 
-  const myListImages = myList
+  const actionItems = action
+    .filter((p) => p.posterPath)
+    .map((p) => ({ url: `${IMAGE_BASE_URL}${p.posterPath}`, id: p._id }));
+
+  const myListItems = myList
     .filter((item) => item.program?.posterPath)
-    .map((item) => `${IMAGE_BASE_URL}${item.program.posterPath}`);
-
-  // sample details for modal
-  const sampleDetails = {
-    title: "House of Ninjas",
-    description:
-      "תיאור התכנית: כאן יופיע תיאור מפורט של התכנית, הסיפור, הסגנון ועוד.",
-    isSeries: true,
-    episodes: [
-      { title: "פרק 1", description: "תיאור קצר של פרק 1", runtime: "55m" },
-      { title: "פרק 2", description: "תיאור קצר של פרק 2", runtime: "53m" },
-      { title: "פרק 3", description: "תיאור קצר של פרק 3", runtime: "55m" },
-    ],
-    trailers: [
-      {
-        image: "/assets/newOnNetFlix.svg",
-        caption: "Season 1 Trailer 1: House of Ninjas",
-      },
-      {
-        image: "/assets/newOnNetFlix.svg",
-        caption: "Season 1 Trailer 2: House of Ninjas",
-      },
-      {
-        image: "/assets/newOnNetFlix.svg",
-        caption: "Season 1 Trailer 3: House of Ninjas",
-      },
-    ],
-  };
+    .map((item) => ({
+      url: `${IMAGE_BASE_URL}${item.program.posterPath}`,
+      id: item.program._id,
+    }));
 
   return (
     <Box
@@ -183,7 +184,7 @@ const AccountHomePage = () => {
           }
           alt={cover[coverIndex]?.title || "Cover"}
           sx={{ display: "block", width: "100%", cursor: "pointer" }}
-          onClick={handleOpenDetailsModal}
+          onClick={() => handleOpenDetailsModal(cover[coverIndex]?._id)}
         />
         <Box
           sx={{
@@ -210,7 +211,9 @@ const AccountHomePage = () => {
             <Button
               variant="contained"
               startIcon={<InfoIcon />}
-              onClick={handleOpenDetailsModal}
+              onClick={() =>
+                handleOpenDetailsModal(cover[coverIndex]?._id)
+              }
               sx={{
                 backgroundColor: "rgba(109,109,110,0.7)",
                 color: "#fff",
@@ -226,46 +229,37 @@ const AccountHomePage = () => {
 
       {/* MAIN CONTENT */}
       <Box sx={{ px: "58px", py: 4 }}>
-        {/* שורה 2: New on Netflix */}
         <SectionRow
           title="New on Netflix"
-          images={newOnNetflixImages}
+          images={newOnNetflixItems}
           imageWidth={215}
           imageHeight={154}
           borderRadius={0}
           onImageClick={handleOpenDetailsModal}
         />
-
-        {/* שורה 6: Animation */}
         <SectionRow
           title="Animation"
-          images={animationImages}
+          images={animationItems}
           onImageClick={handleOpenDetailsModal}
         />
-
-        {/* שורה 7: Action */}
         <SectionRow
           title="Action"
-          images={actionImages}
+          images={actionItems}
           onImageClick={handleOpenDetailsModal}
         />
-
-        {/* שורה 8: My List */}
         <SectionRow
           title="My List"
-          images={myListImages}
+          images={myListItems}
           onImageClick={handleOpenDetailsModal}
         />
       </Box>
 
-      {/* FOOTER */}
       <FooterAccountHomePage />
 
-      {/* Program Details Modal */}
       <ProgramDetailsModal
         open={detailsModalOpen}
         onClose={handleCloseDetailsModal}
-        details={sampleDetails}
+        details={programDetails || {}}  // <-- guard against null
       />
     </Box>
   );

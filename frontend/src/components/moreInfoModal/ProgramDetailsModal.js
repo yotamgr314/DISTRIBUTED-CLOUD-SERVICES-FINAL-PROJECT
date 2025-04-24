@@ -1,5 +1,3 @@
-// 📁 src/components/moreInfoModal/ProgramDetailsModal.js
-
 import React from "react";
 import PropTypes from "prop-types";
 import { Box, Typography, Dialog, DialogContent, Slide } from "@mui/material";
@@ -12,7 +10,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
+const ProgramDetailsModal = ({ open, onClose, details }) => {
+  // guard against null
+  const d = details || {};
+
   const {
     title = "House of Ninjas",
     newSeasons = "New 3 Seasons",
@@ -20,16 +21,15 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
     hdAvailable = true,
     adAvailable = true,
     top10Rank = "#2 in TV Shows Today",
-    summary = `Years after retiring from their formidable ninja lives, a dysfunctional family must return to shadowy missions to counter a string of looming threats.`,
+    summary = `Years after retiring from their formidable ninja lives, ...`,
     cast = "Kento Kaku, Yosuke Eguchi, Tae Kimura, more",
     genresList = "TV Dramas, Japanese, TV Thrillers",
     showIs = "Dark, Suspenseful, Exciting",
     director = "Dave Boyle",
     aboutMaturityRating = "TV-MA For Mature Audiences",
     disclaimers = "smoking, violence For Mature Audiences",
-    episodes = [],
     trailers = [],
-  } = details;
+  } = d;
 
   return (
     <Dialog
@@ -38,7 +38,7 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
       TransitionComponent={Transition}
       fullWidth
       maxWidth="md"
-      scroll="body" // ✅ let the modal grow and scroll with the body
+      scroll="body"
       sx={{
         "& .MuiDialog-container": {
           alignItems: "flex-start",
@@ -54,10 +54,8 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
         },
       }}
     >
-      {/* Header Image + Overlay */}
-      <ModalHeader details={details} onClose={onClose} />
+      <ModalHeader details={d} onClose={onClose} />
 
-      {/* MAIN CONTENT */}
       <DialogContent
         sx={{
           px: 3,
@@ -78,23 +76,8 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
           }}
         >
           {/* LEFT SIDE */}
-          <Box
-            sx={{
-              flex: 1.3,
-              display: "flex",
-              flexDirection: "column",
-              gap: 1.5,
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1.5,
-                color: "#bcbcbc",
-                fontSize: 14,
-              }}
-            >
+          <Box sx={{ flex: 1.3, display: "flex", flexDirection: "column", gap: 1.5 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, color: "#bcbcbc", fontSize: 14 }}>
               <Typography sx={{ color: "#46D369" }}>New</Typography>
               <Typography>{newSeasons}</Typography>
               <Typography>{year}</Typography>
@@ -117,34 +100,8 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
             </Box>
 
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-              <Typography
-                sx={{
-                  fontSize: 13,
-                  backgroundColor: "#141414",
-                  border: "1px solid #bcbcbc",
-                  color: "#bcbcbc",
-                  px: "6px",
-                  py: "2px",
-                }}
-              >
-                TV-MA
-              </Typography>
-              <Typography sx={{ fontSize: 14, color: "#fff" }}>
-                smoking, violence
-              </Typography>
-            </Box>
-
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-              <Box
-                sx={{
-                  backgroundColor: "#F50723",
-                  borderRadius: "4px",
-                  px: 1,
-                }}
-              >
-                <Typography
-                  sx={{ fontSize: 12, color: "#fff", fontWeight: "bold" }}
-                >
+              <Box sx={{ backgroundColor: "#F50723", borderRadius: "4px", px: 1 }}>
+                <Typography sx={{ fontSize: 12, color: "#fff", fontWeight: "bold" }}>
                   TOP 10
                 </Typography>
               </Box>
@@ -153,31 +110,13 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
               </Typography>
             </Box>
 
-            <Typography
-              sx={{
-                fontSize: 16,
-                lineHeight: "26px",
-                color: "#fff",
-                maxWidth: 480,
-              }}
-            >
+            <Typography sx={{ fontSize: 16, lineHeight: "26px", color: "#fff", maxWidth: 480 }}>
               {summary}
             </Typography>
           </Box>
 
           {/* RIGHT SIDE */}
-          <Box
-            sx={{
-              width: 240,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-              gap: "14px",
-              fontSize: 14,
-              lineHeight: "20px",
-              color: "#A3A3A3",
-            }}
-          >
+          <Box sx={{ width: 240, display: "flex", flexDirection: "column", justifyContent: "flex-end", gap: "14px", fontSize: 14, lineHeight: "20px", color: "#A3A3A3" }}>
             <Typography>
               <strong style={{ color: "#fff" }}>Cast:</strong> {cast}
             </Typography>
@@ -211,7 +150,7 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
 ProgramDetailsModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  details: PropTypes.object,
+  details: PropTypes.object, // may be {}
 };
 
 export default ProgramDetailsModal;
