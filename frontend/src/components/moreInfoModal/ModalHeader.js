@@ -1,30 +1,19 @@
+// 📁 src/components/shared/ModalHeader.js
+
 import React from "react";
 import PropTypes from "prop-types";
 import { Box, Typography, Button, IconButton } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useNavigate } from "react-router-dom";
 
-const BACKDROP_BASE_URL = "https://image.tmdb.org/t/p/original";
-const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
-
-const ModalHeader = ({ details = {}, onClose }) => {
+const ModalHeader = ({ details, onClose }) => {
   const navigate = useNavigate();
+
   const {
-    backdropPath,
-    posterPath,
-    title = "",
-    type = "",
+    /*  programId */ _id: heroImage = "/assets/houseOfNinjasCover.png",
+    title = "House of Ninjas",
+    nSeriesLabel = true,
   } = details;
-
-  // pick backdrop if available, else poster, else a default
-  const heroImage = backdropPath
-    ? `${BACKDROP_BASE_URL}${backdropPath}`
-    : posterPath
-    ? `${IMAGE_BASE_URL}${posterPath}`
-    : `${process.env.PUBLIC_URL}/assets/houseOfNinjasCover.png`;
-
-  // show "N SERIES" badge for TV
-  const nSeriesLabel = type === "tv";
 
   return (
     <Box
@@ -74,7 +63,7 @@ const ModalHeader = ({ details = {}, onClose }) => {
         />
       </IconButton>
 
-      {/* Title + Controls */}
+      {/* Overlay Content */}
       <Box
         sx={{
           position: "absolute",
@@ -148,10 +137,10 @@ const ModalHeader = ({ details = {}, onClose }) => {
 ModalHeader.propTypes = {
   onClose: PropTypes.func.isRequired,
   details: PropTypes.shape({
-    backdropPath: PropTypes.string,
-    posterPath: PropTypes.string,
+    _id: PropTypes.string,
+    heroImage: PropTypes.string,
     title: PropTypes.string,
-    type: PropTypes.string,
+    nSeriesLabel: PropTypes.bool,
   }),
 };
 

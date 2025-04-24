@@ -10,26 +10,26 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
-  // pull everything we actually store in Mongo
-  const {
-    title = "",
-    description = "",
-    cast: castArr = [],
-    genres: genresArr = [],
-    crew: crewArr = [],
-    releaseDate = "",
-    trailers = [],
-  } = details;
+const ProgramDetailsModal = ({ open, onClose, details }) => {
+  // guard against null
+  const d = details || {};
 
-  // derive the bits we need
-  const summary = description;
-  const cast = castArr.join(", ");
-  const genresList = genresArr.join(", ");
-  const director = crewArr[0] || "";
-  const year = releaseDate
-    ? new Date(releaseDate).getFullYear()
-    : "";
+  const {
+    title = "House of Ninjas",
+    newSeasons = "New 3 Seasons",
+    year = "2024",
+    hdAvailable = true,
+    adAvailable = true,
+    top10Rank = "#2 in TV Shows Today",
+    summary = `Years after retiring from their formidable ninja lives, ...`,
+    cast = "Kento Kaku, Yosuke Eguchi, Tae Kimura, more",
+    genresList = "TV Dramas, Japanese, TV Thrillers",
+    showIs = "Dark, Suspenseful, Exciting",
+    director = "Dave Boyle",
+    aboutMaturityRating = "TV-MA For Mature Audiences",
+    disclaimers = "smoking, violence For Mature Audiences",
+    trailers = [],
+  } = d;
 
   return (
     <Dialog
@@ -54,8 +54,7 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
         },
       }}
     >
-      {/* banner + close button */}
-      <ModalHeader details={details} onClose={onClose} />
+      <ModalHeader details={d} onClose={onClose} />
 
       <DialogContent
         sx={{
@@ -66,7 +65,7 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
           "::-webkit-scrollbar": { display: "none" },
         }}
       >
-        {/* top metadata + summary */}
+        {/* METADATA + SUMMARY */}
         <Box
           sx={{
             display: "flex",
@@ -76,46 +75,48 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
             mb: 4,
           }}
         >
-          {/* left */}
+          {/* LEFT SIDE */}
           <Box sx={{ flex: 1.3, display: "flex", flexDirection: "column", gap: 1.5 }}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1.5,
-                color: "#bcbcbc",
-                fontSize: 14,
-              }}
-            >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, color: "#bcbcbc", fontSize: 14 }}>
               <Typography sx={{ color: "#46D369" }}>New</Typography>
-              <Typography>{`${year}`}</Typography>
+              <Typography>{newSeasons}</Typography>
+              <Typography>{year}</Typography>
+              {hdAvailable && (
+                <Box
+                  component="img"
+                  src={`${process.env.PUBLIC_URL}/assets/hdIcon.svg`}
+                  alt="HD"
+                  sx={{ width: 24, height: 16 }}
+                />
+              )}
+              {adAvailable && (
+                <Box
+                  component="img"
+                  src={`${process.env.PUBLIC_URL}/assets/adIcon.svg`}
+                  alt="AD"
+                  sx={{ width: 24, height: 16 }}
+                />
+              )}
             </Box>
 
-            <Typography
-              sx={{
-                fontSize: 16,
-                lineHeight: "26px",
-                color: "#fff",
-                maxWidth: 480,
-              }}
-            >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+              <Box sx={{ backgroundColor: "#F50723", borderRadius: "4px", px: 1 }}>
+                <Typography sx={{ fontSize: 12, color: "#fff", fontWeight: "bold" }}>
+                  TOP 10
+                </Typography>
+              </Box>
+              <Typography sx={{ fontSize: 16, fontWeight: 500, color: "#fff" }}>
+                {top10Rank}
+              </Typography>
+            </Box>
+
+            <Typography sx={{ fontSize: 16, lineHeight: "26px", color: "#fff", maxWidth: 480 }}>
               {summary}
             </Typography>
           </Box>
 
-          {/* right */}
-          <Box
-            sx={{
-              width: 240,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-              gap: "14px",
-              fontSize: 14,
-              lineHeight: "20px",
-              color: "#A3A3A3",
-            }}
-          >
+          {/* RIGHT SIDE */}
+          <Box sx={{ width: 240, display: "flex", flexDirection: "column", justifyContent: "flex-end", gap: "14px", fontSize: 14, lineHeight: "20px", color: "#A3A3A3" }}>
             <Typography>
               <strong style={{ color: "#fff" }}>Cast:</strong> {cast}
             </Typography>
@@ -123,23 +124,23 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
               <strong style={{ color: "#fff" }}>Genres:</strong> {genresList}
             </Typography>
             <Typography>
-              <strong style={{ color: "#fff" }}>Director:</strong> {director}
+              <strong style={{ color: "#fff" }}>This show is:</strong> {showIs}
             </Typography>
           </Box>
         </Box>
 
-        {/* trailers if any */}
+        {/* TRAILERS SECTION */}
         {trailers.length > 0 && <TrailersSection trailers={trailers} />}
 
-        {/* about section: now fully dynamic for the fields we have */}
+        {/* ABOUT SECTION */}
         <AboutSection
           title={title}
           director={director}
           cast={cast}
           genresList={genresList}
-          showIs={genresList /* or derive something else */}
-          aboutMaturityRating={details.adult ? "Adult" : "All Ages"}
-          disclaimers={details.adult ? "Contains adult themes" : ""}
+          showIs={showIs}
+          aboutMaturityRating={aboutMaturityRating}
+          disclaimers={disclaimers}
         />
       </DialogContent>
     </Dialog>
@@ -149,7 +150,7 @@ const ProgramDetailsModal = ({ open, onClose, details = {} }) => {
 ProgramDetailsModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  details: PropTypes.object,
+  details: PropTypes.object, // may be {}
 };
 
 export default ProgramDetailsModal;
