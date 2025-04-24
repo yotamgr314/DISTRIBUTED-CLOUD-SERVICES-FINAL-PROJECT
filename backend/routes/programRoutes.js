@@ -1,16 +1,34 @@
+// backend/routes/programRoutes.js
+
 const express = require("express");
 const router = express.Router();
 const auth = require("../middlewares/authMiddleware");
 const { requireUser, requireAdmin } = require("../middlewares/roleMiddleware");
-const { getHomePage, createProgram, getProgramById  } = require("../controllers/programController");
+const profileMw = require("../middlewares/profileMiddleware");
 
- // GET /api/programs/homepage — user only
- router.get("/homepage", auth, requireUser, getHomePage);
+const {
+  getHomePage,
+  createProgram,
+  getProgramById,
+  getRecommendations,
+} = require("../controllers/programController");
 
- // POST /api/programs — admin only
- router.post("/", auth, requireAdmin, createProgram);
- module.exports = router;
+// 1. Homepage (user only)
+router.get("/homepage", auth, requireUser, getHomePage);
 
+// 2. AI Recommendations (user only, requires X-Profile-Id header)
+router.get(
+  "/recommendations",
+  auth,
+  requireUser,
+  profileMw,
+  getRecommendations
+);
 
-  // GET /api/programs/:id        ← הוסף מתחת
+// 3. Get single program by ID (all authenticated)
 router.get("/:id", auth, getProgramById);
+
+// 4. Create program (admin only)
+router.post("/", auth, requireAdmin, createProgram);
+
+module.exports = router;
